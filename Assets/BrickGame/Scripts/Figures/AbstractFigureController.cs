@@ -5,13 +5,12 @@
 // <date>02/08/2017 20:00</date>
 
 using System.Collections.Generic;
-using BrickGame.Scripts.Model;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
-    /// AbstractFigureController
+    /// AbstractFigureController - Factory of game figures
     /// </summary>
     public abstract class AbstractFigureController : GameBehaviour, IFigureController
     {
@@ -47,7 +46,19 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public abstract void Remove();
 
+        /// <summary>
+        /// Get next figure (Without removing from stack)
+        /// </summary>
+        /// <returns>figure matrix</returns>
+        public bool[,] NextFigure()
+        {
+            if(_figures.Count == 0)GenerateFigures();
+            return _figures.Peek();
+        }
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Initialize manager
+        /// </summary>
         private void Awake()
         {
             _previousIndex = -1;
@@ -56,32 +67,18 @@ namespace BrickGame.Scripts.Figures
             ChancesRowCalculation();
         }
 
+        /// <summary>
+        /// Pop first figure from stack
+        /// </summary>
         protected void PopFigure()
         {
             if(_figures.Count == 0)GenerateFigures();
             Figure = _figures.Pop();
         }
 
-        private void ChancesRowCalculation()
-        {
-            int n = Glyphs.Length;
-            _chances = new int[n];
-            float @base = ( (100 / n) * 2 - Step * (n - 1) ) * 0.5F;
-            for (int i = 0; i < n; i++)
-            {
-                _chances[i] = (int)(@base + Step * i);
-                if(i > 0)_chances[i] += _chances[i - 1];
-            }
-        }
-
-        private int RandomIndex()
-        {
-            int index = 0;
-            int chance = Random.Range(0, 99);
-            while (chance > _chances[index])index++;
-            return index;
-        }
-
+        /// <summary>
+        /// Generate new random figures
+        /// </summary>
         private void GenerateFigures()
         {
             if (_figures.Count < 3)
@@ -103,12 +100,31 @@ namespace BrickGame.Scripts.Figures
                 _figures.Push(Random.value > 0.5F ? glyph.GetFigureMatrix() : glyph.GetFlippedFigureMatrix());
             }
         }
-
-        public bool[,] NextFigure()
+        /// <summary>
+        /// Calculate row chances
+        /// </summary>
+        private void ChancesRowCalculation()
         {
-            if(_figures.Count == 0)GenerateFigures();
-            return _figures.Peek();
+            int n = Glyphs.Length;
+            _chances = new int[n];
+            float @base = ( (100 / n) * 2 - Step * (n - 1) ) * 0.5F;
+            for (int i = 0; i < n; i++)
+            {
+                _chances[i] = (int)(@base + Step * i);
+                if(i > 0)_chances[i] += _chances[i - 1];
+            }
         }
 
+        /// <summary>
+        /// Get random index if a glyph
+        /// </summary>
+        /// <returns>Random index</returns>
+        private int RandomIndex()
+        {
+            int index = 0;
+            int chance = Random.Range(0, 99);
+            while (chance > _chances[index])index++;
+            return index;
+        }
     }
 }

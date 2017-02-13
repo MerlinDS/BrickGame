@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-namespace BrickGame.Scripts.Model
+namespace BrickGame.Scripts.Figures
 {
     /// <summary>
     /// Glyph of figure
@@ -34,6 +34,10 @@ namespace BrickGame.Scripts.Model
             _matrix = new bool[Width * Height];
         }
 
+        /// <summary>
+        /// Get figure matrix from empty borders
+        /// </summary>
+        /// <returns></returns>
         public bool[,] GetFlippedFigureMatrix()
         {
             bool[,] t = GetFigureMatrix();
@@ -49,7 +53,7 @@ namespace BrickGame.Scripts.Model
         }
 
         /// <summary>
-        /// GetFigureMatrix from empty borders
+        /// Get figure matrix from empty borders
         /// </summary>
         /// <returns>matrix of figure</returns>
         public bool[,] GetFigureMatrix()

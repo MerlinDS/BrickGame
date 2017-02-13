@@ -4,7 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/08/2017 17:16</date>
 
-using BrickGame.Scripts.Model;
+using BrickGame.Scripts.Figures;
 using UnityEditor;
 using UnityEngine;
 

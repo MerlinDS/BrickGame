@@ -11,7 +11,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
-    /// FigureController
+    /// FigureController - concrete figure controller
     /// </summary>
     [RequireComponent(typeof(PlaygroundController))]
     public class FigureController : AbstractFigureController
@@ -96,6 +96,9 @@ namespace BrickGame.Scripts.Figures
 
 
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Initialize controller
+        /// </summary>
         private void Start()
         {
             _previous = new List<int>();
@@ -144,6 +147,12 @@ namespace BrickGame.Scripts.Figures
             }
         }
 
+        /// <summary>
+        /// Try to shift figure
+        /// </summary>
+        /// <param name="xShift"></param>
+        /// <param name="yShift"></param>
+        /// <returns></returns>
         private bool ShiftFigure(int xShift = 0, int yShift = 0)
         {
             _x += xShift;
@@ -154,6 +163,10 @@ namespace BrickGame.Scripts.Figures
             return false;
         }
 
+        /// <summary>
+        /// Validate figure for placing on playground
+        /// </summary>
+        /// <returns>True if figure can be places on playground, false in other cases.</returns>
         private bool ValidateFigure()
         {
             int width = Figure.GetLength(0);
