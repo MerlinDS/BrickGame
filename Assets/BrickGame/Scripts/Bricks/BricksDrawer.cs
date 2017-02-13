@@ -10,7 +10,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Bricks
 {
     /// <summary>
-    /// BricksDrawer
+    /// BricksDrawer - a component that responsible for drawing group of game bricks.
     /// </summary>
     public class BricksDrawer : GameBehaviour
     {
@@ -23,6 +23,9 @@ namespace BrickGame.Scripts.Bricks
         [Tooltip("Content holder")]
         private Transform _content;
         //================================    Systems properties    =================================
+        /// <summary>
+        /// Flag of the component validity
+        /// </summary>
         private bool _valid;
         //================================      Public methods      =================================
         public bool Validate()
@@ -45,6 +48,17 @@ namespace BrickGame.Scripts.Bricks
             return _valid;
         }
         //================================ Private|Protected methods ================================
+
+        /// <summary>
+        /// Draw bricks
+        /// </summary>
+        /// <param name="width">Width of the bricks maxtrix</param>
+        /// <param name="height">Height of the bricks matrix</param>
+        /// <returns>new bricks matrix</returns>
+        protected Brick[] DrawBricks(int width, int height)
+        {
+            return DrawBricks(width, height, Vector3.one);
+        }
         /// <summary>
         /// Draw bricks
         /// </summary>
@@ -85,15 +99,16 @@ namespace BrickGame.Scripts.Bricks
             return bricks;
         }
 
+        /// <summary>
+        /// Set position of a brick
+        /// </summary>
+        /// <param name="brick">Instance of a brick</param>
+        /// <param name="offset">Offset from top left corner of the component</param>
         protected virtual void SetBrickPosition(Transform brick, Vector3 offset)
         {
             brick.position = transform.position + offset;
         }
 
-        protected Brick[] DrawBricks(int width, int height)
-        {
-            return DrawBricks(width, height, Vector3.one);
-        }
         /// <summary>
         /// Destroy all briks instances in content holder container
         /// </summary>

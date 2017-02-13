@@ -9,7 +9,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Bricks
 {
     /// <summary>
-    /// PlaygroundBrick - class for brick in playground
+    /// PlaygroundBrick - class for the brick, the part of a game playground.
     /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
     public class PlaygroundBrick : ColoredBrick<SpriteRenderer>

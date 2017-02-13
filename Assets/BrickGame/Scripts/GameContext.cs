@@ -12,7 +12,7 @@ using UnityEngine;
 namespace BrickGame.Scripts
 {
     /// <summary>
-    /// GameContext - global game context
+    /// GameContext - global game context class.
     /// </summary>
     public sealed class GameContext : MocaContext
     {
@@ -21,12 +21,13 @@ namespace BrickGame.Scripts
         /// <inheritdoc />
         protected internal override void Initialize()
         {
-            //TODO: Add touch input
+            //Add user input adapter as an actor to context
             IInputAdapter adapter = Input.touchSupported
                 ?  (IInputAdapter) new TouchInputAdapter()
                 : new MouseInputAdapter();
             Debug.Log("Input adapter was intialized: " + adapter);
             MapInstance(adapter, typeof(IInputAdapter));
+            //Add score model to context
             MapInstance<ScoreModel>();
         }
     }

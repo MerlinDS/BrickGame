@@ -9,8 +9,9 @@ using UnityEngine;
 namespace BrickGame.Scripts.Bricks
 {
     /// <summary>
-    /// ColoredBrick - class for brick with changeble color
+    /// ColoredBrick - class for a brick with changeable color.
     /// </summary>
+    /// <typeparam name="T">Type of the brick renderer</typeparam>
     public abstract class ColoredBrick<T> : Brick where T : Component
     {
         //================================       Public Setup       =================================
@@ -33,7 +34,7 @@ namespace BrickGame.Scripts.Bricks
 
         //================================    Systems properties    =================================
         /// <summary>
-        /// Get instance of brick renderer
+        /// Get instance of the brick renderer
         /// </summary>
         protected T Renderer
         {
@@ -49,6 +50,9 @@ namespace BrickGame.Scripts.Bricks
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Initialize brick component.
+        /// </summary>
         private void Start()
         {
             UpdateColor( PassiveColor );

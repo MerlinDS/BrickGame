@@ -10,7 +10,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Bricks
 {
     /// <summary>
-    /// Brick - interface of the brick
+    /// Brick - interface of the brick. Minimal game element
     /// </summary>
     public abstract class Brick : GameBehaviour
     {
