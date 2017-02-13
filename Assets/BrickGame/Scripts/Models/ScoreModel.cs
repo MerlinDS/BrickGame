@@ -11,7 +11,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Models
 {
     /// <summary>
-    /// ScoreModel
+    /// ScoreModel - model of a game score
     /// </summary>
     public class ScoreModel : IMocaActor
     {
@@ -49,18 +49,34 @@ namespace BrickGame.Scripts.Models
             }
         }
 
+        /// <summary>
+        /// Score for the current game session
+        /// </summary>
         public int Score { get; private set; }
+        /// <summary>
+        /// Count of lines that were destroyed in current session.
+        /// </summary>
         public int Lines { get; private set; }
+        /// <summary>
+        /// Current level of the game.
+        /// </summary>
         public int Level { get; private set; }
 
         //================================    Systems properties    =================================
         private GameRules _rules;
         //================================      Public methods      =================================
+        /// <summary>
+        /// Set a rules of the game
+        /// </summary>
+        /// <param name="rules"></param>
         public void SetRules(GameRules rules)
         {
             _rules = rules;
         }
 
+        /// <summary>
+        /// Reset model
+        /// </summary>
         public void Reset()
         {
             Score = 0;
@@ -68,6 +84,10 @@ namespace BrickGame.Scripts.Models
             Level = 1;
         }
 
+        /// <summary>
+        /// Add score for destroyed lines
+        /// </summary>
+        /// <param name="count">Count of destroyed lines</param>
         public void AddLines(int count)
         {
             int score = _rules.CalculateScore(count);

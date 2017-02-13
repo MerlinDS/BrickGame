@@ -26,6 +26,9 @@ namespace BrickGame.Scripts.Playground
         [Tooltip("Score rules of the current game")]
         public GameRules Rules;
 
+        /// <summary>
+        /// Link to Playground model
+        /// </summary>
         public PlaygroundModel Model { get; private set; }
         //================================    Systems properties    =================================
         private bool _started;
@@ -36,7 +39,7 @@ namespace BrickGame.Scripts.Playground
         private IFigureController[] _figureControllers;
         //================================      Public methods      =================================
         /// <summary>
-        /// Rebuild playground
+        /// Inintialize controllers and rebuild playground if needs
         /// </summary>
         [ExecuteInEditMode]
         public void Start()
@@ -47,6 +50,9 @@ namespace BrickGame.Scripts.Playground
             enabled = false;
         }
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Preinitialize controller
+        /// </summary>
         private void Awake()
         {
             Context.AddListener(GameNotification.Start, GameNotificationHandler);
@@ -54,13 +60,16 @@ namespace BrickGame.Scripts.Playground
             _scoreModel.SetRules(Rules);
         }
 
+        /// <summary>
+        /// Remove listners and links
+        /// </summary>
         private void OnDestroy()
         {
             Context.RemoveListener(GameNotification.Start, GameNotificationHandler);
         }
 
         /// <summary>
-        /// Move figure down
+        /// Move active figure down
         /// </summary>
         private void LateUpdate()
         {
@@ -90,6 +99,10 @@ namespace BrickGame.Scripts.Playground
             }
         }
 
+        /// <summary>
+        ///  Handler for a game notifications
+        /// </summary>
+        /// <param name="notification">Name of the notification</param>
         private void GameNotificationHandler(string notification)
         {
             if (notification == GameNotification.Start)
@@ -112,7 +125,9 @@ namespace BrickGame.Scripts.Playground
             }
         }
 
-        // ReSharper disable once UnusedMember.Local
+        /// <summary>
+        /// Finalize playground: Check lines fro fullness, check game for ending
+        /// </summary>
         private void FinalizePlayground()
         {
             List<int> lines = new List<int>();
@@ -120,11 +135,13 @@ namespace BrickGame.Scripts.Playground
             {
                 if (Model.FullLine(y))lines.Add(y);
             }
+            //Full lines were not found. Create a new figure.
             if (lines.Count == 0)
             {
                 SendMessage(PlaygroundMessage.CreateFigure);
                 return;
             }
+            //Full lines exist, need to remove these lines and create a new figure.
             _view.EndOfBlinking += RemoveCells;
             _view.Blink(lines.ToArray());
             //Remove lines from playground
@@ -134,12 +151,19 @@ namespace BrickGame.Scripts.Playground
                     Model[x, y] = false;
             }
             Model.MoveDown(lines[0] - 1, lines[lines.Count - 1]);
+            //Update score and level speed
             _scoreModel.AddLines(lines.Count);
             _speed = Rules.GetSpeed( _scoreModel.Level);
-            enabled = false;//Wiat for callback
+            //Stop updating and wait for callback from the view.
+            enabled = false;
             BroadcastNofitication(GameNotification.ScoreUpdated);
         }
 
+        /// <summary>
+        /// Handler for playground view callback
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RemoveCells(object sender, EventArgs e)
         {
             _view.EndOfBlinking -= RemoveCells;

@@ -6,10 +6,14 @@
 namespace BrickGame.Scripts.Playground
 {
     /// <summary>
-    /// PlaygroundMessage
+    /// PlaygroundMessage - internal playground message.
+    /// Invoke internal methods.
     /// </summary>
     public static class PlaygroundMessage
     {
+        /// <summary>
+        /// Execute figure creation.
+        /// </summary>
         public const string CreateFigure = "CreateFigure";
     }
 }

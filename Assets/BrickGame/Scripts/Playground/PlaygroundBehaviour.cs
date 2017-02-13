@@ -11,7 +11,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Playground
 {
     /// <summary>
-    /// PlaygroundBehaviour - playground drawer
+    /// PlaygroundBehaviour - concrete playground drawer
     /// </summary>
     public class PlaygroundBehaviour : BricksDrawer
     {
@@ -39,7 +39,9 @@ namespace BrickGame.Scripts.Playground
             _bricks = DrawBricks(model.Width, model.Height, transform.localScale);
         }
         //================================ Private|Protected methods ================================
-
+        /// <summary>
+        /// Update activity of bricks depending on data in matrix of playground.
+        /// </summary>
         private void Update()
         {
             Brick brick;
@@ -85,6 +87,10 @@ namespace BrickGame.Scripts.Playground
             }
         }
 
+        /// <summary>
+        /// Execute blinking of lines
+        /// </summary>
+        /// <param name="lines"></param>
         public void Blink(int[] lines)
         {
             _blinking = true;

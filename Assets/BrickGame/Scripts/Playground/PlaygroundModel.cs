@@ -40,13 +40,25 @@ namespace BrickGame.Scripts.Playground
             }
         }
 
+        /// <summary>
+        /// Accessor for cells by Index
+        /// </summary>
+        /// <param name="index">Index of cell in liner array</param>
         public bool this[int index]
         {
             get { return _matrix[index]; }
         }
         //================================    Systems properties    =================================
+        /// <summary>
+        /// Playground matrix
+        /// </summary>
         private readonly bool[] _matrix;
         //================================      Public methods      =================================
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="width">Width of the playground matrix (count of columns)</param>
+        /// <param name="height">Height of the playground matrix (count of rows)</param>
         public PlaygroundModel(int width, int height)
         {
             Width = width;
@@ -81,6 +93,11 @@ namespace BrickGame.Scripts.Playground
             return true;
         }
 
+        /// <summary>
+        /// Move lines down
+        /// </summary>
+        /// <param name="top"></param>
+        /// <param name="bottom"></param>
         public void MoveDown(int top, int bottom)
         {
             do
@@ -94,6 +111,9 @@ namespace BrickGame.Scripts.Playground
 
         }
 
+        /// <summary>
+        /// Reset model from old game data
+        /// </summary>
         public void Reset()
         {
             int n = _matrix.Length;

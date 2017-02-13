@@ -9,7 +9,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Utils
 {
     /// <summary>
-    /// ShowOnlyAttribute
+    /// ShowOnlyAttribute - attribute for public fields in a component that needs to be read only.
     /// </summary>
     public class ShowOnlyAttribute : PropertyAttribute
     {
