@@ -13,7 +13,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Controllers
 {
     /// <summary>
-    /// UserControlsManager
+    /// UserControlsManager - Manager for user input.
     /// </summary>
     public class UserControlsManager : GameManager
     {
@@ -41,6 +41,9 @@ namespace BrickGame.Scripts.Controllers
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Initialize manager, adding of necessary listeners and links.
+        /// </summary>
         private void Awake()
         {
             _began = new Vector2();
@@ -50,6 +53,9 @@ namespace BrickGame.Scripts.Controllers
             Context.AddListener(GameNotification.FigureChanged, GameNotificationHandler);
         }
 
+        /// <summary>
+        /// Remove listeners
+        /// </summary>
         private void OnDestroy()
         {
             Context.RemoveListener(GameNotification.Start, GameNotificationHandler);
@@ -57,6 +63,9 @@ namespace BrickGame.Scripts.Controllers
             _controllers.Clear();
         }
 
+        /// <summary>
+        /// Refresh game controllers
+        /// </summary>
         private void RefreshControllers()
         {
             _controllers.Clear();
@@ -70,6 +79,10 @@ namespace BrickGame.Scripts.Controllers
             Debug.LogFormat("Refreshed {0} controllers", _controllers.Count);
         }
 
+        /// <summary>
+        /// Handler for a game notifications
+        /// </summary>
+        /// <param name="notification"></param>
         private void GameNotificationHandler(string notification)
         {
             if (notification == GameNotification.Start)
@@ -78,6 +91,9 @@ namespace BrickGame.Scripts.Controllers
                 _input.Reset();
         }
 
+        /// <summary>
+        /// Getting a user input and providing game actions.
+        /// </summary>
         private void FixedUpdate()
         {
             Touch touch;
@@ -109,11 +125,13 @@ namespace BrickGame.Scripts.Controllers
                     if (Math.Abs(delta) > swap) MoveHorizontal(delta);
                     break;
             }
-            //
         }
 
 
 
+        /// <summary>
+        /// Execute turning of figures on playground
+        /// </summary>
         private void Turn()
         {
             int n = _controllers.Count;
@@ -121,6 +139,10 @@ namespace BrickGame.Scripts.Controllers
                 _controllers[i].Turn();
         }
 
+        /// <summary>
+        /// Move figures down to bottom edge of a playground.
+        /// </summary>
+        /// <param name="count">Count of iterations</param>
         private void MoveDown(int count)
         {
             if (count <= 1)
@@ -137,6 +159,10 @@ namespace BrickGame.Scripts.Controllers
 
         }
 
+        /// <summary>
+        /// Move figures horizontally
+        /// </summary>
+        /// <param name="h">Horisontal factor</param>
         private void MoveHorizontal(float h)
         {
             if ((_hTimer += Time.deltaTime) < HorCooldown) return;

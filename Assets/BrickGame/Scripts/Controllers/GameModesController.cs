@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 namespace BrickGame.Scripts.Controllers
 {
     /// <summary>
-    /// GameModesController
+    /// GameModesController - controlling game modes.
     /// </summary>
     public class GameModesController : GameManager
     {
@@ -25,7 +25,12 @@ namespace BrickGame.Scripts.Controllers
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
-        // ReSharper disable once ParameterHidesMember
+
+        /// <summary>
+        /// Start game mode: load a scene with a required game mode and execute starting of this mode.
+        /// </summary>
+        /// <param name="name">Name of the required scene</param>
+        /// ReSharper disable once ParameterHidesMember
         public void StartMode(string name)
         {
             TypeSafe.Scene scene = SRScenes.All.FirstOrDefault(s=>s.name == name);
@@ -41,14 +46,18 @@ namespace BrickGame.Scripts.Controllers
         }
 
         /// <summary>
-        /// Exit to main menu from game mode
+        /// Exit to main menu from game mode.
         /// </summary>
         public void Exit2Menu()
         {
             SRScenes.MainMenuScene.Load();
         }
         //================================ Private|Protected methods ================================
-
+        /// <summary>
+        /// Handler for loading of a scene
+        /// </summary>
+        /// <param name="scene">Unity scene that was loaded</param>
+        /// <param name="loadSceneMode">Loading mode</param>
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -57,10 +66,13 @@ namespace BrickGame.Scripts.Controllers
             Debug.LogFormat("Scene {0} loaded", scene.name);
             CurrentScene = scene.name;
             if (link == SRScenes.MainMenuScene) return;
-            //Auto start of the game
+            //Auto start of a game mode
             Invoke("SendStartNotification", StartCooldown);
         }
 
+        /// <summary>
+        /// Start loaded game mode. (avoiding usage of a coroutine)
+        /// </summary>
         private void SendStartNotification()
         {
             Context.Notify(GameNotification.Start);
