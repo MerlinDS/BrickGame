@@ -1,0 +1,14 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# http://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:36966af95c4547e0a39ff02f96244273:4374241e48a1a09f6dbe252e22be47ed:af1e75a12600ff27c3dc9cecaefc2764$
+#
+:format=40000
+:texture=basik_sprite.png
+:size=64x64
+:pivotpoints=enabled
+
+brick;1;21;42;42;0.5;0.5; 4;42;0;0;0;0;42;42;42; 2;1;2;3;0;1;3
