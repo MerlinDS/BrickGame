@@ -9,7 +9,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Effects
 {
     /// <summary>
-    /// GhostingEffectBehaviour
+    /// GhostingEffectBehaviour - component for GhostingEffect
     /// </summary>
     [AddComponentMenu("BrickGame/Effects/GhostingEffect")]
     public class GhostingEffectBehaviour : GameBehaviour
@@ -27,6 +27,9 @@ namespace BrickGame.Scripts.Effects
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Initialize component
+        /// </summary>
         [ExecuteInEditMode]
         private void Start()
         {
@@ -34,6 +37,11 @@ namespace BrickGame.Scripts.Effects
             _previousFrame = new RenderTexture(Screen.width, Screen.height, 16);
         }
 
+        /// <summary>
+        /// Render image effect
+        /// </summary>
+        /// <param name="src">Source texture</param>
+        /// <param name="dest">Resulting texture</param>
         [ExecuteInEditMode]
         private void OnRenderImage(RenderTexture src, RenderTexture dest)
         {
