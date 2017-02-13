@@ -348,8 +348,10 @@ __pycache__/
 
 #External libraries
 [Aa]ssets/[Ss]tandard [Aa]ssets/
-[Aa]ssets/[Ss]tompyRobot/
+[Aa]ssets/[Ss]tompy[Rr]obot/
 [Aa]ssets/[Cc]odeandweb.com/
+[Aa]ssets/[Mm]ini[Mm]oca/
+[Aa]ssets/[Ll]ean[Pp]ool/
 
 #Working folders
 /[Rr]esources/
