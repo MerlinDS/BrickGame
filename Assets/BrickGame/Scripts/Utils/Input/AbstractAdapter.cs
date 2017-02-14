@@ -9,7 +9,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Utils.Input
 {
     /// <summary>
-    /// AbstractAdapter
+    /// AbstractAdapter - abstract class of inpunt adapter.
     /// </summary>
     public abstract class AbstractAdapter : IInputAdapter
     {
@@ -98,6 +98,11 @@ namespace BrickGame.Scripts.Utils.Input
         }
 
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Check if touch was occure
+        /// </summary>
+        /// <param name="position">Position of the touch if it was occure</param>
+        /// <returns>True if touch was occure, false in other case</returns>
         protected abstract bool HasTouch(ref Vector2 position);
     }
 }

@@ -9,7 +9,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Utils.Input
 {
     /// <summary>
-    /// TouchInputAdapter
+    /// TouchInputAdapter - Adapting touch input to ingame touch
     /// </summary>
     public class TouchInputAdapter : AbstractAdapter
     {

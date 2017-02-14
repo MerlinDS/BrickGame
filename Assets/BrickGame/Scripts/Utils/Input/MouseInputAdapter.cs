@@ -9,7 +9,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Utils.Input
 {
     /// <summary>
-    /// MouseInputAdapter
+    /// MouseInputAdapter - Adapting mouse input to ingame touch
     /// </summary>
     public class MouseInputAdapter : AbstractAdapter
     {
