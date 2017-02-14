@@ -30,13 +30,15 @@ namespace BrickGame.Scripts.Playground
         /// Rebuild playground behaviour
         /// </summary>
         /// <param name="model">Current model of playground</param>
-        [ExecuteInEditMode]
         public void Rebuild(PlaygroundModel model)
         {
             if(!Validate())return;
             _model = model;
-            DestroyBricks();
-            _bricks = DrawBricks(model.Width, model.Height, transform.localScale);
+            if (Application.isEditor)
+            {
+                DestroyBricks();
+                _bricks = DrawBricks(model.Width, model.Height, transform.localScale);
+            }
         }
         //================================ Private|Protected methods ================================
         /// <summary>

@@ -66,14 +66,13 @@ namespace BrickGame.Scripts.Playground
         /// <summary>
         /// Inintialize controllers and rebuild playground if it needed
         /// </summary>
-        [ExecuteInEditMode]
         public void Start()
         {
             Model = new PlaygroundModel(Width, Height);
             _view = GetComponent<PlaygroundBehaviour>();
-            _view.Rebuild(Model);
             _state = InternalState.Initialized;
-            enabled = false;
+            _view.Rebuild(Model);
+            if (Application.isPlaying)enabled = false;
         }
         //================================ Private|Protected methods ================================
         /// <summary>
