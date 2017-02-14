@@ -66,6 +66,13 @@ namespace BrickGame.Scripts.Playground
             _matrix = new bool[width * height];
         }
 
+        public PlaygroundModel(int width, int height, bool[] matrix)
+        {
+            Width = width;
+            Height = height;
+            _matrix = matrix;
+        }
+
         /// <inheritdoc />
         public override string ToString()
         {

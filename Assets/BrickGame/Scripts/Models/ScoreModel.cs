@@ -52,7 +52,7 @@ namespace BrickGame.Scripts.Models
         /// <summary>
         /// Name of the game mode
         /// </summary>
-        public string ModelName { get; private set; }
+        public string ModelName { get { return _rules.name; } }
         /// <summary>
         /// Score for the current game session
         /// </summary>
@@ -81,10 +81,8 @@ namespace BrickGame.Scripts.Models
         /// <summary>
         /// Reset model for a new mode
         /// </summary>
-        /// <param name="modeName">Mode name</param>
-        public void Reset(string modeName)
+        public void Reset()
         {
-            ModelName = modeName;
             Score = 0;
             Lines = 0;
             Level = 1;

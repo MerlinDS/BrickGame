@@ -5,6 +5,7 @@
 // <date>02/14/2017 20:17</date>
 
 using System.Text;
+using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playground;
 using BrickGame.Scripts.Utils;
@@ -55,7 +56,7 @@ namespace BrickGame.Scripts.Controllers.Commands
 
             //Save current state of the playground for current mode
             StringBuilder sb = new StringBuilder();
-            sb.Append("");//TODO: Add header
+            //sb.Append("");//TODO: Add header
             ConvertToString(sb);
             cacheModel.UpdatePlayground(scoreModel.ModelName, sb.ToString());
 
@@ -68,7 +69,8 @@ namespace BrickGame.Scripts.Controllers.Commands
             for (i = 0; i < n; i++)
             {
                 PlaygroundModel model = playgrounds[i].Model;
-                sb.Append(DataConverter.ToString(model));
+                FigureController controller = playgrounds[i].GetComponent<FigureController>();
+                sb.Append(DataConverter.ToString(model, controller.FigureIndexes()));
             }
         }
 

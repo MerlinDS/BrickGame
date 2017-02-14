@@ -74,7 +74,18 @@ namespace BrickGame.Scripts.Models
         /// <param name="data">Playground cache</param>
         public void UpdatePlayground(string mode, string data)
         {
-            Debug.Log(mode + ModeField + PlaygroundField + " = " + data);
+            PlayerPrefs.SetString(mode + ModeField + PlaygroundField, data);
+            Debug.Log(data);
+        }
+
+        /// <summary>
+        /// Get playground cache conpressed in string
+        /// </summary>
+        /// <param name="mode">Name of the mode</param>
+        /// <returns>Playground cache</returns>
+        public string GetPlaygroundCache(string mode)
+        {
+            return PlayerPrefs.GetString(mode + ModeField + PlaygroundField);
         }
         //================================ Private|Protected methods ================================
     }

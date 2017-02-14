@@ -7,8 +7,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using BrickGame.Scripts.Playground;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Utils
 {
@@ -31,7 +33,7 @@ namespace BrickGame.Scripts.Utils
         /// <param name="data">Playground model</param>
         /// <returns>Compressed string</returns>
         /// <exception cref="ArgumentNullException">data can't be null</exception>
-        public static string ToString(PlaygroundModel data)
+        public static string ToString(PlaygroundModel data, int[] exclusions)
         {
             if(data == null)
                 throw new ArgumentNullException("data");
@@ -47,8 +49,16 @@ namespace BrickGame.Scripts.Utils
                     if (bits != null) sb.Append(ToString(bits));
                     bits = new BitArray(ChunkSize);
                 }
+
                 // ReSharper disable once PossibleNullReferenceException
-                bits[index] = data[i];
+                if (!exclusions.Contains(i))
+                {
+                    bits[index] = data[i];
+                }
+                else
+                {
+                    Debug.Log(i + " not in cache: " + data[i]);
+                }
             }
 
             if (bits != null && bits.Length > 0)
@@ -122,7 +132,7 @@ namespace BrickGame.Scripts.Utils
                 for (j = 0; j < m; ++j)result.Add(bits[j]);
             }
             return result.ToArray();
-}
+        }
         //================================ Private|Protected methods ================================
         /// <summary>
         /// Convert a bit array to hex string

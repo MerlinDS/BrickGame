@@ -120,6 +120,27 @@ namespace BrickGame.Scripts.Figures
         }
 
 
+        /// <summary>
+        /// Get figure cells indexes in playground matrix
+        /// </summary>
+        /// <returns> list of figure cells indexes</returns>
+        public int[] FigureIndexes()
+        {
+            if(Figure == null)return new int[0];
+            int width = Figure.GetLength(0);
+            int height = Figure.GetLength(1);
+            List<int> result = new List<int>();
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (!Figure[x, y]) continue;
+                    result.Add((_x + x) + (_y + y) * _model.Width);
+                    Debug.Log(result[result.Count - 1]);
+                }
+            }
+            return result.ToArray();
+        }
         //================================ Private|Protected methods ================================
         /// <summary>
         /// Initialize controller

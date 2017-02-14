@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Utils;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Playground
@@ -68,10 +69,22 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         public void Start()
         {
-            Model = new PlaygroundModel(Width, Height);
+            if (Application.isPlaying)
+            {
+                //Get data from cache, TODO: Remove after tests
+                string cache = Context.GetActor<CacheModel>().GetPlaygroundCache(Rules.name);
+                if (cache.Length > 0)
+                {
+                    bool[] matrix = DataConverter.GetMatrix(cache);
+                    Model = new PlaygroundModel(Width, Height, matrix);
+                }
+            }
+
+            if(Model == null)
+                Model = new PlaygroundModel(Width, Height);
             _view = GetComponent<PlaygroundBehaviour>();
-            _state = InternalState.Initialized;
             _view.Rebuild(Model);
+            _state = InternalState.Initialized;
             if (Application.isPlaying)enabled = false;
         }
         //================================ Private|Protected methods ================================
@@ -146,8 +159,7 @@ namespace BrickGame.Scripts.Playground
                 if ((_state & InternalState.Started) != InternalState.Started)
                 {
                     Debug.Log("Start new game on " + gameObject.name);
-                    Model.Reset();
-                    _scoreModel.Reset(Rules.name);
+                    _scoreModel.Reset();
                     _speed = Rules.StartingSpeed;
                     _figureController = GetComponent<IFigureController>();
                     SendMessage(PlaygroundMessage.CreateFigure);
@@ -160,13 +172,14 @@ namespace BrickGame.Scripts.Playground
                         _state ^= InternalState.OnPause;
                     else
                         _state |= InternalState.OnPause;
-                    //TODO TASK: Save playground to cache
                 }
             }
             else if (notification == GameNotification.EndOfGame)
             {
+                //TODO: Add end animation
                 //Remove started and pause flags
                 _state = InternalState.Initialized;
+                Model.Reset();
             }
             //Change global state of the component
             enabled = (_state & InternalState.Started) == InternalState.Started;
