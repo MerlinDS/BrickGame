@@ -11,11 +11,14 @@ using UnityEngine.UI;
 namespace BrickGame.Scripts.UI
 {
     /// <summary>
-    /// GameSwitchingButton
+    /// GameSwitchingButton - switching a game state
     /// </summary>
     [RequireComponent(typeof(Button))]
     public class GameSwitchingButton : GameBehaviour
     {
+        /// <summary>
+        /// Enum of button states
+        /// </summary>
         private enum ButtonState
         {
             Start, Pause, Resume
@@ -33,12 +36,18 @@ namespace BrickGame.Scripts.UI
         private ButtonState _state;
         private Button _button;
         //================================      Public methods      =================================
+        /// <summary>
+        /// Reset button to starting state
+        /// </summary>
         public void ResetState()
         {
             Label.text = StartLable;
             _state = ButtonState.Start;
         }
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Initialize button and add context listeners
+        /// </summary>
         private void Start()
         {
             ResetState();
@@ -52,6 +61,9 @@ namespace BrickGame.Scripts.UI
         }
 
 
+        /// <summary>
+        /// Remove listeners form the button
+        /// </summary>
         private void OnDestroy()
         {
             _button.onClick.RemoveAllListeners();
@@ -59,12 +71,20 @@ namespace BrickGame.Scripts.UI
             Context.RemoveListener(GameNotification.EndOfGame, GameNotificationHandler);
         }
 
+        /// <summary>
+        /// Handle game notifications from context and change button state
+        /// </summary>
+        /// <param name="notification">Name of a notification</param>
         private void GameNotificationHandler(string notification)
         {
             if(notification == GameNotification.EndOfGame)ResetState();
             else ChangeState();
         }
 
+        /// <summary>
+        /// Cahange button statte
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void ChangeState()
         {
             switch (_state)

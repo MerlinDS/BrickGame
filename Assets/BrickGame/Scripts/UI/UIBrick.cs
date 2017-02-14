@@ -11,7 +11,7 @@ using UnityEngine.UI;
 namespace BrickGame.Scripts.UI
 {
     /// <summary>
-    /// UIBrick
+    /// UIBrick - component for drawing brick in UI
     /// </summary>
     // ReSharper disable once InconsistentNaming
     public class UIBrick : ColoredBrick<Image>

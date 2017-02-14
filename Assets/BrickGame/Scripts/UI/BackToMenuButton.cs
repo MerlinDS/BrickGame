@@ -10,7 +10,7 @@ using BrickGame.Scripts.UI.Components;
 namespace BrickGame.Scripts.UI
 {
     /// <summary>
-    /// BackToMenuButton
+    /// BackToMenuButton - Load main menu scene
     /// </summary>
     public class BackToMenuButton : GameControlsButton
     {
@@ -21,7 +21,9 @@ namespace BrickGame.Scripts.UI
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
-        /// <inheritdoc />
+        /// <summary>
+        /// Execute loading of main menu
+        /// </summary>
         protected override void OnClickHandler()
         {
             Context.GetActor<GameModesController>().Exit2Menu();

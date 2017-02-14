@@ -10,8 +10,9 @@ using UnityEngine;
 
 namespace BrickGame.Scripts.UI
 {
+    //TODO:Rename
     /// <summary>
-    /// MainMenuButton
+    /// MainMenuButton - Button for a game mode starting
     /// </summary>
     public class MainMenuButton : GameControlsButton
     {

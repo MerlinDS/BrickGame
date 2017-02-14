@@ -10,7 +10,7 @@ using UnityEngine.UI;
 namespace BrickGame.Scripts.UI.Components
 {
     /// <summary>
-    /// GameControlsButton
+    /// GameControlsButton - abstract class for a game buttons
     /// </summary>
     [RequireComponent(typeof(Button))]
     public abstract class GameControlsButton : GameBehaviour
@@ -20,15 +20,24 @@ namespace BrickGame.Scripts.UI.Components
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
+        /// <summary>
+        /// Will be executed on button click.
+        /// Execute concrete action of the component.
+        /// </summary>
         protected abstract void OnClickHandler();
 
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Add onClick listener fo the component
+        /// </summary>
         protected virtual void Awake()
         {
             GetComponent<Button>().onClick.AddListener(OnClickHandler);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Remove onClick listener from the component
+        /// </summary>
         protected virtual void OnDestroy()
         {
             GetComponent<Button>().onClick.RemoveListener(OnClickHandler);

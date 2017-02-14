@@ -11,25 +11,28 @@ using UnityEngine;
 namespace BrickGame.Scripts.UI
 {
     /// <summary>
-    /// NexFigureBehaviour
+    /// NexFigureBehaviour - Component for drawing next figure of the game
     /// </summary>
     public class NexFigureBehaviour : BricksDrawer
     {
         //================================       Public Setup       =================================
+        [Tooltip("Controller of figure that need to be shown")]
         public FigureController Controller;
-
+        [Tooltip("Width in brick, count of columns")]
         public int Width = 4;
-
+        [Tooltip("Height in bricks, count of rows")]
         public int Height = 4;
 
         //================================    Systems properties    =================================
         private Vector2 _offset;
         private Brick[] _bricks;
-
         private RectTransform _rectTransform;
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Initialize component and add context listeners
+        /// </summary>
         private void Start()
         {
             if(!Validate())return;
@@ -43,6 +46,9 @@ namespace BrickGame.Scripts.UI
             Context.AddListener(GameNotification.FigureChanged, GameNotificationHandler);
         }
 
+        /// <summary>
+        /// Remove listeners
+        /// </summary>
         private void OnDestroy()
         {
             Context.RemoveListener(GameNotification.FigureChanged, GameNotificationHandler);
@@ -56,6 +62,10 @@ namespace BrickGame.Scripts.UI
             rect.anchoredPosition = _offset + position;
         }
 
+        /// <summary>
+        /// Game notifaication handler
+        /// </summary>
+        /// <param name="notification">Name of the notification</param>
         private void GameNotificationHandler(string notification)
         {
             for (int i = 0; i < _bricks.Length; i++)

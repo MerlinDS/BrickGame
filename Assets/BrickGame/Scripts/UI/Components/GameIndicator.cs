@@ -13,14 +13,13 @@ using UnityEngine.UI;
 namespace BrickGame.Scripts.UI.Components
 {
     /// <summary>
-    /// GameIndicator
+    /// GameIndicator - base class for game indicators, shuch as score indicator.
     /// </summary>
-
     public class GameIndicator : GameBehaviour
     {
         //================================       Public Setup       =================================
-        [Tooltip("Name of the value that needs to be indicated")]
-        public ScoreModel.FieldName Value = ScoreModel.FieldName.Score;
+        [Tooltip("Name of the value that needs to be indicated")] public ScoreModel.FieldName Value =
+            ScoreModel.FieldName.Score;
 
         [Tooltip("Count of digits in indicator")] public int CountOfDigits;
         [Tooltip("Default digid value")] public string EmptyDigit = "@";
@@ -29,10 +28,14 @@ namespace BrickGame.Scripts.UI.Components
 
         //================================    Systems properties    =================================
         private ScoreModel _model;
+
         private StringBuilder _builder;
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Inintialize conponent and add context listener
+        /// </summary>
         private void Awake()
         {
             _model = Context.GetActor<ScoreModel>();
@@ -42,11 +45,18 @@ namespace BrickGame.Scripts.UI.Components
             GameNotificationHandler(GameNotification.ScoreUpdated);
         }
 
+        /// <summary>
+        /// Remove context listener
+        /// </summary>
         private void OnDestroy()
         {
             Context.RemoveListener(GameNotification.ScoreUpdated, GameNotificationHandler);
         }
 
+        /// <summary>
+        /// Handle game notification form context and chagen value of the indicator.
+        /// </summary>
+        /// <param name="notification"></param>
         private void GameNotificationHandler(string notification)
         {
             if (ValueTextField == null)
@@ -57,13 +67,11 @@ namespace BrickGame.Scripts.UI.Components
             //Creating string for textifield
             int value = _model[Value];
             int count = CountOfDigits - value.CountOfDigits();
-            while (count-- > 0)_builder.Append(EmptyDigit);
+            while (count-- > 0) _builder.Append(EmptyDigit);
             _builder.Append(value);
             ValueTextField.text = _builder.ToString();
             //Clean builer for next usage
             _builder.Remove(0, _builder.Length);
-
-
         }
     }
 }
