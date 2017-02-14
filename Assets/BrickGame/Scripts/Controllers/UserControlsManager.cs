@@ -72,7 +72,7 @@ namespace BrickGame.Scripts.Controllers
             GameObject[] playgrounds = GameObject.FindGameObjectsWithTag(SRTags.Player);
             foreach (GameObject playground in playgrounds)
                 _controller.Add(playground.GetComponent<IFigureController>());
-            Debug.LogFormat("Refreshed {0} controllers", _controller.Count);
+//            Debug.LogFormat("Refreshed {0} controllers", _controller.Count);
         }
 
         /// <summary>
