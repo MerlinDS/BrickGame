@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/08/2017 18:16</date>
 
+using System;
 using System.Collections.Generic;
 using BrickGame.Scripts.Playground;
 using UnityEngine;
@@ -59,13 +60,16 @@ namespace BrickGame.Scripts.Figures
                 Calculate new position of the figure and
                 save turned matrix as a current figure.
             */
-            //TODO: Fix position
-            x = _x + (int)Mathf.Floor(width * 0.5F);
-            y = _y + (int)Mathf.Floor(height * 0.5F);
-            width = matrix.GetLength(0);
-            height = matrix.GetLength(1);
-            _x = x - (int)Mathf.Floor(width * 0.5F);
-            _y = y - (int)Mathf.Floor(height * 0.5F);
+            if (width != height)
+            {
+                //Set new center of the figure
+                _x = _x + (int)((width - height) * 0.5F);
+                _y = _y + (int)((height - width) * 0.5F);
+                //shift from borders
+                if (_x < 0) _x = 0;
+                else if (_x + height >= _model.Width)
+                    _x = _model.Width - height;
+            }
             Figure = matrix;
             //If vigure can't be turned revert changes
             if (ValidateFigure())return true;
@@ -100,7 +104,7 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public override bool MoveDown()
         {
-            //TODO: Fix move down validate:
+            //TODO BAG: Fix move down validate:
             return Figure != null && ShiftFigure(0, 1);
         }
 
