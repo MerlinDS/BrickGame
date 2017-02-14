@@ -11,7 +11,8 @@ using UnityEngine;
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
-    /// FigureController - concrete figure controller
+    /// FigureController - concrete figure controller.
+    /// Provide controls for controlling figure matrix and position of the figure on playground.
     /// </summary>
     [RequireComponent(typeof(PlaygroundController))]
     public class FigureController : AbstractFigureController
@@ -19,9 +20,19 @@ namespace BrickGame.Scripts.Figures
         //================================       Public Setup       =================================
         public Vector2 SpawnCenter;
         //================================    Systems properties    =================================
+        /// <summary>
+        /// X position of the figure on playground
+        /// </summary>
         private int _x;
+        /// <summary>
+        /// Y position of the figure on playground
+        /// </summary>
         private int _y;
         private float _timer;
+        /// <summary>
+        /// Coordinates of the previous active cells of the figure.
+        /// [0] - x, [1] - y.
+        /// </summary>
         private List<int> _previous;
         private PlaygroundModel _model;
         private PlaygroundController _controller;
@@ -30,11 +41,13 @@ namespace BrickGame.Scripts.Figures
         public override bool Turn()
         {
             if (Figure == null) return false;
+            //Save current state of figure to temporary values
             int tempX = _x;
             int tempY = _y;
+            bool[,] temp = Figure;
+            //Create turned matrix and fill it with current figure values
             int width = Figure.GetLength(0);
             int height = Figure.GetLength(1);
-            bool[,] temp = Figure;
             bool[,] matrix = new bool[height,width];
             int x, y;
             for (x = 0; x < width; x++)
@@ -42,6 +55,11 @@ namespace BrickGame.Scripts.Figures
                 for (y = 0; y < height; y++)
                     matrix[y, x] = Figure[ x, (height - 1) - y];
             }
+            /*
+                Calculate new position of the figure and
+                save turned matrix as a current figure.
+            */
+            //TODO: Fix position
             x = _x + (int)Mathf.Floor(width * 0.5F);
             y = _y + (int)Mathf.Floor(height * 0.5F);
             width = matrix.GetLength(0);
@@ -49,6 +67,7 @@ namespace BrickGame.Scripts.Figures
             _x = x - (int)Mathf.Floor(width * 0.5F);
             _y = y - (int)Mathf.Floor(height * 0.5F);
             Figure = matrix;
+            //If vigure can't be turned revert changes
             if (ValidateFigure())return true;
             _x = tempX;
             _y = tempY;
@@ -69,22 +88,20 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public override bool MoveLeft()
         {
-            if (Figure == null) return false;
-            return ShiftFigure(-1);
+            return Figure != null && ShiftFigure(-1);
         }
 
         /// <inheritdoc />
         public override bool MoveRight()
         {
-            if (Figure == null) return false;
-            return ShiftFigure(1);
+            return Figure != null && ShiftFigure(1);
         }
 
         /// <inheritdoc />
         public override bool MoveDown()
         {
-            if (Figure == null) return false;
-            return ShiftFigure(0, 1);
+            //TODO: Fix move down validate:
+            return Figure != null && ShiftFigure(0, 1);
         }
 
         /// <inheritdoc />
@@ -118,12 +135,14 @@ namespace BrickGame.Scripts.Figures
         }
 
         /// <summary>
-        /// Update figure cells in model
+        /// Update figure cells in playground matrix.
+        /// Remove figure cells from previous place.
+        /// Add figure cells to new place.
         /// </summary>
         private void Update()
         {
             int x, y;
-            //Clean previous cells
+            //Clean previous poosition of figure cells
             for (int i = 0; i < _previous.Count; i += 2)
             {
                 x = _previous[i];
@@ -132,7 +151,7 @@ namespace BrickGame.Scripts.Figures
             }
             _previous.Clear();
             if (Figure == null) return;
-            //Set figure cells
+            //Set new position of figure cells
             int width = Figure.GetLength(0);
             int height = Figure.GetLength(1);
             for (x = 0; x < width; x++)
@@ -148,11 +167,11 @@ namespace BrickGame.Scripts.Figures
         }
 
         /// <summary>
-        /// Try to shift figure
+        /// Try to shift figure in playground matrix
         /// </summary>
         /// <param name="xShift"></param>
         /// <param name="yShift"></param>
-        /// <returns></returns>
+        /// <returns>True if shifting was succeseful, false in other case.</returns>
         private bool ShiftFigure(int xShift = 0, int yShift = 0)
         {
             _x += xShift;
@@ -175,13 +194,16 @@ namespace BrickGame.Scripts.Figures
             {
                 for (int y = 0; y < height; y++)
                 {
+                    //Check if figure upper then playground matrix
                     int y0 = _y + y;
                     if (!Figure[x, y] || y0 < 0) continue;
+                    //Check if figure is out of bounds of playground matrix
                     int x0 = _x + x;
                     if (y0 >= _model.Height || x0 < 0 || x0 > _model.Width - 1) return false;
-                    //interaction with other cells
+                    //Check interaction with other figures (cells that not empty already)
                     if (_model[x0, y0])
                     {
+                        //It cound be cells from previous figure position.
                         bool previous = false;
                         for (int i = 0; i < _previous.Count; i += 2)
                         {
@@ -191,11 +213,13 @@ namespace BrickGame.Scripts.Figures
                                 break;
                             }
                         }
+                        //If figure contains current cell ignore it, if not, figure is invalid.
                         if (previous) continue;
                         return false;
                     }
                 }
             }
+            //Figure is valid
             return true;
         }
     }
