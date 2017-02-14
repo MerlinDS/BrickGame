@@ -19,11 +19,11 @@ namespace BrickGame.Scripts.Models
         public int LevelDivider;
 
         [Tooltip("Starting speed of the game, in seconds")]
-        [Range(0.1F, 4F)]
+        [Range(0.1F, 2F)]
         public float StartingSpeed;
 
         [Tooltip("Time gap before playground finalizing, in seconds")]
-        [Range(0.3F, 10F)]
+        [Range(0.1F, 2F)]
         public float FinalizingGap;
 
         [Tooltip("Score by deleted lines")]
@@ -47,7 +47,7 @@ namespace BrickGame.Scripts.Models
         public float GetSpeed(int level)
         {
             float speed = StartingSpeed - level * 0.1F;
-            if (speed < 0) speed = 0;
+            if (speed <= 0) speed = 0.1F;
             return speed;
         }
         //================================ Private|Protected methods ================================

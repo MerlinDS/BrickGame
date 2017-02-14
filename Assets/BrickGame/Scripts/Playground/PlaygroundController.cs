@@ -5,6 +5,7 @@
 // <date>02/08/2017 13:29</date>
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
@@ -57,7 +58,7 @@ namespace BrickGame.Scripts.Playground
         private InternalState _state;
         private float _speed = 1F;
         private float _colldown;
-        private float _finalizationColldown;
+        private Coroutine _finalization;
         private ScoreModel _scoreModel;
         private PlaygroundBehaviour _view;
         private IFigureController _figureController;
@@ -103,17 +104,18 @@ namespace BrickGame.Scripts.Playground
             //Check if cooldwon was passed
             if ((_colldown += Time.deltaTime) < _speed) return;
             _colldown = 0;
+            //Try to move figure down
             if (!_figureController.MoveDown())
             {
                 if (!_figureController.OutOfBounds)
                 {
                     /*
                         End of the turn.
-                        Figure can't be moved feuthur.
+                        Figure can't be moved further.
                         Need to finalize playground.
                     */
-                    enabled = false;//Stop updating
-                    Invoke("FinalizePlayground", Rules.FinalizingGap);
+                    if(_finalization == null)
+                        _finalization = StartCoroutine(FinalizePlayground());
                 }
                 else
                 {
@@ -126,7 +128,12 @@ namespace BrickGame.Scripts.Playground
                     //TODO TASK: Execute end of the game animation
                     BroadcastNofitication(GameNotification.EndOfGame);
                 }
+                return;
             }
+            //Figure moded down, remove finalization
+            if (_finalization == null) return;
+            StopCoroutine(_finalization);
+            _finalization = null;
         }
 
         /// <summary>
@@ -170,9 +177,10 @@ namespace BrickGame.Scripts.Playground
         /// <summary>
         /// Finalize playground: Check lines for fullness, check game for ending
         /// </summary>
-        private void FinalizePlayground()
+        private IEnumerator FinalizePlayground()
         {
-            //Remove current figures
+            yield return new WaitForSeconds(Rules.FinalizingGap);
+            if (_figureController.MoveDown())yield break;
             _figureController.Remove();
             //Search for filled lines
             List<int> lines = new List<int>();
@@ -184,8 +192,7 @@ namespace BrickGame.Scripts.Playground
             if (lines.Count == 0)
             {
                 SendMessage(PlaygroundMessage.CreateFigure);
-                enabled = true;//Start updating
-                return;
+                yield break;
             }
             //Full lines exist, need to remove these lines and create a new figure.
             _view.EndOfBlinking += RemoveCells;
@@ -200,8 +207,10 @@ namespace BrickGame.Scripts.Playground
             //Update score and level speed
             _scoreModel.AddLines(lines.Count);
             _speed = Rules.GetSpeed( _scoreModel.Level);
+            enabled = false;//Stop updating
             BroadcastNofitication(GameNotification.ScoreUpdated);
             //TODO TASK: Save score to cahce
+            yield return null;
         }
 
         /// <summary>
