@@ -17,7 +17,8 @@ namespace BrickGame.Scripts.Playground
     /// Moving figures to down edge.
     /// Finalizing playground on end of figures movement.
     /// </summary>
-    [RequireComponent(typeof(PlaygroundBehaviour))]
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(PlaygroundBehaviour), typeof(FigureController))]
     public class PlaygroundController : GameBehaviour
     {
         /// <summary>
@@ -55,10 +56,11 @@ namespace BrickGame.Scripts.Playground
         private bool _started;
         private InternalState _state;
         private float _speed = 1F;
-        private float _timer;
+        private float _colldown;
+        private float _finalizationColldown;
         private ScoreModel _scoreModel;
         private PlaygroundBehaviour _view;
-        private IFigureController[] _figureControllers;
+        private IFigureController _figureController;
         //================================      Public methods      =================================
         /// <summary>
         /// Inintialize controllers and rebuild playground if it needed
@@ -99,36 +101,30 @@ namespace BrickGame.Scripts.Playground
         private void LateUpdate()
         {
             //Check if cooldwon was passed
-            if ((_timer += Time.deltaTime) < _speed) return;
-            _timer = 0;
-            int n = _figureControllers.Length;
-            for (int i = 0; i < n; i++)
+            if ((_colldown += Time.deltaTime) < _speed) return;
+            _colldown = 0;
+            if (!_figureController.MoveDown())
             {
-                IFigureController figureController = _figureControllers[i];
-                if (!figureController.MoveDown())
+                if (!_figureController.OutOfBounds)
                 {
-                    if (!figureController.OutOfBounds)
-                    {
-                        /*
-                            End of the turn.
-                            Figure can't be moved feuthur.
-                            Need to finalize playground.
-                        */
-                        figureController.Remove();
-                        //TODO TASK: Add time gap
-                        FinalizePlayground();
-                    }
-                    else
-                    {
-                        /*
-                            One of the figures is upper than top edge.
-                            The game is over.
-                        */
-                        figureController.Remove();
-                        Debug.Log("Game was ended with score: " + _scoreModel.Score);
-                        //TODO TASK: Execute end of the game animation
-                        BroadcastNofitication(GameNotification.EndOfGame);
-                    }
+                    /*
+                        End of the turn.
+                        Figure can't be moved feuthur.
+                        Need to finalize playground.
+                    */
+                    enabled = false;//Stop updating
+                    Invoke("FinalizePlayground", Rules.FinalizingGap);
+                }
+                else
+                {
+                    /*
+                        One of the figures is upper than top edge.
+                        The game is over.
+                    */
+                    _figureController.Remove();
+                    Debug.Log("Game was ended with score: " + _scoreModel.Score);
+                    //TODO TASK: Execute end of the game animation
+                    BroadcastNofitication(GameNotification.EndOfGame);
                 }
             }
         }
@@ -147,7 +143,7 @@ namespace BrickGame.Scripts.Playground
                     Model.Reset();
                     _scoreModel.Reset();
                     _speed = Rules.StartingSpeed;
-                    _figureControllers = GetComponents<IFigureController>();
+                    _figureController = GetComponent<IFigureController>();
                     SendMessage(PlaygroundMessage.CreateFigure);
                     _state |= InternalState.Started;
                 }
@@ -176,6 +172,9 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         private void FinalizePlayground()
         {
+            //Remove current figures
+            _figureController.Remove();
+            //Search for filled lines
             List<int> lines = new List<int>();
             for (int y = 0; y < Model.Height; y++)
             {
@@ -185,6 +184,7 @@ namespace BrickGame.Scripts.Playground
             if (lines.Count == 0)
             {
                 SendMessage(PlaygroundMessage.CreateFigure);
+                enabled = true;//Start updating
                 return;
             }
             //Full lines exist, need to remove these lines and create a new figure.
@@ -200,8 +200,6 @@ namespace BrickGame.Scripts.Playground
             //Update score and level speed
             _scoreModel.AddLines(lines.Count);
             _speed = Rules.GetSpeed( _scoreModel.Level);
-            //Stop updating and wait for callback from the view.
-            enabled = false;
             BroadcastNofitication(GameNotification.ScoreUpdated);
             //TODO TASK: Save score to cahce
         }
@@ -215,7 +213,7 @@ namespace BrickGame.Scripts.Playground
         {
             _view.EndOfBlinking -= RemoveCells;
             SendMessage(PlaygroundMessage.CreateFigure);
-            enabled = true;
+            enabled = true;//Start updating
         }
 
     }

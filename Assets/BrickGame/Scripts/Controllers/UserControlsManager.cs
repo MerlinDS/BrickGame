@@ -31,7 +31,7 @@ namespace BrickGame.Scripts.Controllers
 
         private float _hTimer;
         private float _vTimer;
-        private List<IFigureController> _controllers;
+        private List<IFigureController> _controller;
 
         private Vector2 _began;
 
@@ -47,7 +47,7 @@ namespace BrickGame.Scripts.Controllers
         private void Awake()
         {
             _began = new Vector2();
-            _controllers = new List<IFigureController>();
+            _controller = new List<IFigureController>();
             _input = Context.GetActor<IInputAdapter>();
             Context.AddListener(GameNotification.Start, GameNotificationHandler);
             Context.AddListener(GameNotification.FigureChanged, GameNotificationHandler);
@@ -60,7 +60,7 @@ namespace BrickGame.Scripts.Controllers
         {
             Context.RemoveListener(GameNotification.Start, GameNotificationHandler);
             Context.RemoveListener(GameNotification.FigureChanged, GameNotificationHandler);
-            _controllers.Clear();
+            _controller.Clear();
         }
 
         /// <summary>
@@ -68,15 +68,11 @@ namespace BrickGame.Scripts.Controllers
         /// </summary>
         private void RefreshControllers()
         {
-            _controllers.Clear();
-            GameObject[] playgrounds = GameObject.FindGameObjectsWithTag(SRTags.Playground);
+            _controller.Clear();
+            GameObject[] playgrounds = GameObject.FindGameObjectsWithTag(SRTags.Player);
             foreach (GameObject playground in playgrounds)
-            {
-                var figureControllers = playground.GetComponents<IFigureController>();
-                foreach (IFigureController controller in figureControllers)
-                    _controllers.Add(controller);
-            }
-            Debug.LogFormat("Refreshed {0} controllers", _controllers.Count);
+                _controller.Add(playground.GetComponent<IFigureController>());
+            Debug.LogFormat("Refreshed {0} controllers", _controller.Count);
         }
 
         /// <summary>
@@ -134,9 +130,9 @@ namespace BrickGame.Scripts.Controllers
         /// </summary>
         private void Turn()
         {
-            int n = _controllers.Count;
+            int n = _controller.Count;
             for (int i = 0; i < n; i++)
-                _controllers[i].Turn();
+                _controller[i].Turn();
         }
 
         /// <summary>
@@ -152,9 +148,9 @@ namespace BrickGame.Scripts.Controllers
             }
             for (var j = 0; j < count; j++)
             {
-                int n = _controllers.Count;
+                int n = _controller.Count;
                 for (int i = 0; i < n; i++)
-                    _controllers[i].MoveDown();
+                    _controller[i].MoveDown();
             }
 
         }
@@ -168,11 +164,11 @@ namespace BrickGame.Scripts.Controllers
             if ((_hTimer += Time.deltaTime) < HorCooldown) return;
             _hTimer = 0;
 
-            int n = _controllers.Count;
+            int n = _controller.Count;
             for (int i = 0; i < n; i++)
             {
-                if (h < 0) _controllers[i].MoveLeft();
-                else _controllers[i].MoveRight();
+                if (h < 0) _controller[i].MoveLeft();
+                else _controller[i].MoveRight();
             }
         }
     }

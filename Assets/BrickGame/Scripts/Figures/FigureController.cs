@@ -14,6 +14,7 @@ namespace BrickGame.Scripts.Figures
     /// FigureController - concrete figure controller.
     /// Provide controls for controlling figure matrix and position of the figure on playground.
     /// </summary>
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(PlaygroundController))]
     public class FigureController : AbstractFigureController
     {

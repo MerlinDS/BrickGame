@@ -18,8 +18,13 @@ namespace BrickGame.Scripts.Models
         [Tooltip("Level divider")]
         public int LevelDivider;
 
-        [Tooltip("Starting speed of the game")]
+        [Tooltip("Starting speed of the game, in seconds")]
+        [Range(0.1F, 4F)]
         public float StartingSpeed;
+
+        [Tooltip("Time gap before playground finalizing, in seconds")]
+        [Range(0.3F, 10F)]
+        public float FinalizingGap;
 
         [Tooltip("Score by deleted lines")]
         public int[] Score;
