@@ -20,6 +20,25 @@ namespace BrickGame.Scripts.Playground
     [RequireComponent(typeof(PlaygroundBehaviour))]
     public class PlaygroundController : GameBehaviour
     {
+        /// <summary>
+        /// Enum of internal controller's states
+        /// </summary>
+        [Flags]
+        private enum InternalState
+        {
+            /// <summary>
+            /// Controller was initialized
+            /// </summary>
+            Initialized = 0x1,
+            /// <summary>
+            /// Game was started
+            /// </summary>
+            Started = 0x2,
+            /// <summary>
+            /// Game on pause
+            /// </summary>
+            OnPause = 0x4
+        }
         //================================       Public Setup       =================================
         [Tooltip("Width of playground matrix, count of collumnts")]
         public int Width = 10;//Default by classic rules
@@ -34,6 +53,7 @@ namespace BrickGame.Scripts.Playground
         public PlaygroundModel Model { get; private set; }
         //================================    Systems properties    =================================
         private bool _started;
+        private InternalState _state;
         private float _speed = 1F;
         private float _timer;
         private ScoreModel _scoreModel;
@@ -49,6 +69,7 @@ namespace BrickGame.Scripts.Playground
             Model = new PlaygroundModel(Width, Height);
             _view = GetComponent<PlaygroundBehaviour>();
             _view.Rebuild(Model);
+            _state = InternalState.Initialized;
             enabled = false;
         }
         //================================ Private|Protected methods ================================
@@ -58,6 +79,7 @@ namespace BrickGame.Scripts.Playground
         private void Awake()
         {
             Context.AddListener(GameNotification.Start, GameNotificationHandler);
+            Context.AddListener(GameNotification.EndOfGame, GameNotificationHandler);
             _scoreModel = Context.GetActor<ScoreModel>();
             _scoreModel.SetRules(Rules);
         }
@@ -68,6 +90,7 @@ namespace BrickGame.Scripts.Playground
         private void OnDestroy()
         {
             Context.RemoveListener(GameNotification.Start, GameNotificationHandler);
+            Context.RemoveListener(GameNotification.EndOfGame, GameNotificationHandler);
         }
 
         /// <summary>
@@ -103,9 +126,8 @@ namespace BrickGame.Scripts.Playground
                         */
                         figureController.Remove();
                         Debug.Log("Game was ended with score: " + _scoreModel.Score);
-                        BroadcastNofitication(GameNotification.EndOfGame);
                         //TODO TASK: Execute end of the game animation
-                        _started = enabled = false;
+                        BroadcastNofitication(GameNotification.EndOfGame);
                     }
                 }
             }
@@ -119,7 +141,7 @@ namespace BrickGame.Scripts.Playground
         {
             if (notification == GameNotification.Start)
             {
-                if (!_started)
+                if ((_state & InternalState.Started) != InternalState.Started)
                 {
                     Debug.Log("Start new game on " + gameObject.name);
                     Model.Reset();
@@ -127,15 +149,26 @@ namespace BrickGame.Scripts.Playground
                     _speed = Rules.StartingSpeed;
                     _figureControllers = GetComponents<IFigureController>();
                     SendMessage(PlaygroundMessage.CreateFigure);
-                    _started = enabled = true;
+                    _state |= InternalState.Started;
                 }
                 else
                 {
-                    //Pause | Resume the game
+                    //Change pause state
+                    if ((_state & InternalState.OnPause) == InternalState.OnPause)
+                        _state ^= InternalState.OnPause;
+                    else
+                        _state |= InternalState.OnPause;
                     //TODO TASK: Save playground to cache
-                    enabled = !enabled;
                 }
             }
+            else if (notification == GameNotification.EndOfGame)
+            {
+                //Remove started and pause flags
+                _state = InternalState.Initialized;
+            }
+            //Change global state of the component
+            enabled = (_state & InternalState.Started) == InternalState.Started;
+            if (enabled) enabled = (_state & InternalState.OnPause) != InternalState.OnPause;
         }
 
         /// <summary>
