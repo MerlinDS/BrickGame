@@ -72,7 +72,11 @@ namespace BrickGame.Scripts.Figures
             }
             Figure = matrix;
             //If vigure can't be turned revert changes
-            if (ValidateFigure())return true;
+            if (ValidateFigure())
+            {
+                BroadcastNofitication(GameNotification.FigureTurned);
+                return true;
+            }
             _x = tempX;
             _y = tempY;
             Figure = temp;
@@ -180,7 +184,11 @@ namespace BrickGame.Scripts.Figures
         {
             _x += xShift;
             _y += yShift;
-            if (ValidateFigure()) return true;
+            if (ValidateFigure())
+            {
+                BroadcastNofitication(GameNotification.FigureMoved);
+                return true;
+            }
             _x -= xShift;
             _y -= yShift;
             return false;

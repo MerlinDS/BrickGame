@@ -25,6 +25,8 @@ namespace BrickGame.Scripts.UI
         protected override void OnClickHandler()
         {
             Debug.Log("Change sound mode");
+            BroadcastNofitication(GameNotification.MuteSound);
+            //TODO: Change icon
         }
     }
 }

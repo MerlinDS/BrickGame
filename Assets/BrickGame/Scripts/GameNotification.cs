@@ -26,5 +26,17 @@ namespace BrickGame.Scripts
         /// A new figure was added to playground. (Old one was destroyed)
         /// </summary>
         public const string FigureChanged = "GameNotification::FigureChanged";
+        /// <summary>
+        /// Mute or unmute sound
+        /// </summary>
+        public const string MuteSound = "GameNotification::MuteSound";
+        /// <summary>
+        /// Figure was turned
+        /// </summary>
+        public const string FigureTurned = "GameNotification::FigureTurned";
+        /// <summary>
+        /// Figure was turned
+        /// </summary>
+        public const string FigureMoved = "GameNotification::FigureMoved";
     }
 }
