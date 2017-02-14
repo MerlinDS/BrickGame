@@ -13,7 +13,9 @@ using UnityEngine;
 namespace BrickGame.Scripts.Playground
 {
     /// <summary>
-    /// PlaygroundController - main playground controller, contains main setups and links
+    /// PlaygroundController - main playground controller, contains main setups and links.
+    /// Moving figures to down edge.
+    /// Finalizing playground on end of figures movement.
     /// </summary>
     [RequireComponent(typeof(PlaygroundBehaviour))]
     public class PlaygroundController : GameBehaviour
@@ -39,7 +41,7 @@ namespace BrickGame.Scripts.Playground
         private IFigureController[] _figureControllers;
         //================================      Public methods      =================================
         /// <summary>
-        /// Inintialize controllers and rebuild playground if needs
+        /// Inintialize controllers and rebuild playground if it needed
         /// </summary>
         [ExecuteInEditMode]
         public void Start()
@@ -51,7 +53,7 @@ namespace BrickGame.Scripts.Playground
         }
         //================================ Private|Protected methods ================================
         /// <summary>
-        /// Preinitialize controller
+        /// Preinitialize controller and add listeners to context notifications
         /// </summary>
         private void Awake()
         {
@@ -61,7 +63,7 @@ namespace BrickGame.Scripts.Playground
         }
 
         /// <summary>
-        /// Remove listners and links
+        /// Remove context listners
         /// </summary>
         private void OnDestroy()
         {
@@ -69,7 +71,7 @@ namespace BrickGame.Scripts.Playground
         }
 
         /// <summary>
-        /// Move active figure down
+        /// Move active figure to down edge
         /// </summary>
         private void LateUpdate()
         {
@@ -84,15 +86,25 @@ namespace BrickGame.Scripts.Playground
                 {
                     if (!figureController.OutOfBounds)
                     {
-                        //Figure can't be moved down, need to finalize playground
+                        /*
+                            End of the turn.
+                            Figure can't be moved feuthur.
+                            Need to finalize playground.
+                        */
                         figureController.Remove();
+                        //TODO TASK: Add time gap
                         FinalizePlayground();
                     }
                     else
                     {
+                        /*
+                            One of the figures is upper than top edge.
+                            The game is over.
+                        */
                         figureController.Remove();
-                        Debug.Log("End of the game with score: " + _scoreModel.Score);
+                        Debug.Log("Game was ended with score: " + _scoreModel.Score);
                         BroadcastNofitication(GameNotification.EndOfGame);
+                        //TODO TASK: Execute end of the game animation
                         _started = enabled = false;
                     }
                 }
@@ -119,14 +131,15 @@ namespace BrickGame.Scripts.Playground
                 }
                 else
                 {
-                    //Pause game
+                    //Pause | Resume the game
+                    //TODO TASK: Save playground to cache
                     enabled = !enabled;
                 }
             }
         }
 
         /// <summary>
-        /// Finalize playground: Check lines fro fullness, check game for ending
+        /// Finalize playground: Check lines for fullness, check game for ending
         /// </summary>
         private void FinalizePlayground()
         {
@@ -157,6 +170,7 @@ namespace BrickGame.Scripts.Playground
             //Stop updating and wait for callback from the view.
             enabled = false;
             BroadcastNofitication(GameNotification.ScoreUpdated);
+            //TODO TASK: Save score to cahce
         }
 
         /// <summary>

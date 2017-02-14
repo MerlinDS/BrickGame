@@ -29,6 +29,7 @@ namespace BrickGame.Scripts
             MapInstance(adapter, typeof(IInputAdapter));
             //Add score model to context
             MapInstance<ScoreModel>();
+            //TODO TASK: Add cash model and Game cashe update command
         }
     }
 }
