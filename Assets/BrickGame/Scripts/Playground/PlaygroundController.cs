@@ -147,7 +147,7 @@ namespace BrickGame.Scripts.Playground
                 {
                     Debug.Log("Start new game on " + gameObject.name);
                     Model.Reset();
-                    _scoreModel.Reset();
+                    _scoreModel.Reset(Rules.name);
                     _speed = Rules.StartingSpeed;
                     _figureController = GetComponent<IFigureController>();
                     SendMessage(PlaygroundMessage.CreateFigure);

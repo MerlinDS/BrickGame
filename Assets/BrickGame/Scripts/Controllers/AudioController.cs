@@ -20,6 +20,12 @@ namespace BrickGame.Scripts.Controllers
         [Tooltip("Delete lines sound")] public AudioClip Delete;
         [Tooltip("Turn figure sound")] public AudioClip Turn;
 
+        /// <inheritdoc />
+        public bool Muted
+        {
+            get { return _mainSource.mute; }
+        }
+
         //================================    Systems properties    =================================
         private AudioSource _mainSource;
 

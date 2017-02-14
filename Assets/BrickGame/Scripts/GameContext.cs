@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/08/2017 13:12</date>
 
+using BrickGame.Scripts.Controllers.Commands;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Utils.Input;
 using MiniMoca;
@@ -29,7 +30,12 @@ namespace BrickGame.Scripts
             MapInstance(adapter, typeof(IInputAdapter));
             //Add score model to context
             MapInstance<ScoreModel>();
-            //TODO TASK: Add cash model and Game cashe update command
+            MapInstance<CacheModel>();
+            //Add commands
+            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.Start);
+            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound);
+            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.EndOfGame);
+            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);
         }
     }
 }
