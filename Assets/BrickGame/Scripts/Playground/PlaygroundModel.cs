@@ -13,6 +13,7 @@ namespace BrickGame.Scripts.Playground
     {
         //================================       Public Setup       =================================
         public bool ViewUp2date;
+        public bool Restored;
         /// <summary>
         /// Width of the playground
         /// </summary>
@@ -50,6 +51,15 @@ namespace BrickGame.Scripts.Playground
         {
             get { return _matrix[index]; }
         }
+
+        /// <summary>
+        /// Get copy of playground matrix
+        /// </summary>
+        public bool[] Matrix
+        {
+            get { return _matrix; }
+        }
+
         //================================    Systems properties    =================================
         /// <summary>
         /// Playground matrix
@@ -70,6 +80,7 @@ namespace BrickGame.Scripts.Playground
 
         public PlaygroundModel(int width, int height, bool[] matrix)
         {
+            Restored = true;
             Width = width;
             Height = height;
             _matrix = matrix;
@@ -82,7 +93,7 @@ namespace BrickGame.Scripts.Playground
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
-                    result += this[x, y] + ",";
+                    result += (this[x, y] ? 1 : 0)  + ",";
                 result = result.Remove(result.Length - 1) + "\n";
             }
             return result;

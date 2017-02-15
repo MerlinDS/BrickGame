@@ -33,11 +33,7 @@ namespace BrickGame.Scripts.Playground
             /// <summary>
             /// Game on pause
             /// </summary>
-            OnPause = 0x4,
-            /// <summary>
-            /// Game was ended
-            /// </summary>
-            Ended = 0x8
+            OnPause = 0x4
         }
         //================================       Public Setup       =================================
         [Tooltip("Width of playground matrix, count of collumnts")]
@@ -49,6 +45,17 @@ namespace BrickGame.Scripts.Playground
         [Tooltip("Score rules of the current game")]
         public GameRules Rules;
 
+        /// <summary>
+        /// Get copy of playground matrix
+        /// </summary>
+        public bool[] Matrix
+        {
+            get
+            {
+                return Model == null ? new bool[0] : Model.Matrix;
+            }
+        }
+
         //================================    Systems properties    =================================
         private InternalState _state;
 
@@ -57,6 +64,7 @@ namespace BrickGame.Scripts.Playground
         private int _score;
 
         protected float Speed { get; private set; }
+
         protected PlaygroundModel Model { get; private set; }
         //================================      Public methods      =================================
 
@@ -73,7 +81,6 @@ namespace BrickGame.Scripts.Playground
             Context.AddListener(PlaygroundNotification.Pause, NotificationHandler);
             Context.AddListener(PlaygroundNotification.End, NotificationHandler);
             _state = InternalState.Initialized;
-            BroadcastNofitication(PlaygroundNotification.Restore, new SessionDataProvider(name, Rules));
         }
 
         /// <summary>
@@ -117,7 +124,7 @@ namespace BrickGame.Scripts.Playground
                 return;
             }
             Debug.LogFormat("Game started on {0}", name);
-            Speed = Rules.StartingSpeed;
+            Speed = Rules.GetSpeed(Model.RemovedLines);
             _state |= InternalState.Started;
             //Create first figure
             SendMessage(PlaygroundMessage.CreateFigure);

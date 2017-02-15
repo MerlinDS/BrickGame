@@ -12,7 +12,6 @@ namespace BrickGame.Scripts.Controllers.Commands
 {
     /// <summary>
     /// StartGameCommand - execute starting of the game mode.
-    /// This is clean start without cache restoring
     /// </summary>
     public class StartGameCommand : GameCommand
     {
@@ -30,15 +29,33 @@ namespace BrickGame.Scripts.Controllers.Commands
                 Debug.LogError("Playground controllers was not found!");
                 return;
             }
-            //
+            ScoreModel scoreModel = Context.GetActor<ScoreModel>();
+            RestoreModel restoreModel = Context.GetActor<RestoreModel>();
             foreach (PlaygroundController controller in Playgrounds)
             {
                 string name = controller.name;
                 GameRules rules = controller.Rules;
-                PlaygroundModel model = new PlaygroundModel(controller.Width, controller.Height);
+
+                PlaygroundModel model;
+                ScoreDataProvider scoreDataProvider = null;
+                if (restoreModel.Has(name))
+                {
+                    //Restored start
+                    RestoreModel.RestoredData data = restoreModel.Pop(controller.name);
+                    //TODO: Restore figure
+                    model = new PlaygroundModel(controller.Width, controller.Height, data.Matrix);
+                    scoreModel.UpdateSocre(controller.name, data.Score, data.Level, data.Lines);
+                }
+                else
+                {
+                    //Clean start
+                    model = new PlaygroundModel(controller.Width, controller.Height);
+                    scoreDataProvider = new ScoreDataProvider(rules, name, 0);
+                }
+
                 //TODO: Restore playground from cashe
                 controller.SendMessage(PlaygroundMessage.UpdateModel, model, SendMessageOptions.DontRequireReceiver);
-                Context.Notify(GameNotification.ScoreUpdated, new ScoreDataProvider(rules, name, 0));
+                Context.Notify(GameNotification.ScoreUpdated, scoreDataProvider);
             }
         }
 

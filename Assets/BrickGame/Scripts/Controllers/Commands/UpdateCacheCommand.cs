@@ -4,13 +4,10 @@
 // <author>Andrew Salomatin</author>
 // <date>02/14/2017 20:17</date>
 
-using System.Text;
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playground;
 using BrickGame.Scripts.Utils;
-using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 namespace BrickGame.Scripts.Controllers.Commands
 {
@@ -49,26 +46,25 @@ namespace BrickGame.Scripts.Controllers.Commands
                 CleanCache(cacheModel);
                 return;
             }
-            Debug.LogWarning("Not yet implemented!");
-            /*
-            //Save current state of the playground for current mode
-            StringBuilder sb = new StringBuilder();
-            //sb.Append("");//TODO: Add header
-            ConvertToString(sb);
-            cacheModel.UpdatePlayground(scoreModel.ModelName, sb.ToString());*/
+            SaveMatrices(cacheModel);
 
         }
         //================================ Private|Protected methods ================================
-        private void ConvertToString(StringBuilder sb)
+        /// <summary>
+        /// Save playgrounds matrices to cache for current session
+        /// </summary>
+        /// <param name="cacheModel"></param>
+        private void SaveMatrices(CacheModel cacheModel)
         {
-            /*PlaygroundController[] _controllers = Object.FindObjectsOfType<PlaygroundController>();
-            int i, n = _controllers.Length;
+            int i, n = Playgrounds.Length;
             for (i = 0; i < n; i++)
             {
-                PlaygroundModel model = _controllers[i].Model;
-                FigureController controller = _controllers[i].GetComponent<FigureController>();
-                sb.Append(DataConverter.ToString(model, controller.FigureIndexes()));
-            }*/
+                PlaygroundController pc = Playgrounds[i];
+                bool[] matrix = pc.Matrix;
+                int[] figure = pc.GetComponent<FigureController>().FigureIndexes();
+                string compressed = DataConverter.ToString(matrix, figure);
+                cacheModel.UpdatePlayground(pc.Rules.name, pc.name, compressed);
+            }
         }
 
         /// <summary>
@@ -88,6 +84,10 @@ namespace BrickGame.Scripts.Controllers.Commands
             }
         }
 
+        /// <summary>
+        /// Clean cache from playground
+        /// </summary>
+        /// <param name="cacheModel"></param>
         private void CleanCache(CacheModel cacheModel)
         {
             int i, n = Playgrounds.Length;
@@ -96,6 +96,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                 string name = Playgrounds[i].name;
                 GameRules rules = Playgrounds[i].Rules;
                 cacheModel.UpdateScore(rules.name, name, 0, 0);
+                cacheModel.CleanPlayground(rules.name, name);
             }
         }
 

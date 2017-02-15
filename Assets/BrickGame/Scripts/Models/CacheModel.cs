@@ -5,14 +5,14 @@
 // <date>02/14/2017 20:14</date>
 
 using System.Text;
+using BrickGame.Scripts.Playground;
 using MiniMoca;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 namespace BrickGame.Scripts.Models
 {
     /// <summary>
-    /// CacheModel
+    /// CacheModel - proxy access to the application's cache
     /// </summary>
     public class CacheModel : IMocaActor
     {
@@ -97,34 +97,32 @@ namespace BrickGame.Scripts.Models
         /// Clean cache of the playground for spesified mode in cache.
         /// </summary>
         /// <param name="mode">Game mode of the playground</param>
-        public void CleanPlayground(string mode)
+        /// <param name="session"></param>
+        public void CleanPlayground(string mode, string session)
         {
-            PlayerPrefs.DeleteKey(mode + ModeField + PlaygroundField);
+            PlayerPrefs.DeleteKey(mode + ModeField + session + PlaygroundField);
         }
+
         /// <summary>
         /// Update playground cache for speified mode
         /// </summary>
         /// <param name="mode">Name of the mode</param>
+        /// <param name="session"></param>
         /// <param name="data">Playground cache</param>
-        public void UpdatePlayground(string mode, string data)
+        public void UpdatePlayground(string mode, string session, string data)
         {
-            PlayerPrefs.SetString(mode + ModeField + PlaygroundField, data);
-            Debug.Log(data);
+            PlayerPrefs.SetString(mode + ModeField + session + PlaygroundField, data);
         }
 
         /// <summary>
         /// Get playground cache conpressed in string
         /// </summary>
-        /// <param name="mode">Name of the mode</param>
+        /// <param name="mode">Game mode of the playground</param>
+        /// <param name="session"></param>
         /// <returns>Playground cache</returns>
-        public string GetPlaygroundCache(string mode)
+        public string GetPlaygroundCache(string mode, string session)
         {
-            return PlayerPrefs.GetString(mode + ModeField + PlaygroundField);
-        }
-
-        public bool HasSession(string mode, string session)
-        {
-            return PlayerPrefs.GetInt(mode + ModeField + '_' + session + LinesField) > 0;
+            return PlayerPrefs.GetString(mode + ModeField + session + PlaygroundField);
         }
         //================================ Private|Protected methods ================================
     }

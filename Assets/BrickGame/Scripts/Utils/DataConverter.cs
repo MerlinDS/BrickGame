@@ -7,10 +7,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Text;
-using BrickGame.Scripts.Playground;
-using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace BrickGame.Scripts.Utils
 {
@@ -27,20 +26,32 @@ namespace BrickGame.Scripts.Utils
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
+        public static string ToString(bool[]data, int[] figure)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(figure.Length.ToHex());//Save count of cell in figure to header
+            //Remove figure from playground matrix and save them to header
+            for (int j = 0; j < figure.Length; j++)
+            {
+                sb.Append(figure[j].ToHex());
+                data[figure[j]] = false;
+            }
+            return sb.Append(ToString(data)).ToString();
+        }
         /// <summary>
         /// Convert a playground model to compressed string
         /// </summary>
         /// <param name="data">Playground model</param>
         /// <returns>Compressed string</returns>
         /// <exception cref="ArgumentNullException">data can't be null</exception>
-        public static string ToString(PlaygroundModel data, int[] exclusions)
+        public static string ToString(bool[] data)
         {
             if(data == null)
                 throw new ArgumentNullException("data");
 
             StringBuilder sb = new StringBuilder();
             BitArray bits = null;
-            int i, n = data.Height * data.Width;
+            int i, n = data.Length;
             for (i = 0; i < n; i++)
             {
                 int index = i % ChunkSize;
@@ -51,20 +62,32 @@ namespace BrickGame.Scripts.Utils
                 }
 
                 // ReSharper disable once PossibleNullReferenceException
-                if (!exclusions.Contains(i))
-                {
-                    bits[index] = data[i];
-                }
-                else
-                {
-                    Debug.Log(i + " not in cache: " + data[i]);
-                }
+                bits[index] = data[i];
             }
 
             if (bits != null && bits.Length > 0)
                 sb.Append(ToString(bits));
 
             return sb.Append(Separator).ToString();
+        }
+
+        /// <summary>
+        /// Comvert compressed string to playground matrix
+        /// </summary>
+        /// <param name="data">Compresed string</param>
+        /// <param name="matrix">Playground matrix</param>
+        /// <param name="figure">Active figure cells in playground</param>
+        public static void GetMatrix(string data, out bool[] matrix, out int[] figure)
+        {
+            const int lp = 2;
+            //Read header
+            int length = data.Substring(0, lp).FormHex();
+            //Read figure cells
+            figure = new int[length];
+            for (int i = 0; i < length; i++)
+                figure[i] = data.Substring(lp + i * lp, lp).FormHex();
+            //Read matrix
+            matrix = GetMatrix(data.Substring(lp + lp * length));
         }
 
         /// <summary>
@@ -144,6 +167,8 @@ namespace BrickGame.Scripts.Utils
             byte[] bytes = new byte[BytesLength];
             bits.CopyTo(bytes, 0);
             return BitConverter.ToString(bytes).Remove(2, 1);//Removal "-" from result
-}
+        }
+
+
     }
 }

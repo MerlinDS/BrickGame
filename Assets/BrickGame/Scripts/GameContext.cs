@@ -29,8 +29,9 @@ namespace BrickGame.Scripts
             Debug.Log("Input adapter was intialized: " + adapter);
             MapInstance(adapter, typeof(IInputAdapter));
             //Add score model to context
-            MapInstance<ScoreModel>();
             MapInstance<CacheModel>();
+            MapInstance<RestoreModel>();
+            MapInstance<ScoreModel>();
             //Map commands
             CommandMap.MapCommand<RestoreGameCommand>(PlaygroundNotification.Restore);
             CommandMap.MapCommand<UpdateScoreCommand>(GameNotification.ScoreUpdated);

@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
 {
+    //TODO: Refactor this shity class
     /// <summary>
     /// FigureController - concrete figure controller.
     /// Provide controls for controlling figure matrix and position of the figure on playground.
@@ -80,6 +81,7 @@ namespace BrickGame.Scripts.Figures
             //If vigure can't be turned revert changes
             if (ValidateFigure())
             {
+                Debug.Log("Turn");
                 BroadcastNofitication(FigureNotification.Turned);
                 return true;
             }
@@ -136,13 +138,27 @@ namespace BrickGame.Scripts.Figures
             int width = Figure.GetLength(0);
             int height = Figure.GetLength(1);
             List<int> result = new List<int>();
+            /**
+                Figure cell could be not updated in playground matrix.
+                Check previous figure cells first,
+                and if previous cell already removed then check new figure cells.
+            */
+            //Before update
+            if (_previous.Count > 0)
+            {
+                for (int i = 0; i < _previous.Count; i+=2)
+                {
+                    result.Add(_previous[i] + _previous[i + 1] * _model.Width);
+                }
+                return result.ToArray();
+            }
+            //After update
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     if (!Figure[x, y]) continue;
-                    result.Add((_x + x) + (_y + y) * _model.Width);
-                    Debug.Log(result[result.Count - 1]);
+                    result.Add(_x + x + (_y + y) * _model.Width);
                 }
             }
             return result.ToArray();

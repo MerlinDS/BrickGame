@@ -99,7 +99,7 @@ namespace BrickGame.Scripts.Controllers
             {
                 case TouchPhase.Ended:
 //                    Debug.Log("Ended" + gesture);
-                    if (gesture == InputGesture.Tap) Turn();
+                    if (gesture == InputGesture.Tap)Turn();
                     else if (gesture == InputGesture.Swipe) MoveDown(20);
                     _began = Vector2.zero;
                     break;

@@ -5,6 +5,7 @@
 // <date>02/15/2017 17:15</date>
 
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Utils;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers.Commands
@@ -23,15 +24,30 @@ namespace BrickGame.Scripts.Controllers.Commands
         public override void Execute()
         {
             CacheModel cacheModel = Context.GetActor<CacheModel>();
-            if (!cacheModel.HasSession(Data.Rules.name, Data.Name)) return; //Nothing to restore
+            string compressed = cacheModel.GetPlaygroundCache(Data.Rules.name, Data.Name);
+            if (compressed.Length == 0) return; //Nothing to restore
+            Debug.Log(compressed);
+            //Restore playground from cache
+            bool[] matrix;
+            int[] figure;
+            DataConverter.GetMatrix(compressed, out matrix, out figure);
+            //Restore score
             int score, lines;
             cacheModel.GetScore(Data.Rules.name, Data.Name, out score, out lines);
             int level = Data.Rules.GetLevelByLines(lines);
             Debug.LogFormat("Restore game {0} for {1}: score = {2}, lines = {3}, level = {4}",
                 Data.Rules.name, Data.Name, score, lines, level);
-            ScoreModel scoreModel = Context.GetActor<ScoreModel>();
-            scoreModel.UpdateSocre(Data.Name, score, level, lines);
-            Context.Notify(GameNotification.ScoreUpdated);
+            Context.GetActor<RestoreModel>()
+                .Push(
+                    Data.Name, new RestoreModel.RestoredData
+                    {
+                        Level = level,
+                        Score = score,
+                        Lines = lines,
+                        Figure = figure,
+                        Matrix = matrix
+                    });
+            Context.Notify(PlaygroundNotification.Start);
         }
 
         //================================ Private|Protected methods ================================

@@ -38,6 +38,7 @@ namespace BrickGame.Scripts.Playground
             _view = GetComponent<PlaygroundBehaviour>();
             _figureController = GetComponent<FigureController>();
             if (Application.isPlaying)enabled = false;
+            BroadcastNofitication(PlaygroundNotification.Restore, new SessionDataProvider(name, Rules));
         }
         //================================ Private|Protected methods ================================
 
