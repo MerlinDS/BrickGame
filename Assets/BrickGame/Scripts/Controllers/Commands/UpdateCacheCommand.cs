@@ -16,7 +16,7 @@ namespace BrickGame.Scripts.Controllers.Commands
     /// <summary>
     /// UpdateCacheCommand - update cache of the game.
     /// <para>
-    ///     Executed on GameNotification.EndOfGame, GameNotification.MuteSound, GameNotification.ScoreUpdated
+    ///     Executed on GameNotification.End, GameNotification.MuteSound, GameNotification.ScoreUpdated
     /// </para>
     /// <para>
     ///     <see cref="GameNotification"/>
@@ -47,7 +47,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             cacheModel.UpdateModeScore(scoreModel.ModelName, scoreModel.Score, scoreModel.Lines);
 
             if (Notification == GameNotification.ScoreUpdated) return;//Just update score
-            if (Notification == GameNotification.EndOfGame)
+            if (Notification == PlaygroundNotification.End)
             {
                 //Clean playground cache
                 cacheModel.CleanPlayground(scoreModel.ModelName);

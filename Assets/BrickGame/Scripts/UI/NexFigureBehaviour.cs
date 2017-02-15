@@ -43,7 +43,7 @@ namespace BrickGame.Scripts.UI
             _offset.x *= -1;
             //
             _bricks = DrawBricks(Width, Height);
-            Context.AddListener(GameNotification.FigureChanged, GameNotificationHandler);
+            Context.AddListener(FigureNotification.Changed, GameNotificationHandler);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace BrickGame.Scripts.UI
         /// </summary>
         private void OnDestroy()
         {
-            Context.RemoveListener(GameNotification.FigureChanged, GameNotificationHandler);
+            Context.RemoveListener(FigureNotification.Changed, GameNotificationHandler);
         }
 
         /// <inheritdoc />

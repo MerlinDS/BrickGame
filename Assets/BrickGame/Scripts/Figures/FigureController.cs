@@ -74,7 +74,7 @@ namespace BrickGame.Scripts.Figures
             //If vigure can't be turned revert changes
             if (ValidateFigure())
             {
-                BroadcastNofitication(GameNotification.FigureTurned);
+                BroadcastNofitication(FigureNotification.Turned);
                 return true;
             }
             _x = tempX;
@@ -160,7 +160,7 @@ namespace BrickGame.Scripts.Figures
             _model = _controller.Model;//Update model
             _x = (int)(SpawnCenter.x  - Figure.GetLength(0) * 0.5F);
             _y = (int)(SpawnCenter.y  -  Figure.GetLength(1) * 0.5F);
-            BroadcastNofitication(GameNotification.FigureChanged);
+            BroadcastNofitication(FigureNotification.Changed);
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace BrickGame.Scripts.Figures
             _y += yShift;
             if (ValidateFigure())
             {
-                BroadcastNofitication(GameNotification.FigureMoved);
+                BroadcastNofitication(FigureNotification.Moved);
                 return true;
             }
             _x -= xShift;

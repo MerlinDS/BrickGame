@@ -49,8 +49,8 @@ namespace BrickGame.Scripts.Controllers
             _began = new Vector2();
             _controller = new List<IFigureController>();
             _input = Context.GetActor<IInputAdapter>();
-            Context.AddListener(GameNotification.Start, GameNotificationHandler);
-            Context.AddListener(GameNotification.FigureChanged, GameNotificationHandler);
+            Context.AddListener(PlaygroundNotification.Start, GameNotificationHandler);
+            Context.AddListener(FigureNotification.Changed, GameNotificationHandler);
         }
 
         /// <summary>
@@ -58,8 +58,8 @@ namespace BrickGame.Scripts.Controllers
         /// </summary>
         private void OnDestroy()
         {
-            Context.RemoveListener(GameNotification.Start, GameNotificationHandler);
-            Context.RemoveListener(GameNotification.FigureChanged, GameNotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.Start, GameNotificationHandler);
+            Context.RemoveListener(FigureNotification.Changed, GameNotificationHandler);
             _controller.Clear();
         }
 
@@ -81,9 +81,9 @@ namespace BrickGame.Scripts.Controllers
         /// <param name="notification"></param>
         private void GameNotificationHandler(string notification)
         {
-            if (notification == GameNotification.Start)
+            if (notification == PlaygroundNotification.Start)
                 RefreshControllers();
-            else if (notification == GameNotification.FigureChanged)
+            else if (notification == FigureNotification.Changed)
                 _input.Reset();
         }
 

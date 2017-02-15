@@ -50,18 +50,18 @@ namespace BrickGame.Scripts.Controllers
         {
             _mainSource = GetComponent<AudioSource>();
             Context.AddListener(GameNotification.ScoreUpdated, GameNotificationHandler);
-            Context.AddListener(GameNotification.EndOfGame, GameNotificationHandler);
-            Context.AddListener(GameNotification.FigureTurned, GameNotificationHandler);
-            Context.AddListener(GameNotification.FigureMoved, GameNotificationHandler);
+            Context.AddListener(PlaygroundNotification.End, GameNotificationHandler);
+            Context.AddListener(FigureNotification.Turned, GameNotificationHandler);
+            Context.AddListener(FigureNotification.Moved, GameNotificationHandler);
             Context.AddListener(GameNotification.MuteSound, GameNotificationHandler);
         }
 
         private void OnDestroy()
         {
             Context.RemoveListener(GameNotification.ScoreUpdated, GameNotificationHandler);
-            Context.RemoveListener(GameNotification.EndOfGame, GameNotificationHandler);
-            Context.RemoveListener(GameNotification.FigureTurned, GameNotificationHandler);
-            Context.RemoveListener(GameNotification.FigureMoved, GameNotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.End, GameNotificationHandler);
+            Context.RemoveListener(FigureNotification.Turned, GameNotificationHandler);
+            Context.RemoveListener(FigureNotification.Moved, GameNotificationHandler);
             Context.RemoveListener(GameNotification.MuteSound, GameNotificationHandler);
         }
 
@@ -75,14 +75,14 @@ namespace BrickGame.Scripts.Controllers
                 case GameNotification.ScoreUpdated:
                     PlaySfx(Delete);
                     break;
-                case GameNotification.EndOfGame:
+                case PlaygroundNotification.End:
                     PlaySfx(Lose);
                     break;
-                case GameNotification.FigureTurned:
-                case GameNotification.FigureMoved:
+                case FigureNotification.Turned:
+                case FigureNotification.Moved:
                     //avoiding doubling of a sound
                     if (_mainSource.clip == Turn && Time.time - _delay < 0.1F) return;
-                    PlaySfx(Turn, notification == GameNotification.FigureMoved ? 1.1F : 0.9F);
+                    PlaySfx(Turn, notification == FigureNotification.Moved ? 1.1F : 0.9F);
                     _delay = Time.time;
                     break;
             }

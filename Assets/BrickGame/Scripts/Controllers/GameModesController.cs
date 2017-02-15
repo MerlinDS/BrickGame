@@ -75,7 +75,7 @@ namespace BrickGame.Scripts.Controllers
         /// </summary>
         private void SendStartNotification()
         {
-            Context.Notify(GameNotification.Start);
+            Context.Notify(PlaygroundNotification.Start);
         }
 
     }

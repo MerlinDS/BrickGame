@@ -11,32 +11,47 @@ namespace BrickGame.Scripts
     public static class GameNotification
     {
         /// <summary>
+        /// Update current score of the game
+        /// </summary>
+        public const string ScoreUpdated = "GameNotification::ScoreUpdated";
+        /// <summary>
+        /// Mute or unmute sound
+        /// </summary>
+        public const string MuteSound = "GameNotification::MuteSound";
+    }
+
+    /// <summary>
+    /// Playground external notifications
+    /// </summary>
+    public static class PlaygroundNotification
+    {
+
+        /// <summary>
         /// Start new game
         /// </summary>
         public const string Start = "GameNotification::Start";
         /// <summary>
         /// The game that was previously started is ended.
         /// </summary>
-        public const string EndOfGame = "GameNotification::EndOfGame";
-        /// <summary>
-        /// Update current score of the game
-        /// </summary>
-        public const string ScoreUpdated = "GameNotification::ScoreUpdated";
+        public const string End = "GameNotification::End";
+    }
+
+    /// <summary>
+    /// Notifications of a figures managers
+    /// </summary>
+    public static class FigureNotification
+    {
         /// <summary>
         /// A new figure was added to playground. (Old one was destroyed)
         /// </summary>
-        public const string FigureChanged = "GameNotification::FigureChanged";
-        /// <summary>
-        /// Mute or unmute sound
-        /// </summary>
-        public const string MuteSound = "GameNotification::MuteSound";
+        public const string Changed = "FigureNotification::Changed";
         /// <summary>
         /// Figure was turned
         /// </summary>
-        public const string FigureTurned = "GameNotification::FigureTurned";
+        public const string Turned = "FigureNotification::Turned";
         /// <summary>
         /// Figure was turned
         /// </summary>
-        public const string FigureMoved = "GameNotification::FigureMoved";
+        public const string Moved = "FigureNotification::Moved";
     }
 }

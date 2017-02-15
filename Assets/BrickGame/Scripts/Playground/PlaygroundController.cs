@@ -93,8 +93,8 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         private void Awake()
         {
-            Context.AddListener(GameNotification.Start, GameNotificationHandler);
-            Context.AddListener(GameNotification.EndOfGame, GameNotificationHandler);
+            Context.AddListener(PlaygroundNotification.Start, GameNotificationHandler);
+            Context.AddListener(PlaygroundNotification.End, GameNotificationHandler);
             _scoreModel = Context.GetActor<ScoreModel>();
             _scoreModel.SetRules(Rules);
         }
@@ -104,8 +104,8 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         private void OnDestroy()
         {
-            Context.RemoveListener(GameNotification.Start, GameNotificationHandler);
-            Context.RemoveListener(GameNotification.EndOfGame, GameNotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.Start, GameNotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.End, GameNotificationHandler);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace BrickGame.Scripts.Playground
                     _figureController.Remove();
                     Debug.Log("Game was ended with score: " + _scoreModel.Score);
                     //TODO TASK: Execute end of the game animation
-                    BroadcastNofitication(GameNotification.EndOfGame);
+                    BroadcastNofitication(PlaygroundNotification.End);
                 }
                 return;
             }
@@ -154,7 +154,7 @@ namespace BrickGame.Scripts.Playground
         /// <param name="notification">Name of the notification</param>
         private void GameNotificationHandler(string notification)
         {
-            if (notification == GameNotification.Start)
+            if (notification == PlaygroundNotification.Start)
             {
                 if ((_state & InternalState.Started) != InternalState.Started)
                 {
@@ -174,7 +174,7 @@ namespace BrickGame.Scripts.Playground
                         _state |= InternalState.OnPause;
                 }
             }
-            else if (notification == GameNotification.EndOfGame)
+            else if (notification == PlaygroundNotification.End)
             {
                 //TODO: Add end animation
                 //Remove started and pause flags
