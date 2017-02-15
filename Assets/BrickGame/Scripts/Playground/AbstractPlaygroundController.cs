@@ -5,6 +5,7 @@
 // <date>02/15/2017 11:57</date>
 
 using System;
+using System.Collections.Generic;
 using BrickGame.Scripts.Models;
 using UnityEngine;
 
@@ -38,6 +39,7 @@ namespace BrickGame.Scripts.Playground
             /// </summary>
             Ended = 0x8
         }
+        //================================       Public Setup       =================================
         [Tooltip("Width of playground matrix, count of collumnts")]
         public int Width = 10;//Default by classic rules
 
@@ -47,15 +49,15 @@ namespace BrickGame.Scripts.Playground
         [Tooltip("Score rules of the current game")]
         public GameRules Rules;
 
-
-        /// <summary>
-        /// Link to Playground model
-        /// </summary>
-        public PlaygroundModel Model { get; private set; }
-        //================================       Public Setup       =================================
-
         //================================    Systems properties    =================================
         private InternalState _state;
+
+        private int _levels;
+
+        private int _score;
+
+        protected float Speed { get; private set; }
+        protected PlaygroundModel Model { get; private set; }
         //================================      Public methods      =================================
 
         /// <inheritdoc />
@@ -92,13 +94,13 @@ namespace BrickGame.Scripts.Playground
             switch (notification)
             {
                 case PlaygroundNotification.Start:
-                    StartGame();
+                    StartSession();
                     break;
                 case PlaygroundNotification.Pause:
-                    PauseGame();
+                    PauseSession();
                     break;
                 case PlaygroundNotification.End:
-                    EndGame();
+                    FinishSession();
                     break;
             }
             //Change global state of the component
@@ -106,7 +108,7 @@ namespace BrickGame.Scripts.Playground
             if (enabled) enabled = (_state & InternalState.OnPause) != InternalState.OnPause;
         }
 
-        private void StartGame()
+        private void StartSession()
         {
             if ((_state & InternalState.Started) == InternalState.Started)
             {
@@ -114,16 +116,18 @@ namespace BrickGame.Scripts.Playground
                 return;
             }
             Debug.LogFormat("Game started on {0}", gameObject.name);
-//            SendMessage(PlaygroundMessage.SetModel, new PlaygroundModel(Width, Height));
+            Speed = Rules.StartingSpeed;
             _state |= InternalState.Started;
             //Create first figure
+            BroadcastNofitication(GameNotification.ScoreUpdated,
+                new ScoreDataProvider(Rules, gameObject.name, 0));
             SendMessage(PlaygroundMessage.CreateFigure);
         }
 
         /// <summary>
-        /// Switch between pause and resume
+        /// Switch between pause and resume of session
         /// </summary>
-        private void PauseGame()
+        private void PauseSession()
         {
             if ((_state & InternalState.OnPause) == InternalState.OnPause)
                 _state ^= InternalState.OnPause;
@@ -132,16 +136,31 @@ namespace BrickGame.Scripts.Playground
         }
 
         /// <summary>
-        /// Clean playground from current game
+        /// Clean playground from current session
         /// </summary>
-        private void EndGame()
+        private void FinishSession()
         {
             Debug.Log("Game was ended.");
             //Remove started and pause flags
             _state = InternalState.Initialized;
-            Model.Reset();
         }
 
+        /// <summary>
+        /// Remove lines from playground
+        /// </summary>
+        /// <param name="lines"></param>
+        protected void RemoveLines(List<int> lines)
+        {
+            //Remove lines from playground
+            int count = lines.Count;
+            if (count <= 0) return;
+            foreach (int y in lines)Model.RemoveLine(y);
+            Model.MoveDown(lines[0] - 1, lines[lines.Count - 1]);
+            //Update speed by total count of removed lines
+            Speed = Rules.GetSpeed(Model.RemovedLines);
+            BroadcastNofitication(GameNotification.ScoreUpdated,
+                new ScoreDataProvider(Rules, gameObject.name, count));
+        }
 
     }
 }

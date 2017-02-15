@@ -9,9 +9,16 @@ using MiniMoca;
 namespace BrickGame.Scripts
 {
     /// <summary>
-    /// GameCommand - helper for game commands
+    /// GameCommand - helper for moka commands
     /// </summary>
     public abstract class GameCommand : MocaCommand<GameContext>
+    {
+
+    }
+    /// <summary>
+    /// GameCommand - helper for moka commands
+    /// </summary>
+    public abstract class GameCommand<T> : MocaCommand<GameContext, T> where T : DataProvider
     {
 
     }

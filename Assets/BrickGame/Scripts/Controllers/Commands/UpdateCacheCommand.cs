@@ -44,7 +44,8 @@ namespace BrickGame.Scripts.Controllers.Commands
 
             //Update score
             ScoreModel scoreModel = Context.GetActor<ScoreModel>();
-            cacheModel.UpdateModeScore(scoreModel.ModelName, scoreModel.Score, scoreModel.Lines);
+
+            /*cacheModel.UpdateModeScore(scoreModel.ModelName, scoreModel.Score, scoreModel.Lines);
 
             if (Notification == GameNotification.ScoreUpdated) return;//Just update score
             if (Notification == PlaygroundNotification.End)
@@ -58,20 +59,20 @@ namespace BrickGame.Scripts.Controllers.Commands
             StringBuilder sb = new StringBuilder();
             //sb.Append("");//TODO: Add header
             ConvertToString(sb);
-            cacheModel.UpdatePlayground(scoreModel.ModelName, sb.ToString());
+            cacheModel.UpdatePlayground(scoreModel.ModelName, sb.ToString());*/
 
         }
         //================================ Private|Protected methods ================================
         private void ConvertToString(StringBuilder sb)
         {
-            PlaygroundController[] playgrounds = Object.FindObjectsOfType<PlaygroundController>();
+            /*PlaygroundController[] playgrounds = Object.FindObjectsOfType<PlaygroundController>();
             int i, n = playgrounds.Length;
             for (i = 0; i < n; i++)
             {
                 PlaygroundModel model = playgrounds[i].Model;
                 FigureController controller = playgrounds[i].GetComponent<FigureController>();
                 sb.Append(DataConverter.ToString(model, controller.FigureIndexes()));
-            }
+            }*/
         }
 
     }

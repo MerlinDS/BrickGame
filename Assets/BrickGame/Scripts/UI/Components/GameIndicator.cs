@@ -6,6 +6,7 @@
 
 using System.Text;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Playground;
 using BrickGame.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,6 +21,7 @@ namespace BrickGame.Scripts.UI.Components
         //================================       Public Setup       =================================
         [Tooltip("Name of the value that needs to be indicated")] public ScoreModel.FieldName Value =
             ScoreModel.FieldName.Score;
+        [Tooltip("Instance of the playground controller")] public PlaygroundController Playground;
 
         [Tooltip("Count of digits in indicator")] public int CountOfDigits;
         [Tooltip("Default digid value")] public string EmptyDigit = "@";
@@ -65,7 +67,7 @@ namespace BrickGame.Scripts.UI.Components
                 return;
             }
             //Creating string for textifield
-            int value = _model[Value];
+            int value = Playground == null ? _model[Value] : _model[Value, Playground.name];
             int count = CountOfDigits - value.CountOfDigits();
             while (count-- > 0) _builder.Append(EmptyDigit);
             _builder.Append(value);

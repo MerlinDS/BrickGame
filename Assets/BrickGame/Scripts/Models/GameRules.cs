@@ -44,6 +44,16 @@ namespace BrickGame.Scripts.Models
             return Score[lines - 1];
         }
 
+        public int GetLevelByLines(int lines)
+        {
+            return 1 + (int) Math.Floor((float)lines / LevelDivider);
+        }
+
+        public float GetSpeedByLines(int lines)
+        {
+            return GetSpeed(GetLevelByLines(lines));
+        }
+
         public float GetSpeed(int level)
         {
             float speed = StartingSpeed - level * 0.1F;

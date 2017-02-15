@@ -10,7 +10,8 @@ using UnityEngine;
 namespace BrickGame.Scripts.Controllers.Commands
 {
     /// <summary>
-    /// StartGameCommand
+    /// StartGameCommand - execute starting of the game mode.
+    /// This command will create new model for playgrounds and tries to restore them from cache
     /// </summary>
     public class StartGameCommand : GameCommand
     {
@@ -22,8 +23,14 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <inheritdoc />
         public override void Execute()
         {
-            PlaygroundController[] findObjectsOfType = Object.FindObjectsOfType<PlaygroundController>();
-            foreach (PlaygroundController controller in findObjectsOfType)
+            PlaygroundController[] controllers = Object.FindObjectsOfType<PlaygroundController>();
+            if (controllers == null || controllers.Length == 0)
+            {
+                Debug.LogError("Playground controllers was not found!");
+                return;
+            }
+            //
+            foreach (PlaygroundController controller in controllers)
             {
                 PlaygroundModel model = new PlaygroundModel(controller.Width, controller.Height);
                 //TODO: Restore playground from cashe

@@ -4,7 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/09/2017 19:14</date>
 
-using System;
+using System.Collections.Generic;
 using MiniMoca;
 using UnityEngine;
 
@@ -15,8 +15,6 @@ namespace BrickGame.Scripts.Models
     /// </summary>
     public class ScoreModel : IMocaActor
     {
-
-        //================================       Public Setup       =================================
         /// <summary>
         /// Helper for GameIndicator
         /// </summary>
@@ -27,79 +25,84 @@ namespace BrickGame.Scripts.Models
             Level
         }
 
+        private struct ScoreHolder
+        {
+            public readonly int Level;
+            public readonly int Lines;
+            public readonly int Score;
+
+            /// <inheritdoc />
+            public ScoreHolder(int level, int lines, int score)
+            {
+                Level = level;
+                Lines = lines;
+                Score = score;
+            }
+        }
+
+        //================================       Public Setup       =================================
         /// <summary>
-        /// Get value by name of the filed in model
+        /// Get galobal (sum of values) value by name of the filed in model
         /// </summary>
         /// <param name="name">Name of the field in model</param>
         public int this[FieldName name]
         {
             get
             {
+                int value = 0;
+                foreach (KeyValuePair<string,ScoreHolder> valuePair in _scores)
+                    value += this[name, valuePair.Key];
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Get value by name of the filed in model
+        /// </summary>
+        /// <param name="name">Name of the field in model</param>
+        /// <param name="id">Id of playground</param>
+        public int this[FieldName name, string id]
+        {
+            get
+            {
+                if (!_scores.ContainsKey(id)) return 0;
+
                 switch (name)
                 {
                     case FieldName.Level:
-                        return Level;
+                        return _scores[id].Level;
                     case FieldName.Score:
-                        return Score;
+                        return _scores[id].Score;
                     case FieldName.Lines:
-                        return Lines;
+                        return _scores[id].Lines;
                 }
                 Debug.LogWarning("Unknown score field name");
                 return 0;
             }
         }
 
-        /// <summary>
-        /// Name of the game mode
-        /// </summary>
-        public string ModelName { get { return _rules.name; } }
-        /// <summary>
-        /// Score for the current game session
-        /// </summary>
-        public int Score { get; private set; }
-        /// <summary>
-        /// Count of lines that were destroyed in current session.
-        /// </summary>
-        public int Lines { get; private set; }
-        /// <summary>
-        /// Current level of the game.
-        /// </summary>
-        public int Level { get; private set; }
-
         //================================    Systems properties    =================================
-        private GameRules _rules;
+        private readonly Dictionary<string, ScoreHolder> _scores;
         //================================      Public methods      =================================
-        /// <summary>
-        /// Set a rules of the game
-        /// </summary>
-        /// <param name="rules"></param>
-        public void SetRules(GameRules rules)
+
+        /// <inheritdoc />
+        public ScoreModel()
         {
-            _rules = rules;
+            _scores = new Dictionary<string, ScoreHolder>();
         }
 
-        /// <summary>
-        /// Reset model for a new mode
-        /// </summary>
-        public void Reset()
+        public void UpdateSocre(string id, int score, int level, int lines)
         {
-            Score = 0;
-            Lines = 0;
-            Level = 1;
+            if (level <= 0) level = 1;
+            ScoreHolder holder = new ScoreHolder(level, lines, score);
+            if (!_scores.ContainsKey(id))
+            {
+                _scores.Add(id, holder);
+                return;
+            }
+            _scores[id] = holder;
         }
 
-        /// <summary>
-        /// Add score for destroyed lines
-        /// </summary>
-        /// <param name="count">Count of destroyed lines</param>
-        public void AddLines(int count)
-        {
-            int score = _rules.CalculateScore(count);
-            if (score == 0) return;
-            Lines += count;
-            Score += score;
-            Level = 1 + (int) Math.Floor((float)Lines / _rules.LevelDivider);
-        }
         //================================ Private|Protected methods ================================
     }
 }

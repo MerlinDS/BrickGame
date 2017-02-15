@@ -22,6 +22,8 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         public int Height { get; private set; }
 
+        public int RemovedLines { get; private set; }
+
         /// <summary>
         /// Accessor by coordinates
         /// </summary>
@@ -118,15 +120,10 @@ namespace BrickGame.Scripts.Playground
 
         }
 
-        /// <summary>
-        /// Reset model from old game data
-        /// </summary>
-        public void Reset()
+        public void RemoveLine(int y)
         {
-            int n = _matrix.Length;
-            for (int i = 0; i < n; i++)
-                _matrix[i] = false;
-            ViewUp2date = false;
+            for (int x = 0; x < Width; ++x)this[x, y] = false;
+            RemovedLines++;
         }
         //================================ Private|Protected methods ================================
     }

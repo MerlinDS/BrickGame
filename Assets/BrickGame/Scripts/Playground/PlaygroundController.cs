@@ -25,10 +25,8 @@ namespace BrickGame.Scripts.Playground
         //================================       Public Setup       =================================
 
         //================================    Systems properties    =================================
-        private float _speed = 1F;
         private float _colldown;
         private Coroutine _finalization;
-        private ScoreModel _scoreModel;
         private PlaygroundBehaviour _view;
         private IFigureController _figureController;
         //================================      Public methods      =================================
@@ -39,19 +37,6 @@ namespace BrickGame.Scripts.Playground
         {
             _view = GetComponent<PlaygroundBehaviour>();
             _figureController = GetComponent<FigureController>();
-            _scoreModel = Context.GetActor<ScoreModel>();
-            _scoreModel.SetRules(Rules);
-           /* if (Application.isPlaying)
-            {
-                //Get data from cache, TODO: Remove after tests
-                string cache = Context.GetActor<CacheModel>().GetPlaygroundCache(Rules.name);
-                if (cache.Length > 0)
-                {
-                    bool[] matrix = DataConverter.GetMatrix(cache);
-                    Model = new PlaygroundModel(Width, Height, matrix);
-                }
-            }*/
-            _speed = Rules.StartingSpeed;
             if (Application.isPlaying)enabled = false;
         }
         //================================ Private|Protected methods ================================
@@ -62,7 +47,7 @@ namespace BrickGame.Scripts.Playground
         private void LateUpdate()
         {
             //Check if cooldwon was passed
-            if ((_colldown += Time.deltaTime) < _speed) return;
+            if ((_colldown += Time.deltaTime) < Speed) return;
             _colldown = 0;
             //Try to move figure down
             if (!_figureController.MoveDown())
@@ -118,19 +103,8 @@ namespace BrickGame.Scripts.Playground
             //Full lines exist, need to remove these lines and create a new figure.
             _view.EndOfBlinking += RemoveCells;
             _view.Blink(lines.ToArray());
-            //Remove lines from playground
-            foreach (int y in lines)
-            {
-                for (int x = 0; x < Model.Width; ++x)
-                    Model[x, y] = false;
-            }
-            Model.MoveDown(lines[0] - 1, lines[lines.Count - 1]);
-            //Update score and level speed
-            _scoreModel.AddLines(lines.Count);
-            _speed = Rules.GetSpeed( _scoreModel.Level);
+            RemoveLines(lines);
             enabled = false;//Stop updating
-            BroadcastNofitication(GameNotification.ScoreUpdated);
-            //TODO TASK: Save score to cahce
             yield return null;
         }
 
