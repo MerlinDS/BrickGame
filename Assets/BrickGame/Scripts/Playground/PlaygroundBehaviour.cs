@@ -26,11 +26,9 @@ namespace BrickGame.Scripts.Playground
         private Brick[] _bricks;
         private PlaygroundModel _model;
         //================================      Public methods      =================================
-        /// <summary>
-        /// Rebuild playground behaviour
-        /// </summary>
-        /// <param name="model">Current model of playground</param>
-        public void Rebuild(PlaygroundModel model)
+        //================================ Private|Protected methods ================================
+
+        private void UpdateModel(PlaygroundModel model)
         {
             if(!Validate())return;
             _model = model;
@@ -39,13 +37,18 @@ namespace BrickGame.Scripts.Playground
                 DestroyBricks();
                 _bricks = DrawBricks(model.Width, model.Height, transform.localScale);
             }
+            enabled = true;
         }
-        //================================ Private|Protected methods ================================
         /// <summary>
         /// Update activity of bricks depending on data in matrix of playground.
         /// </summary>
         private void Update()
         {
+            if (_model == null)
+            {
+                enabled = false;
+                return;
+            }
             Brick brick;
             int x, y, w, h;
 
@@ -88,6 +91,8 @@ namespace BrickGame.Scripts.Playground
                 }
             }
         }
+
+
 
         /// <summary>
         /// Execute blinking of lines

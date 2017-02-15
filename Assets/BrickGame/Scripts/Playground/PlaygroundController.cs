@@ -9,7 +9,6 @@ using System.Collections;
 using System.Collections.Generic;
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
-using BrickGame.Scripts.Utils;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Playground
@@ -21,42 +20,11 @@ namespace BrickGame.Scripts.Playground
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(PlaygroundBehaviour), typeof(FigureController))]
-    public class PlaygroundController : GameBehaviour
+    public class PlaygroundController : AbstractPlaygroundController
     {
-        /// <summary>
-        /// Enum of internal controller's states
-        /// </summary>
-        [Flags]
-        private enum InternalState
-        {
-            /// <summary>
-            /// Controller was initialized
-            /// </summary>
-            Initialized = 0x1,
-            /// <summary>
-            /// Game was started
-            /// </summary>
-            Started = 0x2,
-            /// <summary>
-            /// Game on pause
-            /// </summary>
-            OnPause = 0x4
-        }
         //================================       Public Setup       =================================
-        [Tooltip("Width of playground matrix, count of collumnts")]
-        public int Width = 10;//Default by classic rules
-        [Tooltip("Height of playground matrix, count of rows")]
-        public int Height = 20;//Default by classic rules
-        [Tooltip("Score rules of the current game")]
-        public GameRules Rules;
 
-        /// <summary>
-        /// Link to Playground model
-        /// </summary>
-        public PlaygroundModel Model { get; private set; }
         //================================    Systems properties    =================================
-        private bool _started;
-        private InternalState _state;
         private float _speed = 1F;
         private float _colldown;
         private Coroutine _finalization;
@@ -69,7 +37,11 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         public void Start()
         {
-            if (Application.isPlaying)
+            _view = GetComponent<PlaygroundBehaviour>();
+            _figureController = GetComponent<FigureController>();
+            _scoreModel = Context.GetActor<ScoreModel>();
+            _scoreModel.SetRules(Rules);
+           /* if (Application.isPlaying)
             {
                 //Get data from cache, TODO: Remove after tests
                 string cache = Context.GetActor<CacheModel>().GetPlaygroundCache(Rules.name);
@@ -78,37 +50,11 @@ namespace BrickGame.Scripts.Playground
                     bool[] matrix = DataConverter.GetMatrix(cache);
                     Model = new PlaygroundModel(Width, Height, matrix);
                 }
-            }
-
-            if(Model == null)
-                Model = new PlaygroundModel(Width, Height);
-            _view = GetComponent<PlaygroundBehaviour>();
-            _view.Rebuild(Model);
-            _state = InternalState.Initialized;
+            }*/
+            _speed = Rules.StartingSpeed;
             if (Application.isPlaying)enabled = false;
         }
         //================================ Private|Protected methods ================================
-        /// <summary>
-        /// Preinitialize controller and add listeners to context notifications
-        /// </summary>
-        private void Awake()
-        {
-            Context.AddListener(PlaygroundNotification.Start, NotificationHandler);
-            Context.AddListener(PlaygroundNotification.Pause, NotificationHandler);
-            Context.AddListener(PlaygroundNotification.End, NotificationHandler);
-            _scoreModel = Context.GetActor<ScoreModel>();
-            _scoreModel.SetRules(Rules);
-        }
-
-        /// <summary>
-        /// Remove context listners
-        /// </summary>
-        private void OnDestroy()
-        {
-            Context.RemoveListener(PlaygroundNotification.Start, NotificationHandler);
-            Context.RemoveListener(PlaygroundNotification.Pause, NotificationHandler);
-            Context.RemoveListener(PlaygroundNotification.End, NotificationHandler);
-        }
 
         /// <summary>
         /// Move active figure to down edge
@@ -138,7 +84,6 @@ namespace BrickGame.Scripts.Playground
                         The game is over.
                     */
                     _figureController.Remove();
-                    Debug.Log("Game was ended with score: " + _scoreModel.Score);
                     //TODO TASK: Execute end of the game animation
                     BroadcastNofitication(PlaygroundNotification.End);
                 }
@@ -148,53 +93,6 @@ namespace BrickGame.Scripts.Playground
             if (_finalization == null) return;
             StopCoroutine(_finalization);
             _finalization = null;
-        }
-
-        /// <summary>
-        ///  Handler for a playground notifications
-        /// </summary>
-        /// <param name="notification">Name of the notification</param>
-        private void NotificationHandler(string notification)
-        {
-            if (notification == PlaygroundNotification.Start)
-            {
-                if ((_state & InternalState.Started) == InternalState.Started)
-                {
-                    Debug.LogWarning("Game already started");
-                    return;
-                }
-                Debug.Log("Start new game on " + gameObject.name);
-                _scoreModel.Reset();
-                _speed = Rules.StartingSpeed;
-                _figureController = GetComponent<IFigureController>();
-                SendMessage(PlaygroundMessage.CreateFigure);
-                _state |= InternalState.Started;
-            }
-            else if (notification == PlaygroundNotification.Pause)
-            {
-                //Change pause state
-                if ((_state & InternalState.OnPause) == InternalState.OnPause)
-                {
-                    _state ^= InternalState.OnPause;
-                    Debug.Log("Resume game");
-                }
-                else
-                {
-                    Debug.Log("Pause game");
-                    _state |= InternalState.OnPause;
-                }
-            }
-            else if (notification == PlaygroundNotification.End)
-            {
-                //TODO: Add end animation
-                //Remove started and pause flags
-                _state = InternalState.Initialized;
-                Debug.Log("Game is ended");
-                Model.Reset();
-            }
-            //Change global state of the component
-            enabled = (_state & InternalState.Started) == InternalState.Started;
-            if (enabled) enabled = (_state & InternalState.OnPause) != InternalState.OnPause;
         }
 
         /// <summary>

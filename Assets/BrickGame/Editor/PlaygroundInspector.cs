@@ -6,6 +6,7 @@
 
 using BrickGame.Scripts.Playground;
 using UnityEditor;
+using UnityEngine;
 
 namespace BrickGame.Editor
 {
@@ -13,7 +14,7 @@ namespace BrickGame.Editor
     /// PlaygroundInspector 
     /// </summary>
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(PlaygroundController))]
+    [CustomEditor(typeof(AbstractPlaygroundController), true)]
     public class PlaygroundInspector : UnityEditor.Editor
     {
         //================================       Public Setup       =================================
@@ -36,7 +37,10 @@ namespace BrickGame.Editor
             serializedObject.ApplyModifiedProperties();
             if(changes){
                 PlaygroundController behaviour = (PlaygroundController) serializedObject.targetObject;
-                if(behaviour.Width > 0 && behaviour.Height > 0)behaviour.Start();
+                if (behaviour.Width > 0 && behaviour.Height > 0)
+                {
+                    behaviour.Start();
+                }
             }
         }
         //================================ Private|Protected methods ================================

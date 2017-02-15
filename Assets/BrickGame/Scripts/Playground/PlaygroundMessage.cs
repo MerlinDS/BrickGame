@@ -15,5 +15,7 @@ namespace BrickGame.Scripts.Playground
         /// Execute figure creation.
         /// </summary>
         public const string CreateFigure = "CreateFigure";
+
+        public const string UpdateModel = "UpdateModel";
     }
 }
