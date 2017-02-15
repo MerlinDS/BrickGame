@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/08/2017 18:16</date>
 
+using System;
 using System.Collections.Generic;
 using BrickGame.Scripts.Playground;
 using UnityEngine;
@@ -16,26 +17,32 @@ namespace BrickGame.Scripts.Figures
     /// Provide controls for controlling figure matrix and position of the figure on playground.
     /// </summary>
     [DisallowMultipleComponent]
-    public class FigureController : AbstractFigureController, IModelMessageResiver
+    public class FigureController : AbstractFigureController, IModelMessageResiver, IFigureMessageResiver
     {
         //================================       Public Setup       =================================
         public Vector2 SpawnCenter;
+
         //================================    Systems properties    =================================
         /// <summary>
         /// X position of the figure on playground
         /// </summary>
         private int _x;
+
         /// <summary>
         /// Y position of the figure on playground
         /// </summary>
         private int _y;
+
         private float _timer;
+
         /// <summary>
         /// Coordinates of the previous active cells of the figure.
         /// [0] - x, [1] - y.
         /// </summary>
         private readonly List<int> _previous = new List<int>();
+
         private PlaygroundModel _model;
+
         //================================      Public methods      =================================
         /// <inheritdoc />
         public void UpdateModel(PlaygroundModel model)
@@ -56,12 +63,12 @@ namespace BrickGame.Scripts.Figures
             //Create turned matrix and fill it with current figure values
             int width = Figure.GetLength(0);
             int height = Figure.GetLength(1);
-            bool[,] matrix = new bool[height,width];
+            bool[,] matrix = new bool[height, width];
             int x, y;
             for (x = 0; x < width; x++)
             {
                 for (y = 0; y < height; y++)
-                    matrix[y, x] = Figure[ x, (height - 1) - y];
+                    matrix[y, x] = Figure[x, (height - 1) - y];
             }
             /*
                 Calculate new position of the figure and
@@ -70,8 +77,8 @@ namespace BrickGame.Scripts.Figures
             if (width != height)
             {
                 //Set new center of the figure
-                _x = _x + (int)((width - height) * 0.5F);
-                _y = _y + (int)((height - width) * 0.5F);
+                _x = _x + (int) ((width - height) * 0.5F);
+                _y = _y + (int) ((height - width) * 0.5F);
                 //shift from borders
                 if (_x < 0) _x = 0;
                 else if (_x + height >= _model.Width)
@@ -134,7 +141,7 @@ namespace BrickGame.Scripts.Figures
         /// <returns> list of figure cells indexes</returns>
         public int[] FigureIndexes()
         {
-            if(Figure == null)return new int[0];
+            if (Figure == null) return new int[0];
             int width = Figure.GetLength(0);
             int height = Figure.GetLength(1);
             List<int> result = new List<int>();
@@ -146,8 +153,9 @@ namespace BrickGame.Scripts.Figures
             //Before update
             if (_previous.Count > 0)
             {
-                for (int i = 0; i < _previous.Count; i+=2)
+                for (int i = 0; i < _previous.Count; i += 2)
                 {
+                    //x + y * width
                     result.Add(_previous[i] + _previous[i + 1] * _model.Width);
                 }
                 return result.ToArray();
@@ -158,23 +166,60 @@ namespace BrickGame.Scripts.Figures
                 for (int x = 0; x < width; x++)
                 {
                     if (!Figure[x, y]) continue;
+                    //x + y * width
                     result.Add(_x + x + (_y + y) * _model.Width);
                 }
             }
             return result.ToArray();
         }
-        //================================ Private|Protected methods ================================
+
+        public void RestoreFigure(int[] figure)
+        {
+            PopFigure();
+            Array.Sort(figure);
+            int[] temp = new int[figure.Length * 2]; //temp array of coordinates (x, y)
+            int x, y;
+            int width = 0;
+            int height = 0;
+            _x = _model.Width;
+            _y = _model.Height;
+            for (int i = 0; i < figure.Length; i++)
+            {
+                //y = |c / w| & x = c - |c / w| * w
+                y = figure[i] / _model.Width;
+                x = figure[i] - y * _model.Width;
+                if (x < _x) _x = x;
+                else if (x > width) width = x;
+                if (y < _y) _y = y;
+                else if (y > height) height = y;
+                temp[i * 2] = x;
+                temp[i * 2 + 1] = y;
+            }
+            width -= (_x - 1);
+            height -= (_y - 1);
+            Figure = new bool[width, height];
+            for (int i = 0; i < temp.Length; i+=2)
+            {
+                x = temp[i] - _x;
+                y = temp[i + 1] - _y;
+                Figure[x, y] = true;
+            }
+            BroadcastNofitication(FigureNotification.Changed);
+        }
+
         /// <summary>
         /// Create new figure
         /// </summary>
         // ReSharper disable once UnusedMember.Local
-        private void CreateFigure()
+        public void CreateFigure()
         {
             PopFigure();
-            _x = (int)(SpawnCenter.x  - Figure.GetLength(0) * 0.5F);
-            _y = (int)(SpawnCenter.y  -  Figure.GetLength(1) * 0.5F);
+            _x = (int) (SpawnCenter.x - Figure.GetLength(0) * 0.5F);
+            _y = (int) (SpawnCenter.y - Figure.GetLength(1) * 0.5F);
             BroadcastNofitication(FigureNotification.Changed);
         }
+        //================================ Private|Protected methods ================================
+
 
         /// <summary>
         /// Update figure cells in playground matrix.
@@ -200,7 +245,7 @@ namespace BrickGame.Scripts.Figures
             {
                 for (y = 0; y < height; y++)
                 {
-                    if(!Figure[x, y])continue;//update only pressent cells
+                    if (!Figure[x, y]) continue; //update only pressent cells
                     _model[_x + x, _y + y] = true;
                     _previous.Add(_x + x);
                     _previous.Add(_y + y);

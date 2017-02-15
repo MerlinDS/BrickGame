@@ -21,6 +21,21 @@ namespace BrickGame.Scripts.Playground
         /// <see cref="IModelMessageResiver"/>
         /// </summary>
         public const string UpdateModel = "UpdateModel";
+
+        public const string RestoreFigure = "RestoreFigure";
+    }
+
+    public interface IFigureMessageResiver
+    {
+        /// <summary>
+        /// Restore figure from cache
+        /// </summary>
+        /// <param name="figure">array of figure cells in playground matrix</param>
+        void RestoreFigure(int[] figure);
+        /// <summary>
+        /// Create new figure
+        /// </summary>
+        void CreateFigure();
     }
 
     public interface IModelMessageResiver

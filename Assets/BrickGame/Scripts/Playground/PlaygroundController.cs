@@ -19,7 +19,7 @@ namespace BrickGame.Scripts.Playground
     /// Finalizing playground on end of figures movement.
     /// </summary>
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(PlaygroundBehaviour), typeof(FigureController))]
+    [RequireComponent(typeof(PlaygroundBehaviour), typeof(IFigureController))]
     public class PlaygroundController : AbstractPlaygroundController
     {
         //================================       Public Setup       =================================
@@ -36,7 +36,7 @@ namespace BrickGame.Scripts.Playground
         public void Start()
         {
             _view = GetComponent<PlaygroundBehaviour>();
-            _figureController = GetComponent<FigureController>();
+            _figureController = GetComponent<IFigureController>();
             if (Application.isPlaying)enabled = false;
             BroadcastNofitication(PlaygroundNotification.Restore, new SessionDataProvider(name, Rules));
         }

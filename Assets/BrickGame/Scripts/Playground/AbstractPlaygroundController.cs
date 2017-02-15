@@ -126,8 +126,6 @@ namespace BrickGame.Scripts.Playground
             Debug.LogFormat("Game started on {0}", name);
             Speed = Rules.GetSpeed(Model.RemovedLines);
             _state |= InternalState.Started;
-            //Create first figure
-            SendMessage(PlaygroundMessage.CreateFigure);
         }
 
         /// <summary>

@@ -33,6 +33,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             RestoreModel restoreModel = Context.GetActor<RestoreModel>();
             foreach (PlaygroundController controller in Playgrounds)
             {
+                int[] figure = null;
                 string name = controller.name;
                 GameRules rules = controller.Rules;
 
@@ -42,7 +43,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                 {
                     //Restored start
                     RestoreModel.RestoredData data = restoreModel.Pop(controller.name);
-                    //TODO: Restore figure
+                    figure = data.Figure;
                     model = new PlaygroundModel(controller.Width, controller.Height, data.Matrix);
                     scoreModel.UpdateSocre(controller.name, data.Score, data.Level, data.Lines);
                 }
@@ -53,9 +54,11 @@ namespace BrickGame.Scripts.Controllers.Commands
                     scoreDataProvider = new ScoreDataProvider(rules, name, 0);
                 }
 
-                //TODO: Restore playground from cashe
                 controller.SendMessage(PlaygroundMessage.UpdateModel, model, SendMessageOptions.DontRequireReceiver);
                 Context.Notify(GameNotification.ScoreUpdated, scoreDataProvider);
+                //Create first figure or restore old one
+                if(figure == null)controller.SendMessage(PlaygroundMessage.CreateFigure);
+                else controller.SendMessage(PlaygroundMessage.RestoreFigure, figure);
             }
         }
 
