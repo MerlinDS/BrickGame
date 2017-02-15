@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/14/2017 18:52</date>
 
+using BrickGame.Scripts.Figures;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers

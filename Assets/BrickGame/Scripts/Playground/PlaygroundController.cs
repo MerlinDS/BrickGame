@@ -93,9 +93,9 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         private void Awake()
         {
-            Context.AddListener(PlaygroundNotification.Start, GameNotificationHandler);
-            Context.AddListener(PlaygroundNotification.Pause, GameNotificationHandler);
-            Context.AddListener(PlaygroundNotification.End, GameNotificationHandler);
+            Context.AddListener(PlaygroundNotification.Start, NotificationHandler);
+            Context.AddListener(PlaygroundNotification.Pause, NotificationHandler);
+            Context.AddListener(PlaygroundNotification.End, NotificationHandler);
             _scoreModel = Context.GetActor<ScoreModel>();
             _scoreModel.SetRules(Rules);
         }
@@ -105,9 +105,9 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         private void OnDestroy()
         {
-            Context.RemoveListener(PlaygroundNotification.Start, GameNotificationHandler);
-            Context.RemoveListener(PlaygroundNotification.Pause, GameNotificationHandler);
-            Context.RemoveListener(PlaygroundNotification.End, GameNotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.Start, NotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.Pause, NotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.End, NotificationHandler);
         }
 
         /// <summary>
@@ -151,10 +151,10 @@ namespace BrickGame.Scripts.Playground
         }
 
         /// <summary>
-        ///  Handler for a game notifications
+        ///  Handler for a playground notifications
         /// </summary>
         /// <param name="notification">Name of the notification</param>
-        private void GameNotificationHandler(string notification)
+        private void NotificationHandler(string notification)
         {
             if (notification == PlaygroundNotification.Start)
             {
