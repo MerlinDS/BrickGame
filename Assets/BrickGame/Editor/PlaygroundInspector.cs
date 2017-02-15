@@ -6,7 +6,6 @@
 
 using BrickGame.Scripts.Playground;
 using UnityEditor;
-using UnityEngine;
 
 namespace BrickGame.Editor
 {
@@ -39,7 +38,8 @@ namespace BrickGame.Editor
                 PlaygroundController behaviour = (PlaygroundController) serializedObject.targetObject;
                 if (behaviour.Width > 0 && behaviour.Height > 0)
                 {
-                    behaviour.Start();
+                    behaviour.GetComponent<PlaygroundBehaviour>().UpdateModel(
+                        new PlaygroundModel(behaviour.Width, behaviour.Height));
                 }
             }
         }
