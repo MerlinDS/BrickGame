@@ -4,8 +4,10 @@
 // <author>Andrew Salomatin</author>
 // <date>02/14/2017 20:14</date>
 
+using System.Text;
 using MiniMoca;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace BrickGame.Scripts.Models
 {
@@ -28,10 +30,6 @@ namespace BrickGame.Scripts.Models
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
-        /// <inheritdoc />
-        public CacheModel()
-        {
-        }
 
         public void DeleteCache(bool save = true)
         {
@@ -42,23 +40,59 @@ namespace BrickGame.Scripts.Models
             }
             PlayerPrefs.DeleteKey(AudioField);
         }
+
         /// <summary>
-        /// Update max score of spesified mode in cache.
+        /// Update score of spesified mode in cache.
+        /// </summary>
+        /// <param name="mode">Game mode</param>
+        /// <param name="session">Name of the session</param>
+        /// <param name="score">Current score</param>
+        /// <param name="lines">Current lines</param>
+        public void UpdateScore(string mode, string session, int score, int lines)
+        {
+            StringBuilder sb = new StringBuilder(mode);
+            sb.Append(ModeField);
+            //Get previous score
+            int maxScore = PlayerPrefs.GetInt(sb + ScoreField);
+            int maxLines = PlayerPrefs.GetInt(sb + LinesField);
+            //Update score in mode
+            if (score > maxScore)PlayerPrefs.SetInt(sb + ScoreField, score);
+            if (lines > maxLines)PlayerPrefs.SetInt(sb + LinesField, lines);
+            //Update session
+            sb.Append('_');
+            sb.Append(session);
+            PlayerPrefs.SetInt(sb + ScoreField, score);
+            PlayerPrefs.SetInt(sb + LinesField, lines);
+
+        }
+
+        /// <summary>
+        /// Get score of the sesssion
+        /// </summary>
+        /// <param name="mode">Game mode</param>
+        /// <param name="session">Name of the session</param>
+        /// <param name="score">Current score</param>
+        /// <param name="lines">Current lines</param>
+        public void GetScore(string mode, string session, out int score, out int lines)
+        {
+            mode += ModeField + '_' + session;
+            score = PlayerPrefs.GetInt(mode + ScoreField);
+            lines = PlayerPrefs.GetInt(mode + LinesField);
+        }
+
+        /// <summary>
+        /// Get score of the mode
         /// </summary>
         /// <param name="mode">Game mode</param>
         /// <param name="score">Current score</param>
         /// <param name="lines">Current lines</param>
-        public void UpdateModeScore(string mode, int score, int lines)
+        public void GetScore(string mode, out int score, out int lines)
         {
             mode += ModeField;
-            //Get previous score
-            int maxScore = PlayerPrefs.GetInt(mode + ScoreField);
-            int maxLines = PlayerPrefs.GetInt(mode + LinesField);
-            //Update score in mode
-            if (score > maxScore)PlayerPrefs.GetInt(mode + ScoreField, score);
-            if (score > maxLines)PlayerPrefs.GetInt(mode + LinesField, lines);
-
+            score = PlayerPrefs.GetInt(mode + ScoreField);
+            lines = PlayerPrefs.GetInt(mode + LinesField);
         }
+
         /// <summary>
         /// Clean cache of the playground for spesified mode in cache.
         /// </summary>

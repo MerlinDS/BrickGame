@@ -21,6 +21,7 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <inheritdoc />
         public override void Execute()
         {
+            if (Data == null) return;
             ScoreModel model = Context.GetActor<ScoreModel>();
             if (Data.Count == 0)
             {

@@ -119,8 +119,6 @@ namespace BrickGame.Scripts.Playground
             Speed = Rules.StartingSpeed;
             _state |= InternalState.Started;
             //Create first figure
-            BroadcastNofitication(GameNotification.ScoreUpdated,
-                new ScoreDataProvider(Rules, gameObject.name, 0));
             SendMessage(PlaygroundMessage.CreateFigure);
         }
 

@@ -10,6 +10,7 @@ using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playground;
 using BrickGame.Scripts.Utils;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace BrickGame.Scripts.Controllers.Commands
 {
@@ -28,7 +29,6 @@ namespace BrickGame.Scripts.Controllers.Commands
         //================================       Public Setup       =================================
 
         //================================    Systems properties    =================================
-
         //================================      Public methods      =================================
         /// <inheritdoc />
         public override void Execute()
@@ -42,12 +42,12 @@ namespace BrickGame.Scripts.Controllers.Commands
                 return;
             }
 
-            //Update score
-            ScoreModel scoreModel = Context.GetActor<ScoreModel>();
-
-            /*cacheModel.UpdateModeScore(scoreModel.ModelName, scoreModel.Score, scoreModel.Lines);
-
+            ScoreUpdate(cacheModel);
+            Debug.LogWarning("Not yet implemented!");
             if (Notification == GameNotification.ScoreUpdated) return;//Just update score
+
+            /*cacheModel.UpdateScore(scoreModel.ModelName, scoreModel.Score, scoreModel.Lines);
+
             if (Notification == PlaygroundNotification.End)
             {
                 //Clean playground cache
@@ -65,14 +65,31 @@ namespace BrickGame.Scripts.Controllers.Commands
         //================================ Private|Protected methods ================================
         private void ConvertToString(StringBuilder sb)
         {
-            /*PlaygroundController[] playgrounds = Object.FindObjectsOfType<PlaygroundController>();
-            int i, n = playgrounds.Length;
+            /*PlaygroundController[] _controllers = Object.FindObjectsOfType<PlaygroundController>();
+            int i, n = _controllers.Length;
             for (i = 0; i < n; i++)
             {
-                PlaygroundModel model = playgrounds[i].Model;
-                FigureController controller = playgrounds[i].GetComponent<FigureController>();
+                PlaygroundModel model = _controllers[i].Model;
+                FigureController controller = _controllers[i].GetComponent<FigureController>();
                 sb.Append(DataConverter.ToString(model, controller.FigureIndexes()));
             }*/
+        }
+
+        /// <summary>
+        /// Update score
+        /// </summary>
+        private void ScoreUpdate(CacheModel cacheModel)
+        {
+            ScoreModel scoreModel = Context.GetActor<ScoreModel>();
+            int i, n = Playgrounds.Length;
+            for (i = 0; i < n; i++)
+            {
+                string name = Playgrounds[i].name;
+                GameRules rules = Playgrounds[i].Rules;
+                cacheModel.UpdateScore(rules.name, name,
+                    scoreModel[ScoreModel.FieldName.Score, name],
+                    scoreModel[ScoreModel.FieldName.Lines, name]);
+            }
         }
 
     }

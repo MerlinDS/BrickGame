@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/15/2017 13:07</date>
 
+using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playground;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace BrickGame.Scripts.Controllers.Commands
 {
     /// <summary>
     /// StartGameCommand - execute starting of the game mode.
-    /// This command will create new model for playgrounds and tries to restore them from cache
+    /// This is clean start without cache restoring
     /// </summary>
     public class StartGameCommand : GameCommand
     {
@@ -23,18 +24,21 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <inheritdoc />
         public override void Execute()
         {
-            PlaygroundController[] controllers = Object.FindObjectsOfType<PlaygroundController>();
-            if (controllers == null || controllers.Length == 0)
+
+            if (Playgrounds == null || Playgrounds.Length == 0)
             {
                 Debug.LogError("Playground controllers was not found!");
                 return;
             }
             //
-            foreach (PlaygroundController controller in controllers)
+            foreach (PlaygroundController controller in Playgrounds)
             {
+                string name = controller.name;
+                GameRules rules = controller.Rules;
                 PlaygroundModel model = new PlaygroundModel(controller.Width, controller.Height);
                 //TODO: Restore playground from cashe
                 controller.SendMessage(PlaygroundMessage.UpdateModel, model, SendMessageOptions.DontRequireReceiver);
+                Context.Notify(GameNotification.ScoreUpdated, new ScoreDataProvider(rules, name, 0));
             }
         }
 
