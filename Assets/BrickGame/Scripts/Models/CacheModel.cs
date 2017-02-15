@@ -121,6 +121,11 @@ namespace BrickGame.Scripts.Models
         {
             return PlayerPrefs.GetString(mode + ModeField + PlaygroundField);
         }
+
+        public bool HasSession(string mode, string session)
+        {
+            return PlayerPrefs.GetInt(mode + ModeField + '_' + session + LinesField) > 0;
+        }
         //================================ Private|Protected methods ================================
     }
 }

@@ -19,5 +19,7 @@
         /// Set playground on pause or resume it.
         /// </summary>
         public const string Pause = "PlaygroundNotification:Pause";
+
+        public static string Restore = "PlaygroundNotification:Restore";
     }
 }

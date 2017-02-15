@@ -43,18 +43,14 @@ namespace BrickGame.Scripts.Controllers.Commands
             }
 
             ScoreUpdate(cacheModel);
-            Debug.LogWarning("Not yet implemented!");
             if (Notification == GameNotification.ScoreUpdated) return;//Just update score
-
-            /*cacheModel.UpdateScore(scoreModel.ModelName, scoreModel.Score, scoreModel.Lines);
-
             if (Notification == PlaygroundNotification.End)
             {
-                //Clean playground cache
-                cacheModel.CleanPlayground(scoreModel.ModelName);
+                CleanCache(cacheModel);
                 return;
             }
-
+            Debug.LogWarning("Not yet implemented!");
+            /*
             //Save current state of the playground for current mode
             StringBuilder sb = new StringBuilder();
             //sb.Append("");//TODO: Add header
@@ -89,6 +85,17 @@ namespace BrickGame.Scripts.Controllers.Commands
                 cacheModel.UpdateScore(rules.name, name,
                     scoreModel[ScoreModel.FieldName.Score, name],
                     scoreModel[ScoreModel.FieldName.Lines, name]);
+            }
+        }
+
+        private void CleanCache(CacheModel cacheModel)
+        {
+            int i, n = Playgrounds.Length;
+            for (i = 0; i < n; i++)
+            {
+                string name = Playgrounds[i].name;
+                GameRules rules = Playgrounds[i].Rules;
+                cacheModel.UpdateScore(rules.name, name, 0, 0);
             }
         }
 

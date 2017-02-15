@@ -20,7 +20,7 @@ namespace BrickGame.Scripts.Playground
         /// Enum of internal controller's states
         /// </summary>
         [Flags]
-        protected enum InternalState
+        private enum InternalState
         {
             /// <summary>
             /// Controller was initialized
@@ -73,6 +73,7 @@ namespace BrickGame.Scripts.Playground
             Context.AddListener(PlaygroundNotification.Pause, NotificationHandler);
             Context.AddListener(PlaygroundNotification.End, NotificationHandler);
             _state = InternalState.Initialized;
+            BroadcastNofitication(PlaygroundNotification.Restore, new SessionDataProvider(name, Rules));
         }
 
         /// <summary>
@@ -112,10 +113,10 @@ namespace BrickGame.Scripts.Playground
         {
             if ((_state & InternalState.Started) == InternalState.Started)
             {
-                Debug.LogWarningFormat("Game already started on playground {0}", gameObject.name);
+                Debug.LogWarningFormat("Game already started on playground {0}", name);
                 return;
             }
-            Debug.LogFormat("Game started on {0}", gameObject.name);
+            Debug.LogFormat("Game started on {0}", name);
             Speed = Rules.StartingSpeed;
             _state |= InternalState.Started;
             //Create first figure
