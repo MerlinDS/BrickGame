@@ -13,7 +13,7 @@ namespace BrickGame.Scripts.Playground
     /// <summary>
     /// PlaygroundBehaviour - concrete playground drawer
     /// </summary>
-    public class PlaygroundBehaviour : BricksDrawer
+    public class PlaygroundBehaviour : BricksDrawer, IModelMessageResiver
     {
         //================================       Public Setup       =================================
         public int BlinkingCount;
@@ -26,9 +26,7 @@ namespace BrickGame.Scripts.Playground
         private Brick[] _bricks;
         private PlaygroundModel _model;
         //================================      Public methods      =================================
-        //================================ Private|Protected methods ================================
-
-        private void UpdateModel(PlaygroundModel model)
+        public void UpdateModel(PlaygroundModel model)
         {
             if(!Validate())return;
             _model = model;
@@ -39,6 +37,7 @@ namespace BrickGame.Scripts.Playground
             }
             enabled = true;
         }
+        //================================ Private|Protected methods ================================
         /// <summary>
         /// Update activity of bricks depending on data in matrix of playground.
         /// </summary>

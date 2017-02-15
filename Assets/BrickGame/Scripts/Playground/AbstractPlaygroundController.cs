@@ -13,7 +13,7 @@ namespace BrickGame.Scripts.Playground
     /// <summary>
     /// AbstractPlaygroundController - abstract class for playground controller.
     /// </summary>
-    public abstract class AbstractPlaygroundController : GameBehaviour
+    public abstract class AbstractPlaygroundController : GameBehaviour, IModelMessageResiver
     {
         /// <summary>
         /// Enum of internal controller's states
@@ -57,6 +57,12 @@ namespace BrickGame.Scripts.Playground
         //================================    Systems properties    =================================
         private InternalState _state;
         //================================      Public methods      =================================
+
+        /// <inheritdoc />
+        public void UpdateModel(PlaygroundModel model)
+        {
+            Model = model;
+        }
 
         //================================ Private|Protected methods ================================
         public void Awake()
@@ -108,7 +114,7 @@ namespace BrickGame.Scripts.Playground
                 return;
             }
             Debug.LogFormat("Game started on {0}", gameObject.name);
-            SendMessage(PlaygroundMessage.UpdateModel, new PlaygroundModel(Width, Height));
+//            SendMessage(PlaygroundMessage.SetModel, new PlaygroundModel(Width, Height));
             _state |= InternalState.Started;
             //Create first figure
             SendMessage(PlaygroundMessage.CreateFigure);
@@ -136,9 +142,6 @@ namespace BrickGame.Scripts.Playground
             Model.Reset();
         }
 
-        private void UpdateModel(PlaygroundModel model)
-        {
-            Model = model;
-        }
+
     }
 }

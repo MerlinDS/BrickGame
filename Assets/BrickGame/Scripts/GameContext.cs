@@ -36,6 +36,7 @@ namespace BrickGame.Scripts
             CommandMap.MapCommand<UpdateCacheCommand>(PlaygroundNotification.End);
             CommandMap.MapCommand<UpdateCacheCommand>(PlaygroundNotification.Pause);
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);
+            CommandMap.MapCommand<StartGameCommand>(PlaygroundNotification.Start);
         }
     }
 }

@@ -16,6 +16,19 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         public const string CreateFigure = "CreateFigure";
 
+        /// <summary>
+        /// Send message to IModelMessageResiver
+        /// <see cref="IModelMessageResiver"/>
+        /// </summary>
         public const string UpdateModel = "UpdateModel";
+    }
+
+    public interface IModelMessageResiver
+    {
+        /// <summary>
+        /// Update model in component
+        /// </summary>
+        /// <param name="model"></param>
+        void UpdateModel(PlaygroundModel model);
     }
 }

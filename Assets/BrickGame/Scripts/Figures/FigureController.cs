@@ -15,8 +15,7 @@ namespace BrickGame.Scripts.Figures
     /// Provide controls for controlling figure matrix and position of the figure on playground.
     /// </summary>
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(PlaygroundController))]
-    public class FigureController : AbstractFigureController
+    public class FigureController : AbstractFigureController, IModelMessageResiver
     {
         //================================       Public Setup       =================================
         public Vector2 SpawnCenter;
@@ -34,10 +33,17 @@ namespace BrickGame.Scripts.Figures
         /// Coordinates of the previous active cells of the figure.
         /// [0] - x, [1] - y.
         /// </summary>
-        private List<int> _previous;
+        private readonly List<int> _previous = new List<int>();
         private PlaygroundModel _model;
-        private PlaygroundController _controller;
         //================================      Public methods      =================================
+        /// <inheritdoc />
+        public void UpdateModel(PlaygroundModel model)
+        {
+            Figure = null;
+            _model = model;
+            _previous.Clear();
+        }
+
         /// <inheritdoc />
         public override bool Turn()
         {
@@ -143,21 +149,12 @@ namespace BrickGame.Scripts.Figures
         }
         //================================ Private|Protected methods ================================
         /// <summary>
-        /// Initialize controller
-        /// </summary>
-        private void Start()
-        {
-            _previous = new List<int>();
-            _controller = GetComponent<PlaygroundController>();
-        }
-        /// <summary>
         /// Create new figure
         /// </summary>
         // ReSharper disable once UnusedMember.Local
         private void CreateFigure()
         {
             PopFigure();
-            _model = _controller.Model;//Update model
             _x = (int)(SpawnCenter.x  - Figure.GetLength(0) * 0.5F);
             _y = (int)(SpawnCenter.y  -  Figure.GetLength(1) * 0.5F);
             BroadcastNofitication(FigureNotification.Changed);
