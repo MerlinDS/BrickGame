@@ -32,9 +32,9 @@ namespace BrickGame.Scripts
             MapInstance<ScoreModel>();
             MapInstance<CacheModel>();
             //Map commands
-            CommandMap.MapCommand<UpdateCacheCommand>(PlaygroundNotification.Start);
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound);
             CommandMap.MapCommand<UpdateCacheCommand>(PlaygroundNotification.End);
+            CommandMap.MapCommand<UpdateCacheCommand>(PlaygroundNotification.Pause);
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);
         }
     }

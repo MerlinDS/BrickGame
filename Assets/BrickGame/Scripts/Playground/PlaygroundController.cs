@@ -94,6 +94,7 @@ namespace BrickGame.Scripts.Playground
         private void Awake()
         {
             Context.AddListener(PlaygroundNotification.Start, GameNotificationHandler);
+            Context.AddListener(PlaygroundNotification.Pause, GameNotificationHandler);
             Context.AddListener(PlaygroundNotification.End, GameNotificationHandler);
             _scoreModel = Context.GetActor<ScoreModel>();
             _scoreModel.SetRules(Rules);
@@ -105,6 +106,7 @@ namespace BrickGame.Scripts.Playground
         private void OnDestroy()
         {
             Context.RemoveListener(PlaygroundNotification.Start, GameNotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.Pause, GameNotificationHandler);
             Context.RemoveListener(PlaygroundNotification.End, GameNotificationHandler);
         }
 
@@ -156,22 +158,30 @@ namespace BrickGame.Scripts.Playground
         {
             if (notification == PlaygroundNotification.Start)
             {
-                if ((_state & InternalState.Started) != InternalState.Started)
+                if ((_state & InternalState.Started) == InternalState.Started)
                 {
-                    Debug.Log("Start new game on " + gameObject.name);
-                    _scoreModel.Reset();
-                    _speed = Rules.StartingSpeed;
-                    _figureController = GetComponent<IFigureController>();
-                    SendMessage(PlaygroundMessage.CreateFigure);
-                    _state |= InternalState.Started;
+                    Debug.LogWarning("Game already started");
+                    return;
+                }
+                Debug.Log("Start new game on " + gameObject.name);
+                _scoreModel.Reset();
+                _speed = Rules.StartingSpeed;
+                _figureController = GetComponent<IFigureController>();
+                SendMessage(PlaygroundMessage.CreateFigure);
+                _state |= InternalState.Started;
+            }
+            else if (notification == PlaygroundNotification.Pause)
+            {
+                //Change pause state
+                if ((_state & InternalState.OnPause) == InternalState.OnPause)
+                {
+                    _state ^= InternalState.OnPause;
+                    Debug.Log("Resume game");
                 }
                 else
                 {
-                    //Change pause state
-                    if ((_state & InternalState.OnPause) == InternalState.OnPause)
-                        _state ^= InternalState.OnPause;
-                    else
-                        _state |= InternalState.OnPause;
+                    Debug.Log("Pause game");
+                    _state |= InternalState.OnPause;
                 }
             }
             else if (notification == PlaygroundNotification.End)
@@ -179,6 +189,7 @@ namespace BrickGame.Scripts.Playground
                 //TODO: Add end animation
                 //Remove started and pause flags
                 _state = InternalState.Initialized;
+                Debug.Log("Game is ended");
                 Model.Reset();
             }
             //Change global state of the component

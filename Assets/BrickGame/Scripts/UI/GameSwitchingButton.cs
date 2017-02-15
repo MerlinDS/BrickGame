@@ -52,11 +52,15 @@ namespace BrickGame.Scripts.UI
         {
             ResetState();
             Context.AddListener(PlaygroundNotification.Start, GameNotificationHandler);
+            Context.AddListener(PlaygroundNotification.Pause, GameNotificationHandler);
             Context.AddListener(PlaygroundNotification.End, GameNotificationHandler);
             _button = GetComponent<Button>();
             _button.onClick.AddListener(() =>
             {
-                BroadcastNofitication(PlaygroundNotification.Start);
+                if(_state == ButtonState.Start)
+                    BroadcastNofitication(PlaygroundNotification.Start);
+                else
+                    BroadcastNofitication(PlaygroundNotification.Pause);
             });
         }
 
@@ -69,6 +73,7 @@ namespace BrickGame.Scripts.UI
             _button.onClick.RemoveAllListeners();
             Context.RemoveListener(PlaygroundNotification.Start, GameNotificationHandler);
             Context.RemoveListener(PlaygroundNotification.End, GameNotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.Pause, GameNotificationHandler);
         }
 
         /// <summary>
