@@ -17,7 +17,7 @@ namespace BrickGame.Scripts.Figures
     /// Provide controls for controlling figure matrix and position of the figure on playground.
     /// </summary>
     [DisallowMultipleComponent]
-    public class FigureController : AbstractFigureController, IModelMessageResiver, IFigureMessageResiver
+    public class FigureController : FigureFactory, IModelMessageResiver, IFigureMessageResiver
     {
         //================================       Public Setup       =================================
         public Vector2 SpawnCenter;
@@ -174,6 +174,11 @@ namespace BrickGame.Scripts.Figures
 
         public void RestoreFigure(int[] figure)
         {
+            if (figure.Length == 0)
+            {
+                CreateFigure();
+                return;
+            }
             PopFigure();
             Array.Sort(figure);
             int[] temp = new int[figure.Length * 2]; //temp array of coordinates (x, y)
@@ -184,6 +189,7 @@ namespace BrickGame.Scripts.Figures
             _y = _model.Height;
             for (int i = 0; i < figure.Length; i++)
             {
+                Debug.Log(figure[i]);
                 //y = |c / w| & x = c - |c / w| * w
                 y = figure[i] / _model.Width;
                 x = figure[i] - y * _model.Width;

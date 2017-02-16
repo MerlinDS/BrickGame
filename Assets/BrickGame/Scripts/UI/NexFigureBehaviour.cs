@@ -16,8 +16,8 @@ namespace BrickGame.Scripts.UI
     public class NexFigureBehaviour : BricksDrawer
     {
         //================================       Public Setup       =================================
-        [Tooltip("Controller of figure that need to be shown")]
-        public FigureController Controller;
+        [Tooltip("Factory of figures that provide next figure to show")]
+        public FigureFactory Factory;
         [Tooltip("Width in brick, count of columns")]
         public int Width = 4;
         [Tooltip("Height in bricks, count of rows")]
@@ -70,7 +70,7 @@ namespace BrickGame.Scripts.UI
         {
             for (int i = 0; i < _bricks.Length; i++)
                 _bricks[i].Active = false;
-            bool[,] figure = Controller.NextFigure();
+            bool[,] figure = Factory.NextFigure();
             int w = figure.GetLength(0);
             int h = figure.GetLength(1);
 

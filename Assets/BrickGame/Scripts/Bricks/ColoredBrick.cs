@@ -53,7 +53,7 @@ namespace BrickGame.Scripts.Bricks
         /// <summary>
         /// Initialize brick component.
         /// </summary>
-        private void Start()
+        private void Awake()
         {
             UpdateColor( PassiveColor );
         }
