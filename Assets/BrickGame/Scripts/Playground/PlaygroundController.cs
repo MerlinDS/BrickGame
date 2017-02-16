@@ -2,12 +2,10 @@
 // Copyright (c) 2017 All Rights Reserved
 // </copyright>
 // <author>Andrew Salomatin</author>
-// <date>02/08/2017 13:29</date>
+// <date>02/15/2017 11:57</date>
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using UnityEngine;
 
@@ -18,112 +16,156 @@ namespace BrickGame.Scripts.Playground
     /// Moving figures to down edge.
     /// Finalizing playground on end of figures movement.
     /// </summary>
-    [DisallowMultipleComponent]
-    [RequireComponent(typeof(PlaygroundBehaviour), typeof(IFigureController))]
-    public class PlaygroundController : AbstractPlaygroundController
+    public abstract class PlaygroundController : GameBehaviour, IModelMessageResiver
     {
+        /// <summary>
+        /// Enum of internal controller's states
+        /// </summary>
+        [Flags]
+        private enum InternalState
+        {
+            /// <summary>
+            /// Controller was initialized
+            /// </summary>
+            Initialized = 0x1,
+            /// <summary>
+            /// Game was started
+            /// </summary>
+            Started = 0x2,
+            /// <summary>
+            /// Game on pause
+            /// </summary>
+            OnPause = 0x4
+        }
         //================================       Public Setup       =================================
+        [Tooltip("Width of playground matrix, count of collumnts")]
+        public int Width = 10;//Default by classic rules
+
+        [Tooltip("Height of playground matrix, count of rows")]
+        public int Height = 20;//Default by classic rules
+
+        [Tooltip("Score rules of the current game")]
+        public GameRules Rules;
+
+        /// <summary>
+        /// Get copy of playground matrix
+        /// </summary>
+        public bool[] Matrix
+        {
+            get
+            {
+                return Model == null ? new bool[0] : Model.Matrix;
+            }
+        }
 
         //================================    Systems properties    =================================
-        private float _colldown;
-        private Coroutine _finalization;
-        private PlaygroundBehaviour _view;
-        private IFigureController _figureController;
+        private InternalState _state;
+
+        private int _levels;
+
+        private int _score;
+
+        protected float Speed { get; private set; }
+
+        protected PlaygroundModel Model { get; private set; }
         //================================      Public methods      =================================
-        /// <summary>
-        /// Inintialize controllers and rebuild playground if it needed
-        /// </summary>
-        public void Start()
+
+        /// <inheritdoc />
+        public void UpdateModel(PlaygroundModel model)
         {
-            _view = GetComponent<PlaygroundBehaviour>();
-            _figureController = GetComponent<IFigureController>();
-            if (Application.isPlaying)enabled = false;
-            BroadcastNofitication(PlaygroundNotification.Restore, new SessionDataProvider(name, Rules));
+            Model = model;
         }
+
         //================================ Private|Protected methods ================================
+        public void Awake()
+        {
+            Context.AddListener(PlaygroundNotification.Start, NotificationHandler);
+            Context.AddListener(PlaygroundNotification.Pause, NotificationHandler);
+            Context.AddListener(PlaygroundNotification.End, NotificationHandler);
+            _state = InternalState.Initialized;
+        }
 
         /// <summary>
-        /// Move active figure to down edge
+        /// Remove context listners
         /// </summary>
-        private void LateUpdate()
+        private void OnDestroy()
         {
-            //Check if cooldwon was passed
-            if ((_colldown += Time.deltaTime) < Speed) return;
-            _colldown = 0;
-            //Try to move figure down
-            if (!_figureController.MoveDown())
+            Context.RemoveListener(PlaygroundNotification.Start, NotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.Pause, NotificationHandler);
+            Context.RemoveListener(PlaygroundNotification.End, NotificationHandler);
+        }
+
+        /// <summary>
+        ///  Handler for a playground notifications
+        /// </summary>
+        /// <param name="notification">Name of the notification</param>
+        private void NotificationHandler(string notification)
+        {
+            switch (notification)
             {
-                if (!_figureController.OutOfBounds)
-                {
-                    /*
-                        End of the turn.
-                        Figure can't be moved further.
-                        Need to finalize playground.
-                    */
-                    if(_finalization == null)
-                        _finalization = StartCoroutine(FinalizePlayground());
-                }
-                else
-                {
-                    /*
-                        One of the figures is upper than top edge.
-                        The game is over.
-                    */
-                    _figureController.Remove();
-                    //TODO TASK: Execute end of the game animation
-                    BroadcastNofitication(PlaygroundNotification.End);
-                }
+                case PlaygroundNotification.Start:
+                    StartSession();
+                    break;
+                case PlaygroundNotification.Pause:
+                    PauseSession();
+                    break;
+                case PlaygroundNotification.End:
+                    FinishSession();
+                    break;
+            }
+            //Change global state of the component
+            enabled = (_state & InternalState.Started) == InternalState.Started;
+            if (enabled) enabled = (_state & InternalState.OnPause) != InternalState.OnPause;
+        }
+
+        private void StartSession()
+        {
+            if ((_state & InternalState.Started) == InternalState.Started)
+            {
+                Debug.LogWarningFormat("Game already started on playground {0}", name);
                 return;
             }
-            //Figure moded down, remove finalization
-            if (_finalization == null) return;
-            StopCoroutine(_finalization);
-            _finalization = null;
+            Debug.LogFormat("Game started on {0}", name);
+            Speed = Rules.GetSpeedByLines(Model.RemovedLines);
+            _state |= InternalState.Started;
         }
 
         /// <summary>
-        /// Finalize playground: Check lines for fullness, check game for ending
+        /// Switch between pause and resume of session
         /// </summary>
-        private IEnumerator FinalizePlayground()
+        private void PauseSession()
         {
-            yield return new WaitForSeconds(Rules.FinalizingGap);
-            if (_figureController.MoveDown())
-            {
-                _finalization = null;
-                yield break;
-            }
-            _figureController.Remove();
-            //Search for filled lines
-            List<int> lines = new List<int>();
-            for (int y = 0; y < Model.Height; y++)
-            {
-                if (Model.FullLine(y))lines.Add(y);
-            }
-            //Full lines were not found. Create a new figure.
-            if (lines.Count == 0)
-            {
-                SendMessage(PlaygroundMessage.CreateFigure);
-                _finalization = null;
-                yield break;
-            }
-            //Full lines exist, need to remove these lines and create a new figure.
-            _view.EndOfBlinking += RemoveCells;
-            _view.Blink(lines.ToArray());
-            RemoveLines(lines);
-            enabled = false;//Stop updating
-            yield return null;
+            if ((_state & InternalState.OnPause) == InternalState.OnPause)
+                _state ^= InternalState.OnPause;
+            else
+                _state |= InternalState.OnPause;
         }
 
         /// <summary>
-        /// Handler for playground view callback
+        /// Clean playground from current session
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RemoveCells(object sender, EventArgs e)
+        private void FinishSession()
         {
-            _view.EndOfBlinking -= RemoveCells;
-            SendMessage(PlaygroundMessage.CreateFigure);
-            enabled = true;//Start updating
+            Debug.Log("Game was ended.");
+            //Remove started and pause flags
+            _state = InternalState.Initialized;
+        }
+
+        /// <summary>
+        /// Remove lines from playground
+        /// </summary>
+        /// <param name="lines"></param>
+        protected void RemoveLines(List<int> lines)
+        {
+            //Remove lines from playground
+            int count = lines.Count;
+            if (count <= 0) return;
+            foreach (int y in lines)Model.RemoveLine(y);
+            Model.MoveDown(lines[0] - 1, lines[lines.Count - 1]);
+            //Update speed by total count of removed lines
+            Speed = Rules.GetSpeedByLines(Model.RemovedLines);
+            BroadcastNofitication(GameNotification.ScoreUpdated,
+                new ScoreDataProvider(Rules, gameObject.name, count));
         }
 
     }

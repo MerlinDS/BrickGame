@@ -14,7 +14,7 @@ namespace BrickGame.Editor
     /// PlaygroundInspector 
     /// </summary>
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(AbstractPlaygroundController), true)]
+    [CustomEditor(typeof(PlaygroundController), true)]
     public class PlaygroundInspector : UnityEditor.Editor
     {
         //================================       Public Setup       =================================
