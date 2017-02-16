@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/15/2017 17:15</date>
 
+using System;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Utils;
 using UnityEngine;
@@ -32,26 +33,38 @@ namespace BrickGame.Scripts.Controllers.Commands
             }
             Debug.LogFormat("{0} has compressed string {1}", Data.Name, compressed);
             //Restore playground from cache
-            bool[] matrix;
-            int[] figure;
-            DataConverter.GetMatrix(compressed, out matrix, out figure);
-            //Restore score
-            int score, lines;
-            cacheModel.GetScore(Data.Rules.name, Data.Name, out score, out lines);
-            int level = Data.Rules.GetLevelByLines(lines);
-            Debug.LogFormat("Restore game {0} for {1}: score = {2}, lines = {3}, level = {4}",
-                Data.Rules.name, Data.Name, score, lines, level);
-            Context.GetActor<RestoreModel>()
-                .Push(
-                    Data.Name, new RestoreModel.RestoredData
-                    {
-                        Level = level,
-                        Score = score,
-                        Lines = lines,
-                        Figure = figure,
-                        Matrix = matrix
-                    });
-            Context.Notify(PlaygroundNotification.Start);
+            try
+            {
+                bool[] matrix;
+                int[] figure;
+                DataConverter.GetMatrix(compressed, out matrix, out figure);
+                //Restore score
+                int score, lines;
+                cacheModel.GetScore(Data.Rules.name, Data.Name, out score, out lines);
+                int level = Data.Rules.GetLevelByLines(lines);
+                Debug.LogFormat("Restore game {0} for {1}: score = {2}, lines = {3}, level = {4}",
+                    Data.Rules.name, Data.Name, score, lines, level);
+                Context.GetActor<RestoreModel>()
+                    .Push(
+                        Data.Name, new RestoreModel.RestoredData
+                        {
+                            Level = level,
+                            Score = score,
+                            Lines = lines,
+                            Figure = figure,
+                            Matrix = matrix
+                        });
+            }
+            catch (Exception exception)
+            {
+                Debug.LogErrorFormat("Error was occure while restoring: {0}", exception);
+                //Delete corupted cache
+                cacheModel.CleanPlayground(Data.Rules.name, Data.Name);
+            }
+            finally
+            {
+                Context.Notify(PlaygroundNotification.Start);
+            }
         }
 
         //================================ Private|Protected methods ================================

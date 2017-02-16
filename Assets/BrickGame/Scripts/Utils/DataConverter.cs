@@ -7,9 +7,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
-using Debug = UnityEngine.Debug;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Utils
 {
@@ -26,15 +25,29 @@ namespace BrickGame.Scripts.Utils
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
-        public static string ToString(bool[]data, int[] figure)
+        public static string ToString(bool[] data, int[] figure)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(figure.Length.ToHex());//Save count of cell in figure to header
+            bool hasGarbage = false;
             //Remove figure from playground matrix and save them to header
-            for (int j = 0; j < figure.Length; j++)
+            for (int i = 0; i < figure.Length; i++)
             {
-                sb.Append(figure[j].ToHex());
-                data[figure[j]] = false;
+                sb.Append(figure[i].ToHex());
+                if (figure[i] < 0)
+                {
+                    //garbage was found in figure data.
+                    hasGarbage = true;
+                    continue;
+                }
+                data[figure[i]] = false;
+            }
+            //Remove corupted data
+            if (hasGarbage)
+            {
+                Debug.LogWarningFormat("Data of figure has garbage: {0}", sb);
+                sb = new StringBuilder();
+                sb.Append(0.ToHex());
             }
             return sb.Append(ToString(data)).ToString();
         }

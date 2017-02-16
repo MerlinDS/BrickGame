@@ -48,7 +48,7 @@ namespace BrickGame.Scripts.UI
         /// <summary>
         /// Initialize button and add context listeners
         /// </summary>
-        private void Start()
+        private void Awake()
         {
             ResetState();
             Context.AddListener(PlaygroundNotification.Start, GameNotificationHandler);

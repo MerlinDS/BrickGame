@@ -174,7 +174,7 @@ namespace BrickGame.Scripts.Figures
 
         public void RestoreFigure(int[] figure)
         {
-            if (figure.Length == 0)
+            if (figure.Length == 0 || figure[0] >= _model.Height * _model.Width)
             {
                 CreateFigure();
                 return;
@@ -189,7 +189,6 @@ namespace BrickGame.Scripts.Figures
             _y = _model.Height;
             for (int i = 0; i < figure.Length; i++)
             {
-                Debug.Log(figure[i]);
                 //y = |c / w| & x = c - |c / w| * w
                 y = figure[i] / _model.Width;
                 x = figure[i] - y * _model.Width;
