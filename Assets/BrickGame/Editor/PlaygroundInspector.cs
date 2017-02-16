@@ -15,41 +15,33 @@ namespace BrickGame.Editor
     /// </summary>
     [CanEditMultipleObjects]
     [CustomEditor(typeof(PlaygroundController), true)]
-    public class PlaygroundInspector : UnityEditor.Editor
+    public class PlaygroundInspector : BasePlaygroundInspector
     {
         //================================       Public Setup       =================================
 
         //================================    Systems properties    =================================
-        private SerializedProperty _width;
-        private SerializedProperty _height;
         private SerializedProperty _rules;
 
         //================================      Public methods      =================================
-        /// <inheritdoc />
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(_width);
-            EditorGUILayout.PropertyField(_height);
-            bool changes = EditorGUI.EndChangeCheck();
-            EditorGUILayout.PropertyField(_rules);
-            serializedObject.ApplyModifiedProperties();
-            if(changes){
-                Component component = (Component) serializedObject.targetObject;
-                if (_width.intValue > 0 && _height.intValue > 0)
-                {
-                    if (component.GetComponent<PlaygroundBehaviour>() == null) return;
-                    component.GetComponent<PlaygroundBehaviour>().UpdateModel(
-                        new PlaygroundModel(_width.intValue, _height.intValue));
-                }
-            }
-        }
+
         //================================ Private|Protected methods ================================
-        private void OnEnable()
+        /// <inheritdoc />
+        protected override void ConcreteOnInspectorGUI()
         {
-            _width = serializedObject.FindProperty("Width");
-            _height = serializedObject.FindProperty("Height");
+            EditorGUILayout.PropertyField(_rules);
+        }
+
+        /// <inheritdoc />
+        protected override void UpdateInstance(int width, int height)
+        {
+            Component component = (Component) serializedObject.targetObject;
+            if (component.GetComponent<PlaygroundBehaviour>() == null) return;
+            component.GetComponent<PlaygroundBehaviour>().UpdateModel(
+                new PlaygroundModel(width, height));
+        }
+
+        protected override void ConcreteOnEnable()
+        {
             _rules = serializedObject.FindProperty("Rules");
         }
     }
