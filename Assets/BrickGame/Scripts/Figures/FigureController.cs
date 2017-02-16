@@ -88,7 +88,6 @@ namespace BrickGame.Scripts.Figures
             //If vigure can't be turned revert changes
             if (ValidateFigure())
             {
-                Debug.Log("Turn");
                 BroadcastNofitication(FigureNotification.Turned);
                 return true;
             }

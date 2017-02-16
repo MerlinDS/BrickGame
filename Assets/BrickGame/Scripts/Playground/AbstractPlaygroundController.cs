@@ -124,7 +124,7 @@ namespace BrickGame.Scripts.Playground
                 return;
             }
             Debug.LogFormat("Game started on {0}", name);
-            Speed = Rules.GetSpeed(Model.RemovedLines);
+            Speed = Rules.GetSpeedByLines(Model.RemovedLines);
             _state |= InternalState.Started;
         }
 
@@ -161,7 +161,7 @@ namespace BrickGame.Scripts.Playground
             foreach (int y in lines)Model.RemoveLine(y);
             Model.MoveDown(lines[0] - 1, lines[lines.Count - 1]);
             //Update speed by total count of removed lines
-            Speed = Rules.GetSpeed(Model.RemovedLines);
+            Speed = Rules.GetSpeedByLines(Model.RemovedLines);
             BroadcastNofitication(GameNotification.ScoreUpdated,
                 new ScoreDataProvider(Rules, gameObject.name, count));
         }

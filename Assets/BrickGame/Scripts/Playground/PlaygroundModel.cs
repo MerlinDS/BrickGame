@@ -78,12 +78,13 @@ namespace BrickGame.Scripts.Playground
             _matrix = new bool[width * height];
         }
 
-        public PlaygroundModel(int width, int height, bool[] matrix)
+        public PlaygroundModel(int width, int height, int lines, bool[] matrix)
         {
             Restored = true;
             Width = width;
             Height = height;
             _matrix = matrix;
+            RemovedLines = lines;
         }
 
         /// <inheritdoc />

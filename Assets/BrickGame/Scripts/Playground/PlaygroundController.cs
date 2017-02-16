@@ -87,7 +87,11 @@ namespace BrickGame.Scripts.Playground
         private IEnumerator FinalizePlayground()
         {
             yield return new WaitForSeconds(Rules.FinalizingGap);
-            if (_figureController.MoveDown())yield break;
+            if (_figureController.MoveDown())
+            {
+                _finalization = null;
+                yield break;
+            }
             _figureController.Remove();
             //Search for filled lines
             List<int> lines = new List<int>();
@@ -99,6 +103,7 @@ namespace BrickGame.Scripts.Playground
             if (lines.Count == 0)
             {
                 SendMessage(PlaygroundMessage.CreateFigure);
+                _finalization = null;
                 yield break;
             }
             //Full lines exist, need to remove these lines and create a new figure.

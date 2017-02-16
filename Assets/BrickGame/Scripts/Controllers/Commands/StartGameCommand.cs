@@ -44,7 +44,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                     //Restored start
                     RestoreModel.RestoredData data = restoreModel.Pop(controller.name);
                     figure = data.Figure;
-                    model = new PlaygroundModel(controller.Width, controller.Height, data.Matrix);
+                    model = new PlaygroundModel(controller.Width, controller.Height, data.Lines, data.Matrix);
                     scoreModel.UpdateSocre(controller.name, data.Score, data.Level, data.Lines);
                 }
                 else

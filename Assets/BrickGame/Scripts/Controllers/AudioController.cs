@@ -46,6 +46,14 @@ namespace BrickGame.Scripts.Controllers
             _mainSource.mute = !_mainSource.mute;
         }
 
+        /// <summary>
+        /// Stopn all sound fx
+        /// </summary>
+        public void StopSfx()
+        {
+            _mainSource.Stop();
+            _mainSource.clip = null;
+        }
         //================================ Private|Protected methods ================================
         private void Awake()
         {
@@ -92,6 +100,8 @@ namespace BrickGame.Scripts.Controllers
         private void PlaySfx(AudioClip clip, float pitch = 1)
         {
             if (clip == null) return;
+            //Prevent playing desebled audio source
+            if(!_mainSource.isActiveAndEnabled) return;
             _mainSource.clip = clip;
             _mainSource.pitch = pitch;
             _mainSource.Play();

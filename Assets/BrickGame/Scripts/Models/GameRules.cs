@@ -22,6 +22,10 @@ namespace BrickGame.Scripts.Models
         [Range(0.1F, 2F)]
         public float StartingSpeed;
 
+        [Tooltip("Minimal speed of the game, in seconds")]
+        [Range(0.01F, 0.1F)]
+        public float MinSpeed;
+
         [Tooltip("Time gap before playground finalizing, in seconds")]
         [Range(0.1F, 2F)]
         public float FinalizingGap;
@@ -57,7 +61,7 @@ namespace BrickGame.Scripts.Models
         public float GetSpeed(int level)
         {
             float speed = StartingSpeed - level * 0.1F;
-            if (speed <= 0) speed = 0.1F;
+            if (speed <= MinSpeed) speed = MinSpeed;
             return speed;
         }
         //================================ Private|Protected methods ================================

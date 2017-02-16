@@ -39,10 +39,7 @@ namespace BrickGame.Scripts.Controllers
                 Debug.LogError("Unknow mode: " + name);
                 return;
             }
-
-            Debug.LogFormat("Starting {0} mode", name);
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            scene.LoadAsync();
+            ChangeCurrentSceneTo(scene);
         }
 
         /// <summary>
@@ -50,9 +47,30 @@ namespace BrickGame.Scripts.Controllers
         /// </summary>
         public void Exit2Menu()
         {
-            SRScenes.MainMenuScene.Load();
+            //provokes cache updating
+            BroadcastNofitication(PlaygroundNotification.Pause);
+            //Load menu
+            ChangeCurrentSceneTo(SRScenes.MainMenuScene);
         }
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Cahnge current scene to other one.
+        /// If scenes are equals, will not chages
+        /// </summary>
+        /// <param name="scene">TypeSafe scene</param>
+        private void ChangeCurrentSceneTo(TypeSafe.Scene scene)
+        {
+            if (SceneManager.GetActiveScene().name == scene.name)
+            {
+                Debug.LogWarning("Scene are equals and not to be changed!");
+                return;
+            }
+            Debug.LogFormat("Change scene {0} to {1}", SceneManager.GetActiveScene().name,  scene.name);
+            Context.GetActor<AudioController>().StopSfx();
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            scene.LoadAsync();
+        }
+
         /// <summary>
         /// Handler for loading of a scene
         /// </summary>
@@ -65,17 +83,7 @@ namespace BrickGame.Scripts.Controllers
             if (link == null) return;
             Debug.LogFormat("Scene {0} loaded", scene.name);
             CurrentScene = scene.name;
-            if (link == SRScenes.MainMenuScene) return;
-            //Auto start of a game mode
-            Invoke("SendStartNotification", StartCooldown);
-        }
-
-        /// <summary>
-        /// Start loaded game mode. (avoiding usage of a coroutine)
-        /// </summary>
-        private void SendStartNotification()
-        {
-            Context.Notify(PlaygroundNotification.Start);
+            Context.GetActor<UserControlsManager>().RefreshControllers();
         }
 
     }

@@ -39,7 +39,17 @@ namespace BrickGame.Scripts.Controllers
 
         private double _swapHorisontal;
         //================================      Public methods      =================================
-
+        /// <summary>
+        /// Refresh game controllers
+        /// </summary>
+        public void RefreshControllers()
+        {
+            _controller.Clear();
+            GameObject[] playgrounds = GameObject.FindGameObjectsWithTag(SRTags.Player);
+            foreach (GameObject playground in playgrounds)
+                _controller.Add(playground.GetComponent<IFigureController>());
+//            Debug.LogFormat("Refreshed {0} controllers", _controller.Count);
+        }
         //================================ Private|Protected methods ================================
         /// <summary>
         /// Initialize manager, adding of necessary listeners and links.
@@ -63,17 +73,7 @@ namespace BrickGame.Scripts.Controllers
             _controller.Clear();
         }
 
-        /// <summary>
-        /// Refresh game controllers
-        /// </summary>
-        private void RefreshControllers()
-        {
-            _controller.Clear();
-            GameObject[] playgrounds = GameObject.FindGameObjectsWithTag(SRTags.Player);
-            foreach (GameObject playground in playgrounds)
-                _controller.Add(playground.GetComponent<IFigureController>());
-//            Debug.LogFormat("Refreshed {0} controllers", _controller.Count);
-        }
+
 
         /// <summary>
         /// Handler for a game notifications
