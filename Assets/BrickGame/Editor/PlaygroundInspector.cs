@@ -6,6 +6,7 @@
 
 using BrickGame.Scripts.Playground;
 using UnityEditor;
+using UnityEngine;
 
 namespace BrickGame.Editor
 {
@@ -35,11 +36,12 @@ namespace BrickGame.Editor
             EditorGUILayout.PropertyField(_rules);
             serializedObject.ApplyModifiedProperties();
             if(changes){
-                PlaygroundController behaviour = (PlaygroundController) serializedObject.targetObject;
-                if (behaviour.Width > 0 && behaviour.Height > 0)
+                Component component = (Component) serializedObject.targetObject;
+                if (_width.intValue > 0 && _height.intValue > 0)
                 {
-                    behaviour.GetComponent<PlaygroundBehaviour>().UpdateModel(
-                        new PlaygroundModel(behaviour.Width, behaviour.Height));
+                    if (component.GetComponent<PlaygroundBehaviour>() == null) return;
+                    component.GetComponent<PlaygroundBehaviour>().UpdateModel(
+                        new PlaygroundModel(_width.intValue, _height.intValue));
                 }
             }
         }
