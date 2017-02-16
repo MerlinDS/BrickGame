@@ -1,10 +1,10 @@
-﻿Shader "BrickGames/Effects/GhostyEffectShader"
+﻿Shader "Hidden/GhostingEffectShader"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		 _BTex ("Output Render Texture", 2D) = "black" {}
-        _Intensity ("Intensity", Range (0,1)) = 0.5
+        _Intensivity ("_Intensivity", Range (0,1)) = 0.5
 	}
 	SubShader
 	{
@@ -21,12 +21,14 @@
 
             uniform sampler2D _MainTex;
             uniform sampler2D _BTex;
-            uniform float _Intensity;
+            uniform float _Intensivity;
 
             float4 frag(v2f_img i) : COLOR{
-                float4 c1 = tex2D(_MainTex, i.uv);
-                float4 c2 = tex2D(_BTex, i.uv);
-                float4 c3 = lerp(c1, c2, _Intensity);
+                float2 uv = i.uv;
+                float4 c1 = tex2D(_MainTex, uv);
+                uv.y = 1 - uv.y;
+                float4 c2 = tex2D(_BTex, uv);
+                float4 c3 = lerp(c1, c2, _Intensivity);
                 return c3;
             }
             ENDCG

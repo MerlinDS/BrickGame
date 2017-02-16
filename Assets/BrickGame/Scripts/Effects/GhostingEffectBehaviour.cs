@@ -11,6 +11,7 @@ namespace BrickGame.Scripts.Effects
     /// <summary>
     /// GhostingEffectBehaviour - component for GhostingEffect
     /// </summary>
+//    [ExecuteInEditMode]
     [AddComponentMenu("BrickGame/Effects/GhostingEffect")]
     public class GhostingEffectBehaviour : GameBehaviour
     {
@@ -19,7 +20,7 @@ namespace BrickGame.Scripts.Effects
         public float Intensivity = 0.99F;
         //================================    Systems properties    =================================
         // ReSharper disable once InconsistentNaming
-        private const string _Intensity = "_Intensity";
+        private const string _Intensivity = "_Intensivity";
         // ReSharper disable once InconsistentNaming
         private const string _BTex = "_BTex";
         private Material _material;
@@ -30,11 +31,15 @@ namespace BrickGame.Scripts.Effects
         /// <summary>
         /// Initialize component
         /// </summary>
-        [ExecuteInEditMode]
-        private void Start()
+        private void OnEnable()
         {
-            _material = new Material(Shader.Find("BrickGames/Effects/GhostyEffectShader"));
-            _previousFrame = new RenderTexture(Screen.width, Screen.height, 16);
+            _material = new Material(Shader.Find("Hidden/GhostingEffectShader"));
+            if (_previousFrame != null)
+            {
+                _previousFrame.Release();
+                _previousFrame.DiscardContents();
+            }
+            _previousFrame = new RenderTexture(Screen.width, Screen.height, 0);
         }
 
         /// <summary>
@@ -42,10 +47,9 @@ namespace BrickGame.Scripts.Effects
         /// </summary>
         /// <param name="src">Source texture</param>
         /// <param name="dest">Resulting texture</param>
-        [ExecuteInEditMode]
         private void OnRenderImage(RenderTexture src, RenderTexture dest)
         {
-            _material.SetFloat(_Intensity, Intensivity);
+            _material.SetFloat(_Intensivity, Intensivity);
             _material.SetTexture(_BTex, _previousFrame);
             Graphics.Blit(src, dest, _material);
             Graphics.Blit(RenderTexture.active, _previousFrame);

@@ -84,6 +84,7 @@ namespace BrickGame.Scripts.Controllers
             Debug.LogFormat("Scene {0} loaded", scene.name);
             CurrentScene = scene.name;
             Context.GetActor<UserControlsManager>().RefreshControllers();
+            Context.GetActor<ColorPalleteManager>().UpdateColors(true);
         }
 
     }

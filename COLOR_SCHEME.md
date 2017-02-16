@@ -1,7 +1,15 @@
 # Color scheme memo
 
+##Color aliaces
+
+* Color0 - FFFFFFFF
+* Color1 - 7F7F7FFF
+* Color2 - 0x2A2D2B
+* Color3 - 00000000
+
 ## Classic scheme colors
 
-* Wite - 0x9CB2A5
-* Gray - 0x84968B
-* Black - 0x2A2D2B
+* Color0 - 2A2D2BFF
+* Color1 - 9CB2A5FF
+* Color2 - 84968BFF
+* Color3 - 84968BFF
