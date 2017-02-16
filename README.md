@@ -10,5 +10,5 @@ Demo project - the old style Tetris game for Android.
 
 ### Shaders
 
-* [Ghosting effect shader](/blob/development/Assets/BrickGame/Shaders/GhostingEffectShader.shader) - simulation of an old device screen.
-* [Pallete swapping shader](/blob/development/Assets/BrickGame/Shaders/PalleteSwappingShader.shader) - changing color palette on the fly.
+* [Ghosting effect shader](https://github.com/MerlinDS/BrickGame/blob/development/Assets/BrickGame/Shaders/GhostingEffectShader.shader) - simulation of an old device screen.
+* [Palette swapping shader](https://github.com/MerlinDS/BrickGame/blob/development/Assets/BrickGame/Shaders/PalleteSwappingShader.shader) - changing color palette on the fly.
