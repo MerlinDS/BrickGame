@@ -121,7 +121,7 @@ namespace BrickGame.Scripts.Playground
         {
             _view.EndOfBlinking -= RemoveCells;
             SendMessage(PlaygroundMessage.CreateFigure);
-            enabled = true;//Start updating
+            enabled = true;//Rebuild updating
         }
 
     }

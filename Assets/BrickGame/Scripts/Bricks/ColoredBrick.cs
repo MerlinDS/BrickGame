@@ -48,7 +48,10 @@ namespace BrickGame.Scripts.Bricks
         private bool _active;
         private T _renderer;
         //================================      Public methods      =================================
-
+        public void Refresh()
+        {
+            UpdateColor(Active?ActiveColor:PassiveColor);
+        }
         //================================ Private|Protected methods ================================
         /// <summary>
         /// Initialize brick component.

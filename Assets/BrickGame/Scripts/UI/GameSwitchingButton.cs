@@ -24,7 +24,7 @@ namespace BrickGame.Scripts.UI
             Start, Pause, Resume
         }
         //================================       Public Setup       =================================
-        [Tooltip("Start button label text")]
+        [Tooltip("Rebuild button label text")]
         public string StartLable = "START";
         [Tooltip("Pause button label text")]
         public string PauseLabel = "PAUSE";

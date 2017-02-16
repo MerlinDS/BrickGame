@@ -109,6 +109,29 @@ namespace BrickGame.Scripts.Bricks
             brick.position = transform.position + offset;
         }
 
+        protected Brick[] RestoreBricks(int width, int height)
+        {
+            return RestoreBricks(width, height, Vector3.one);
+        }
+
+        protected Brick[] RestoreBricks(int width, int height, Vector3 scale)
+        {
+            int n = width * height;
+            if (_content.childCount != n)
+            {
+                DestroyBricks();
+                return DrawBricks(width, height, scale);
+            }
+            Brick[] bricks = new Brick[n];
+            for (int i = 0; i < n; i++)
+            {
+                Brick brick = _content.GetChild(i).GetComponent<Brick>();
+                bricks[ brick.X + brick.Y * width ] = brick;
+
+            }
+            return bricks;
+        }
+
         /// <summary>
         /// Destroy all briks instances in content holder container
         /// </summary>

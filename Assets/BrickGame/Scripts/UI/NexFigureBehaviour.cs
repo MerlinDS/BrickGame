@@ -25,15 +25,11 @@ namespace BrickGame.Scripts.UI
 
         //================================    Systems properties    =================================
         private Vector2 _offset;
-        private Brick[] _bricks;
+        [HideInInspector][SerializeField]private Brick[] _bricks;
         private RectTransform _rectTransform;
         //================================      Public methods      =================================
 
-        //================================ Private|Protected methods ================================
-        /// <summary>
-        /// Initialize component and add context listeners
-        /// </summary>
-        private void Start()
+        public void Rebuild()
         {
             if(!Validate())return;
             //offset
@@ -41,8 +37,17 @@ namespace BrickGame.Scripts.UI
             _offset = _rectTransform.rect.size * 0.5F;
             _offset -= _brickPrefab.Size * 0.5F;
             _offset.x *= -1;
-            //
-            _bricks = DrawBricks(Width, Height);
+            _bricks = RestoreBricks(Width, Height);
+        }
+        //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Initialize component and add context listeners
+        /// </summary>
+        private void Start()
+        {
+            if(!Validate())return;
+            Rebuild();
+            if(!Application.isPlaying)return;
             Context.AddListener(FigureNotification.Changed, GameNotificationHandler);
         }
 

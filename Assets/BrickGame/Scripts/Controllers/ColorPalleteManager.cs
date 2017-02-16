@@ -4,7 +4,9 @@
 // <author>Andrew Salomatin</author>
 // <date>02/16/2017 18:06</date>
 
+using BrickGame.Scripts.Bricks;
 using BrickGame.Scripts.Effects;
+using BrickGame.Scripts.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,9 +33,10 @@ namespace BrickGame.Scripts.Controllers
         {
             UpdateCameras();
             if (!_foreground.Equals(Foreground) || force)
-                UpdateUIColor(_foreground = Foreground);
+                UpdateTextColor(_foreground = Foreground);
             if(!_main.Equals(Main) || force)
                 UpdateShadows(_main = Main);
+            UpdateUIBricks();
         }
 
         public void Reset()
@@ -64,7 +67,7 @@ namespace BrickGame.Scripts.Controllers
             }
         }
 
-        private void UpdateUIColor(Color color)
+        private void UpdateTextColor(Color color)
         {
             var textFields = FindObjectsOfType<Text>();
             foreach (Text textField in textFields)
@@ -76,6 +79,17 @@ namespace BrickGame.Scripts.Controllers
             var shadows = FindObjectsOfType<Shadow>();
             foreach (Shadow shadow in shadows)
                 shadow.effectColor = color;
+        }
+
+        private void UpdateUIBricks()
+        {
+            UIBrick[] bricks = FindObjectsOfType<UIBrick>();
+            foreach (UIBrick brick in bricks)
+            {
+                brick.ActiveColor = Foreground;
+                brick.PassiveColor = Main;
+                brick.Refresh();
+            }
         }
     }
 }

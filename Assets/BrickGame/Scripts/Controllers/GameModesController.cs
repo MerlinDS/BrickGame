@@ -27,7 +27,7 @@ namespace BrickGame.Scripts.Controllers
         //================================      Public methods      =================================
 
         /// <summary>
-        /// Start game mode: load a scene with a required game mode and execute starting of this mode.
+        /// Rebuild game mode: load a scene with a required game mode and execute starting of this mode.
         /// </summary>
         /// <param name="name">Name of the required scene</param>
         /// ReSharper disable once ParameterHidesMember

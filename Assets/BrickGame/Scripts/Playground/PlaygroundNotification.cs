@@ -7,9 +7,9 @@
     {
 
         /// <summary>
-        /// Start new game
+        /// Rebuild new game
         /// </summary>
-        public const string Start = "PlaygroundNotification::Start";
+        public const string Start = "PlaygroundNotification::Rebuild";
         /// <summary>
         /// The game that was previously started is ended.
         /// </summary>

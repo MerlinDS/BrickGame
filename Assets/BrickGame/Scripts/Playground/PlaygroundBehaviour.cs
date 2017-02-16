@@ -30,11 +30,7 @@ namespace BrickGame.Scripts.Playground
         {
             if(!Validate())return;
             _model = model;
-            if (Application.isEditor)
-            {
-                DestroyBricks();
-                _bricks = DrawBricks(model.Width, model.Height, transform.localScale);
-            }
+            _bricks = RestoreBricks(model.Width, model.Height, transform.localScale);
             enabled = true;
         }
         //================================ Private|Protected methods ================================
