@@ -59,7 +59,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             int i, n = Playgrounds.Length;
             for (i = 0; i < n; i++)
             {
-                ClassicPlayground pc = Playgrounds[i];
+                PlaygroundController pc = Playgrounds[i];
                 bool[] matrix = pc.Matrix;
                 int[] figure = pc.GetComponent<FigureController>().FigureIndexes();
                 string compressed = DataConverter.ToString(matrix, figure);

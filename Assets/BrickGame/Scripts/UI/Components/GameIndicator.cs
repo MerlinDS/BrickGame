@@ -21,7 +21,7 @@ namespace BrickGame.Scripts.UI.Components
         //================================       Public Setup       =================================
         [Tooltip("Name of the value that needs to be indicated")] public ScoreModel.FieldName Value =
             ScoreModel.FieldName.Score;
-        [Tooltip("Instance of the playground controller")] public ClassicPlayground Playground;
+        [Tooltip("Instance of the playground controller")] public PlaygroundController Playground;
 
         [Tooltip("Count of digits in indicator")] public int CountOfDigits;
         [Tooltip("Default digid value")] public string EmptyDigit = "@";

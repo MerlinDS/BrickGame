@@ -15,17 +15,17 @@ namespace BrickGame.Scripts
     /// </summary>
     public abstract class GameCommand : MocaCommand<GameContext>
     {
-        protected ClassicPlayground[] Playgrounds
+        protected PlaygroundController[] Playgrounds
         {
             get
             {
                 if(_playgrounds == null)
-                    _playgrounds = Object.FindObjectsOfType<ClassicPlayground>();
+                    _playgrounds = Object.FindObjectsOfType<PlaygroundController>();
                 return _playgrounds;
             }
         }
 
-        private ClassicPlayground[] _playgrounds;
+        private PlaygroundController[] _playgrounds;
 
         /// <inheritdoc />
         public override void Dispose()
@@ -39,17 +39,17 @@ namespace BrickGame.Scripts
     /// </summary>
     public abstract class GameCommand<T> :  MocaCommand<GameContext, T> where T : DataProvider
     {
-        protected ClassicPlayground[] Playgrounds
+        protected PlaygroundController[] Playgrounds
         {
             get
             {
                 if(_playgrounds == null)
-                    _playgrounds = Object.FindObjectsOfType<ClassicPlayground>();
+                    _playgrounds = Object.FindObjectsOfType<PlaygroundController>();
                 return _playgrounds;
             }
         }
 
-        private ClassicPlayground[] _playgrounds;
+        private PlaygroundController[] _playgrounds;
 
         /// <inheritdoc />
         public override void Dispose()

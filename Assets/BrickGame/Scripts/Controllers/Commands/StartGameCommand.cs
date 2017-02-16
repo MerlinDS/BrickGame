@@ -31,7 +31,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             }
             ScoreModel scoreModel = Context.GetActor<ScoreModel>();
             RestoreModel restoreModel = Context.GetActor<RestoreModel>();
-            foreach (ClassicPlayground controller in Playgrounds)
+            foreach (PlaygroundController controller in Playgrounds)
             {
                 int[] figure = null;
                 string name = controller.name;
