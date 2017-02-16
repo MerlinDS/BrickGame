@@ -24,7 +24,8 @@ namespace BrickGame.Scripts.Effects
         // ReSharper disable once InconsistentNaming
         private const string _BTex = "_BTex";
         private Material _material;
-        private RenderTexture _previousFrame;
+        //static - hack for smooth transition between scenes
+        private static RenderTexture _previousFrame;
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
@@ -34,12 +35,8 @@ namespace BrickGame.Scripts.Effects
         private void OnEnable()
         {
             _material = new Material(Shader.Find("Hidden/GhostingEffectShader"));
-            if (_previousFrame != null)
-            {
-                _previousFrame.Release();
-                _previousFrame.DiscardContents();
-            }
-            _previousFrame = new RenderTexture(Screen.width, Screen.height, 0);
+            if(_previousFrame == null)
+                _previousFrame = new RenderTexture(Screen.width, Screen.height, 0);
         }
 
         /// <summary>
