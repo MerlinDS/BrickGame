@@ -11,7 +11,7 @@ namespace BrickGame.Scripts
     public static class GameNotification
     {
         /// <summary>
-        /// Update current score of the game
+        /// UpdateColors current score of the game
         /// </summary>
         public const string ScoreUpdated = "GameNotification::ScoreUpdated";
         /// <summary>

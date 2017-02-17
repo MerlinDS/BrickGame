@@ -35,7 +35,7 @@ namespace BrickGame.Scripts.Playground
         }
         //================================ Private|Protected methods ================================
         /// <summary>
-        /// Update activity of bricks depending on data in matrix of playground.
+        /// UpdateColors activity of bricks depending on data in matrix of playground.
         /// </summary>
         private void Update()
         {
@@ -51,7 +51,7 @@ namespace BrickGame.Scripts.Playground
             {
                 if (_model.ViewUp2date) return;
                 w = _model.Width * _model.Height;
-                //Update active bricks
+                //UpdateColors active bricks
                 for (x = 0; x < w; ++x)
                 {
                     brick = _bricks[x];

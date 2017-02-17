@@ -49,7 +49,7 @@ namespace BrickGame.Scripts.Utils.Input
         {
             gesture = InputGesture.None;
             bool result = HasTouch(ref _position);
-            //Update touch
+            //UpdateColors touch
             if (result && _touch.phase == TouchPhase.Ended)
             {
                 _touch.phase = TouchPhase.Began;

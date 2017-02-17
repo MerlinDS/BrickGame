@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/16/2017 18:06</date>
 
+using Assets.BrickGame.Scripts.Utils.Colors;
 using BrickGame.Scripts.Effects;
 using BrickGame.Scripts.UI;
 using UnityEngine;
@@ -18,16 +19,26 @@ namespace BrickGame.Scripts.Controllers
     public class ColorPalleteManager : GameManager
     {
         //================================       Public Setup       =================================
+        [Header("Current color palette")]
         [Tooltip("Color of game backgorund")] public Color Background;
 
         [Tooltip("Foreground color, and UI color")] public Color Foreground;
 
         [Tooltip("Main color of the game")] public Color Main;
 
+        [Header("Color setups:")]
+        [Tooltip("Index of current palette")] [SerializeField][HideInInspector]
+        private int _index;
+        [Tooltip("List of availabel palettes")][SerializeField]
+        private ColorPalette[] _palettes;
         //================================    Systems properties    =================================
         private Color _foreground;
         private Color _main;
         //================================      Public methods      =================================
+        /// <summary>
+        /// UpdateColors colors of components in game
+        /// </summary>
+        /// <param name="force"></param>
         public void UpdateColors(bool force = false)
         {
             UpdateCameras();
@@ -38,6 +49,9 @@ namespace BrickGame.Scripts.Controllers
             UpdateUIBricks();
         }
 
+        /// <summary>
+        /// Reset manager to default palette
+        /// </summary>
         public void Reset()
         {
             Background = new Color(0.611F, 0.698F, 0.65F);
@@ -47,10 +61,28 @@ namespace BrickGame.Scripts.Controllers
             UpdateColors();
         }
 
+        public void NextPalette()
+        {
+            ChangePalette(_index+1);
+        }
+
+        public void ChangePalette(int index)
+        {
+            if(index == _index)return;
+            //cycling index in palette array
+            if (index >= _palettes.Length) index = 0;
+            else if (index < 0) index = _palettes.Length - 1;
+            //UpdateColors colors from palette
+            _palettes[index].UpdateColors(ref Background, ref Foreground, ref Main);
+            UpdateColors(true);
+            _index = index;
+
+        }
         //================================ Private|Protected methods ================================
         private void Start()
         {
             UpdateColors(true);
+
         }
 
         private void UpdateCameras()
@@ -82,7 +114,10 @@ namespace BrickGame.Scripts.Controllers
         {
             var shadows = FindObjectsOfType<Shadow>();
             foreach (Shadow shadow in shadows)
+            {
+                if(shadow.tag == SRTags.FixedColor)continue;
                 shadow.effectColor = color;
+            }
         }
 
         private void UpdateUIBricks()
@@ -95,5 +130,6 @@ namespace BrickGame.Scripts.Controllers
                 brick.Refresh();
             }
         }
+
     }
 }

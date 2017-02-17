@@ -4,7 +4,6 @@
 // <author>Andrew Salomatin</author>
 // <date>02/08/2017 17:15</date>
 
-using System.IO;
 using BrickGame.Scripts.Figures;
 using UnityEditor;
 using UnityEngine;
@@ -29,7 +28,7 @@ namespace BrickGame.Editor
 
         void OnWizardCreate()
         {
-            Glyph glyph = ScriptableObject.CreateInstance<Glyph>();
+            Glyph glyph = CreateInstance<Glyph>();
             for (int y = 0; y < Height; ++y)
             {
                 for (int x = 0; x < Width; ++x)

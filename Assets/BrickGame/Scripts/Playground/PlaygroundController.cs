@@ -162,7 +162,7 @@ namespace BrickGame.Scripts.Playground
             if (count <= 0) return;
             foreach (int y in lines)Model.RemoveLine(y);
             Model.MoveDown(lines[0] - 1, lines[lines.Count - 1]);
-            //Update speed by total count of removed lines
+            //UpdateColors speed by total count of removed lines
             Speed = Rules.GetSpeedByLines(Model.RemovedLines);
             BroadcastNofitication(GameNotification.ScoreUpdated,
                 new ScoreDataProvider(Rules, gameObject.name, count));

@@ -42,7 +42,7 @@ namespace BrickGame.Scripts.Models
         }
 
         /// <summary>
-        /// Update score of spesified mode in cache.
+        /// UpdateColors score of spesified mode in cache.
         /// </summary>
         /// <param name="mode">Game mode</param>
         /// <param name="session">Name of the session</param>
@@ -55,10 +55,10 @@ namespace BrickGame.Scripts.Models
             //Get previous score
             int maxScore = PlayerPrefs.GetInt(sb + ScoreField);
             int maxLines = PlayerPrefs.GetInt(sb + LinesField);
-            //Update score in mode
+            //UpdateColors score in mode
             if (score > maxScore)PlayerPrefs.SetInt(sb + ScoreField, score);
             if (lines > maxLines)PlayerPrefs.SetInt(sb + LinesField, lines);
-            //Update session
+            //UpdateColors session
             sb.Append('_');
             sb.Append(session);
             PlayerPrefs.SetInt(sb + ScoreField, score);
@@ -104,7 +104,7 @@ namespace BrickGame.Scripts.Models
         }
 
         /// <summary>
-        /// Update playground cache for speified mode
+        /// UpdateColors playground cache for speified mode
         /// </summary>
         /// <param name="mode">Name of the mode</param>
         /// <param name="session"></param>

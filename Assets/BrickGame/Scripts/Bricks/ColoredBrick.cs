@@ -62,7 +62,7 @@ namespace BrickGame.Scripts.Bricks
         }
 
         /// <summary>
-        /// Update color of the brick
+        /// UpdateColors color of the brick
         /// </summary>
         /// <param name="color">New color</param>
         protected abstract void UpdateColor(Color color);

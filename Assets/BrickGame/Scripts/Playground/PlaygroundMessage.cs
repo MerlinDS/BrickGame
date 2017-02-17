@@ -41,7 +41,7 @@ namespace BrickGame.Scripts.Playground
     public interface IModelMessageResiver
     {
         /// <summary>
-        /// Update model in component
+        /// UpdateColors model in component
         /// </summary>
         /// <param name="model"></param>
         void UpdateModel(PlaygroundModel model);

@@ -33,7 +33,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             CacheModel cacheModel = Context.GetActor<CacheModel>();
             if (Notification == GameNotification.MuteSound)
             {
-                //Update audio cache
+                //UpdateColors audio cache
                 AudioController audioController = Context.GetActor<AudioController>();
                 cacheModel.AudioMuted = audioController.Muted;
                 return;
@@ -68,7 +68,7 @@ namespace BrickGame.Scripts.Controllers.Commands
         }
 
         /// <summary>
-        /// Update score
+        /// UpdateColors score
         /// </summary>
         private void ScoreUpdate(CacheModel cacheModel)
         {

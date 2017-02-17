@@ -226,7 +226,7 @@ namespace BrickGame.Scripts.Figures
 
 
         /// <summary>
-        /// Update figure cells in playground matrix.
+        /// UpdateColors figure cells in playground matrix.
         /// Remove figure cells from previous place.
         /// Add figure cells to new place.
         /// </summary>
