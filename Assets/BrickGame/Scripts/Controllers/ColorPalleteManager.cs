@@ -43,7 +43,10 @@ namespace BrickGame.Scripts.Controllers
         {
             UpdateCameras();
             if (!_foreground.Equals(Foreground) || force)
+            {
                 UpdateTextColor(_foreground = Foreground);
+                UpdateImages(_foreground);
+            }
             if(!_main.Equals(Main) || force)
                 UpdateShadows(_main = Main);
             UpdateUIBricks();
@@ -108,6 +111,16 @@ namespace BrickGame.Scripts.Controllers
             var textFields = FindObjectsOfType<Text>();
             foreach (Text textField in textFields)
                 textField.color = color;
+        }
+
+        private void UpdateImages(Color color)
+        {
+            var changable = GameObject.FindGameObjectsWithTag(SRTags.ColorChangeble);
+            foreach (GameObject gameObject in changable)
+            {
+                if(gameObject.GetComponent<Image>() == null)continue;
+                gameObject.GetComponent<Image>().color = color;
+            }
         }
 
         private void UpdateShadows(Color color)
