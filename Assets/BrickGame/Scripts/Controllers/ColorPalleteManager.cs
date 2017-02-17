@@ -4,7 +4,6 @@
 // <author>Andrew Salomatin</author>
 // <date>02/16/2017 18:06</date>
 
-using BrickGame.Scripts.Bricks;
 using BrickGame.Scripts.Effects;
 using BrickGame.Scripts.UI;
 using UnityEngine;
@@ -49,12 +48,17 @@ namespace BrickGame.Scripts.Controllers
         }
 
         //================================ Private|Protected methods ================================
+        private void Start()
+        {
+            UpdateColors(true);
+        }
+
         private void UpdateCameras()
         {
             foreach (Camera c in Camera.allCameras)
             {
-                PalleteSwappingEffectBehaviour effectBehaviour = c.GetComponent
-                    <PalleteSwappingEffectBehaviour>();
+                PaletteSwappingEffectBehaviour effectBehaviour = c.GetComponent
+                    <PaletteSwappingEffectBehaviour>();
                 if (effectBehaviour == null)
                 {
                     //Change directly on camera

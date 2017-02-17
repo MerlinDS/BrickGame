@@ -1,4 +1,4 @@
-﻿Shader "Hidden/PalleteSwappingShader"
+﻿Shader "Hidden/PaleteSwapping"
 {
 	Properties
 	{
@@ -33,23 +33,20 @@
 			{
 				v2f o;
 				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
-				o.uv = v.uv;
+                o.uv = v.uv;
 				return o;
 			}
-			
-			sampler2D _MainTex;
-		    half4x4 _ColorMatrix;
+
             float _Intensivity;
+            half4x4 _ColorMatrix;
+			sampler2D _MainTex;
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed x = tex2D(_MainTex, i.uv).r;
-				float4 c = _ColorMatrix[x * 3];// i * color length
-                //Blackout
-                float4 c1 =  lerp(c, _ColorMatrix[0], _Intensivity);
-                float y = 1 - i.uv.y;
-                c = lerp(c, c1, y);
-                return c;
+                fixed x = tex2D(_MainTex, i.uv).x;//i in color matrix
+                float4 bl = _ColorMatrix[0]; // blackout color
+                float4 rep = _ColorMatrix[x * 3]; //Color replasing (i * color length)
+                return lerp(rep, bl, _Intensivity * i.uv.y);
 			}
 			ENDCG
 		}
