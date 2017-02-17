@@ -8,6 +8,7 @@ using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playground;
 using BrickGame.Scripts.Utils;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers.Commands
 {
@@ -40,8 +41,8 @@ namespace BrickGame.Scripts.Controllers.Commands
             if (Notification == GameNotification.MuteSound)
             {
                 //UpdateColors audio cache
-                AudioController audioController = Context.GetActor<AudioController>();
-                cacheModel.AudioMuted = audioController.Muted;
+                //AudioController audioController = Context.GetActor<AudioController>();
+                cacheModel.AudioMuted = !cacheModel.AudioMuted;
                 return;
             }
 

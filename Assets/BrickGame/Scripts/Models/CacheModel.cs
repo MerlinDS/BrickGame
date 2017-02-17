@@ -5,7 +5,6 @@
 // <date>02/14/2017 20:14</date>
 
 using System.Text;
-using BrickGame.Scripts.Playground;
 using MiniMoca;
 using UnityEngine;
 
@@ -22,16 +21,18 @@ namespace BrickGame.Scripts.Models
         private const string PlaygroundField = "_Playground";
         private const string AudioField = "AudioMuted";
         private const string ColorField = "ColorPaletteIndex";
+
         //================================       Public Setup       =================================
         public bool AudioMuted
         {
             get { return PlayerPrefs.GetInt(AudioField) > 0; }
             set { PlayerPrefs.SetInt(AudioField, value ? 1 : 0); }
-}
+        }
 
-        public int ColorPaletteIndex {
+        public int ColorPaletteIndex
+        {
             get { return PlayerPrefs.GetInt(ColorField); }
-            set { PlayerPrefs.SetInt(ColorField, value);}
+            set { PlayerPrefs.SetInt(ColorField, value); }
         }
         //================================    Systems properties    =================================
 
@@ -62,14 +63,13 @@ namespace BrickGame.Scripts.Models
             int maxScore = PlayerPrefs.GetInt(sb + ScoreField);
             int maxLines = PlayerPrefs.GetInt(sb + LinesField);
             //UpdateColors score in mode
-            if (score > maxScore)PlayerPrefs.SetInt(sb + ScoreField, score);
-            if (lines > maxLines)PlayerPrefs.SetInt(sb + LinesField, lines);
+            if (score > maxScore) PlayerPrefs.SetInt(sb + ScoreField, score);
+            if (lines > maxLines) PlayerPrefs.SetInt(sb + LinesField, lines);
             //UpdateColors session
             sb.Append('_');
             sb.Append(session);
             PlayerPrefs.SetInt(sb + ScoreField, score);
             PlayerPrefs.SetInt(sb + LinesField, lines);
-
         }
 
         /// <summary>
@@ -130,6 +130,7 @@ namespace BrickGame.Scripts.Models
         {
             return PlayerPrefs.GetString(mode + ModeField + session + PlaygroundField);
         }
+
         //================================ Private|Protected methods ================================
     }
 }

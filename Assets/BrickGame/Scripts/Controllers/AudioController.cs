@@ -5,6 +5,7 @@
 // <date>02/14/2017 18:52</date>
 
 using BrickGame.Scripts.Figures;
+using BrickGame.Scripts.Models;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers
@@ -73,6 +74,12 @@ namespace BrickGame.Scripts.Controllers
             Context.RemoveListener(FigureNotification.Moved, GameNotificationHandler);
             Context.RemoveListener(GameNotification.MuteSound, GameNotificationHandler);
         }
+
+        private void Start()
+        {
+            if(Context.GetActor<CacheModel>().AudioMuted)Mute();
+        }
+
 
         private void GameNotificationHandler(string notification)
         {
