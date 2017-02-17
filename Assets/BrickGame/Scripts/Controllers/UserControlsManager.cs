@@ -93,7 +93,7 @@ namespace BrickGame.Scripts.Controllers
         /// <summary>
         /// Getting a user input and providing game actions.
         /// </summary>
-        private void FixedUpdate()
+        private void Update()
         {
             Touch touch;
             InputGesture gesture;
@@ -101,8 +101,9 @@ namespace BrickGame.Scripts.Controllers
             switch (touch.phase)
             {
                 case TouchPhase.Ended:
-//                    Debug.Log("Ended" + gesture);
+                    //TODO: avoid turn if position out of playground
                     if (gesture == InputGesture.Tap)Turn();
+                    //TODO: avoid movement
                     else if (gesture == InputGesture.Swipe) MoveDown(20);
                     _began = Vector2.zero;
                     break;
@@ -146,7 +147,7 @@ namespace BrickGame.Scripts.Controllers
         {
             if (count <= 1)
             {
-                if ((_hTimer += Time.deltaTime) < HorCooldown) return;
+                if ((_hTimer += Time.deltaTime) < VerCooldown) return;
                 _hTimer = 0;
             }
             for (var j = 0; j < count; j++)

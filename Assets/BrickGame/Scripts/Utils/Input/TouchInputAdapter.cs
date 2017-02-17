@@ -24,7 +24,7 @@ namespace BrickGame.Scripts.Utils.Input
         /// <inheritdoc />
         protected override bool HasTouch(ref Vector2 position)
         {
-            position.y = position.x = 0;
+            //position.y = position.x = 0;
             if (UnityEngine.Input.touchCount == 0) return false;
             Touch touch = UnityEngine.Input.GetTouch(0);
             position.x = touch.position.x;
