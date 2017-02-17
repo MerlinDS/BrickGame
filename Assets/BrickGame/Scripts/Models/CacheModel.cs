@@ -21,12 +21,18 @@ namespace BrickGame.Scripts.Models
         private const string LinesField = "_Lines";
         private const string PlaygroundField = "_Playground";
         private const string AudioField = "AudioMuted";
+        private const string ColorField = "ColorPaletteIndex";
         //================================       Public Setup       =================================
         public bool AudioMuted
         {
             get { return PlayerPrefs.GetInt(AudioField) > 0; }
             set { PlayerPrefs.SetInt(AudioField, value ? 1 : 0); }
 }
+
+        public int ColorPaletteIndex {
+            get { return PlayerPrefs.GetInt(ColorField); }
+            set { PlayerPrefs.SetInt(ColorField, value);}
+        }
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================

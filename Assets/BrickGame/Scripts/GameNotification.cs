@@ -18,5 +18,10 @@ namespace BrickGame.Scripts
         /// Mute or unmute sound
         /// </summary>
         public const string MuteSound = "GameNotification::MuteSound";
+
+        /// <summary>
+        /// Application color palette was changed
+        /// </summary>
+        public const string ColorChanged = "GameNotification:ColorChanged";
     }
 }

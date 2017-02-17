@@ -6,6 +6,7 @@
 
 using Assets.BrickGame.Scripts.Utils.Colors;
 using BrickGame.Scripts.Effects;
+using BrickGame.Scripts.Models;
 using BrickGame.Scripts.UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,6 +35,9 @@ namespace BrickGame.Scripts.Controllers
         //================================    Systems properties    =================================
         private Color _foreground;
         private Color _main;
+
+        public int ColorPaletteIndex { get { return _index; } }
+
         //================================      Public methods      =================================
         /// <summary>
         /// UpdateColors colors of components in game
@@ -79,13 +83,13 @@ namespace BrickGame.Scripts.Controllers
             _palettes[index].UpdateColors(ref Background, ref Foreground, ref Main);
             UpdateColors(true);
             _index = index;
+            BroadcastNofitication(GameNotification.ColorChanged);
 
         }
         //================================ Private|Protected methods ================================
         private void Start()
         {
-            UpdateColors(true);
-
+            ChangePalette(Context.GetActor<CacheModel>().ColorPaletteIndex);
         }
 
         private void UpdateCameras()
@@ -116,10 +120,10 @@ namespace BrickGame.Scripts.Controllers
         private void UpdateImages(Color color)
         {
             var changable = GameObject.FindGameObjectsWithTag(SRTags.ColorChangeble);
-            foreach (GameObject gameObject in changable)
+            foreach (GameObject obj in changable)
             {
-                if(gameObject.GetComponent<Image>() == null)continue;
-                gameObject.GetComponent<Image>().color = color;
+                if(obj.GetComponent<Image>() == null)continue;
+                obj.GetComponent<Image>().color = color;
             }
         }
 

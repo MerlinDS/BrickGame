@@ -136,7 +136,11 @@ namespace BrickGame.Scripts.Controllers
         {
             int n = _controller.Count;
             for (int i = 0; i < n; i++)
+            {
+//                var controller = _controller[i] as Component;
+                //controller.transform
                 _controller[i].Turn();
+            }
         }
 
         /// <summary>
@@ -154,7 +158,9 @@ namespace BrickGame.Scripts.Controllers
             {
                 int n = _controller.Count;
                 for (int i = 0; i < n; i++)
+                {
                     _controller[i].MoveDown();
+                }
             }
 
         }

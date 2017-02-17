@@ -38,6 +38,7 @@ namespace BrickGame.Scripts
             CommandMap.MapCommand<StartGameCommand>(PlaygroundNotification.Start);
             //Cache command
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound);
+            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ColorChanged);
             CommandMap.MapCommand<UpdateCacheCommand>(PlaygroundNotification.End);
             CommandMap.MapCommand<UpdateCacheCommand>(PlaygroundNotification.Pause);
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);
