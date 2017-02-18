@@ -6,7 +6,6 @@
 
 using System;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Models
 {
@@ -64,7 +63,7 @@ namespace BrickGame.Scripts.Models
         /// Matrix has read only access!
         /// <see cref="IsReadOnly"/> flag equals true.
         /// </exception>
-        public virtual T this[int x, int y]
+        public T this[int x, int y]
         {
             get
             {
@@ -90,6 +89,18 @@ namespace BrickGame.Scripts.Models
             }
         }
 
+        /// <summary>
+        /// Convert matrix to linear array
+        /// </summary>
+        /// <param name="value">Matrix instance</param>
+        /// <returns>An linear array instance</returns>
+        public static implicit operator T[](Matrix<T> value)
+        {
+            int length = value.Width * value.Height;
+            T[] result = new T[length];
+            Array.Copy(value._matrix, result, length);
+            return result;
+        }
         //================================    Systems properties    =================================
         /// <summary>
         /// Linear representation of the rectangular matrix
@@ -147,6 +158,26 @@ namespace BrickGame.Scripts.Models
         public Matrix(int width, int height, bool isStrict = false) :
             this(new T[width * height], width, height, isStrict, false)
         {
+        }
+        /// <summary>
+        /// Matrix constructor
+        /// </summary>
+        /// <param name="matrix">Base matrix data</param>
+        /// <param name="isStrict">Flag of access strictness.</param>
+        /// <param name="isReadOnly">Flag of read only access.</param>
+        /// <seealso cref="IsStrict"/>
+        /// <seealso cref="IsReadOnly"/>
+        /// <exception cref="ArgumentException">Width and height of the matrix can be lass that 1</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Size of the matrix doesn't match width * height!</exception>
+        public Matrix(T[,]matrix, bool isStrict = false, bool isReadOnly = true):
+            this(new T[matrix.GetLength(0) * matrix.GetLength(1)], matrix.GetLength(0), matrix.GetLength(1),
+                isStrict, isReadOnly)
+        {
+            for (int x = 0; x < Width; ++x)
+            {
+                for (int y = 0; y < Height; ++y)
+                    _matrix[x + y * Width] = matrix[x, y];
+            }
         }
 
         /// <summary>
