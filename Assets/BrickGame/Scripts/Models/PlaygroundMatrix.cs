@@ -15,13 +15,6 @@ namespace BrickGame.Scripts.Models
     public class PlaygroundMatrix : Matrix<bool>
     {
         //================================       Public Setup       =================================
-
-        /// <inheritdoc />
-        public override bool this[int x, int y]
-        {
-            //TODO: mix figure cells to matrix (without matrix updating)
-            get { return base[x, y]; }
-        }
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================

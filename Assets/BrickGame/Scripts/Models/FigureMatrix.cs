@@ -14,7 +14,10 @@ namespace BrickGame.Scripts.Models
     public class FigureMatrix : Matrix<bool>
 {
         //================================       Public Setup       =================================
-
+        // ReSharper disable InconsistentNaming
+        public int x;
+        public int y;
+        // ReSharper restore InconsistentNaming
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
