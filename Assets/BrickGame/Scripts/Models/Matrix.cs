@@ -63,7 +63,7 @@ namespace BrickGame.Scripts.Models
         /// Matrix has read only access!
         /// <see cref="IsReadOnly"/> flag equals true.
         /// </exception>
-        public T this[int x, int y]
+        public virtual T this[int x, int y]
         {
             get
             {
@@ -203,7 +203,26 @@ namespace BrickGame.Scripts.Models
                 _matrix[FlippedCell(i, Width)] = matrix[i];
         }
 
-
+        /// <summary>
+        /// Check if matrix has row with cells of spesified value
+        /// </summary>
+        /// <param name="row">Index of row</param>
+        /// <param name="value">Value of cells ot compare</param>
+        /// <returns>True if row contains cells equals value, false in other case</returns>
+        /// <exception cref="IndexOutOfRangeException">Row index is out of the matrix bounds</exception>
+        public bool RowContainsValue(int row, T value)
+        {
+            if (row < 0 || row >= Height)
+            {
+                if (IsStrict)
+                    throw new IndexOutOfRangeException("Row index is out of the matrix bounds");
+                return false;
+            }
+            int offset = row * Width;
+            for (int x = 0; x < Width; x++)
+                if (!_matrix[x + offset].Equals(value)) return false;
+            return true;
+        }
         //================================ Equals methods ==========================================
         /// <inheritdoc />
         private bool Equals(Matrix<T> other)
