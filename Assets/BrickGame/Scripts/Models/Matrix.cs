@@ -6,6 +6,7 @@
 
 using System;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Models
 {
@@ -222,6 +223,30 @@ namespace BrickGame.Scripts.Models
             for (int x = 0; x < Width; x++)
                 if (!_matrix[x + offset].Equals(value)) return false;
             return true;
+        }
+
+        public bool HasIntersection(Matrix<T> target, int xOffset, int yOffset)
+        {
+            int width = target.Width;
+            int height = target.Height;
+            T @default = default(T);
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if(target._matrix[x + y * width].Equals(@default))continue;
+                    //target matrix has value in the cell
+                    int c = xOffset * x + (yOffset + y) * Width;
+                    if(c < 0 || c > _matrix.Length) continue;
+                    //the cell is in bounds of current matrix
+                    if (_matrix[c].Equals(@default))continue;
+                    //current matrix has value in the cell
+                    //matrices have an intersection
+                    return true;
+                }
+            }
+            //an intersection between matrices was not found
+            return false;
         }
         //================================ Equals methods ==========================================
         /// <inheritdoc />
