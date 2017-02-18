@@ -2,6 +2,8 @@
 
 Demo project - the old style Tetris game for Android.
 
+*Developed with Jetbrains Rider IDE*
+
 ## Dependencies
 
 * [MiniMoca](https://github.com/MerlinDS/MiniMoca) - a simple and lightweight architecture framework for Unity.
@@ -11,4 +13,7 @@ Demo project - the old style Tetris game for Android.
 ### Shaders
 
 * [Ghosting effect shader](https://github.com/MerlinDS/BrickGame/blob/development/Assets/BrickGame/Shaders/GhostingEffectShader.shader) - simulation of an old device screen.
-* [Palette swapping shader](https://github.com/MerlinDS/BrickGame/blob/development/Assets/BrickGame/Shaders/PalleteSwappingShader.shader) - changing color palette on the fly.
+* [Palette swapping shader](https://github.com/MerlinDS/BrickGame/blob/development/Assets/BrickGame/Shaders/PaletteSwapping.shader) - changing color palette on the fly.
+
+
+
