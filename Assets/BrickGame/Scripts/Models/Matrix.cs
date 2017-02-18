@@ -256,6 +256,17 @@ namespace BrickGame.Scripts.Models
             return true;
         }
 
+        /// <summary>
+        /// Check for intersection between two matrices
+        /// </summary>
+        /// <param name="target">Target matrix to interact with</param>
+        /// <param name="xOffset">X offset in current matrix</param>
+        /// <param name="yOffset">Y offset in current matrix</param>
+        /// <returns>
+        /// True if matrices have a cell that intersects with a cell in target matrix:
+        /// cells with same coordinates have values that not equals to default value
+        /// I n other cases return false.
+        /// </returns>
         public bool HasIntersection(Matrix<T> target, int xOffset, int yOffset)
         {
             int width = target.Width;
