@@ -1,18 +1,19 @@
-﻿// <copyright file="FigureMatrix.cs" company="Near Fancy">
+﻿// <copyright file="Figure.cs" company="Near Fancy">
 // Copyright (c) 2017 All Rights Reserved
 // </copyright>
 // <author>Andrew Salomatin</author>
 // <date>02/18/2017 19:23</date>
 
+using BrickGame.Scripts.Figures;
 using JetBrains.Annotations;
 
 namespace BrickGame.Scripts.Models
 {
     /// <summary>
-    /// FigureMatrix
+    /// Figure - class that represent figures in the game as the rectangular matrix.
     /// </summary>
-    public class FigureMatrix : Matrix<bool>
-{
+    public class Figure : Matrix<bool>
+    {
         //================================       Public Setup       =================================
         // ReSharper disable InconsistentNaming
         public int x;
@@ -21,24 +22,21 @@ namespace BrickGame.Scripts.Models
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
-
-        /// <inheritdoc />
-        public FigureMatrix(int width, int height) : base(width, height, true)
+        /// <summary>
+        /// Constructor for epmty figure
+        /// </summary>
+        public Figure()
         {
-        }
 
-        /// <inheritdoc />
-        public FigureMatrix([NotNull] bool[,] matrix, bool isStrict = false, bool isReadOnly = true) :
-            base(matrix, isStrict, isReadOnly)
+        }
+        /// <summary>
+        /// Create new figure from the template
+        /// </summary>
+        /// <param name="glyph">tamplate of a figure</param>
+        public Figure([NotNull] Glyph glyph):base(glyph.GetFigureMatrix(), true)
         {
-        }
 
-        /// <inheritdoc />
-        public FigureMatrix([NotNull] bool[] matrix, int width, int height) :
-            base(matrix, width, height, true, true)
-        {
         }
-
         //================================ Private|Protected methods ================================
-}
+    }
 }

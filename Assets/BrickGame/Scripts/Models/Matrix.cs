@@ -22,21 +22,11 @@ namespace BrickGame.Scripts.Models
     {
         //================================       Public Setup       =================================
         /// <summary>
-        /// Matrix width, count of cells in row
-        /// </summary>
-        public int Width { get; private set; }
-
-        /// <summary>
-        /// Matrix height, count of cells in column
-        /// </summary>
-        public int Height { get; private set; }
-
-        /// <summary>
         /// Flag of read only access
         ///
         /// <seealso cref="this[int,int]"/>
         /// </summary>
-        public bool IsReadOnly { get; private set; }
+        public readonly bool IsReadOnly;
 
         /// <summary>
         /// Flag of access strictness: if flag equals true,
@@ -50,7 +40,23 @@ namespace BrickGame.Scripts.Models
         ///
         /// <seealso cref="this[int,int]"/>
         /// </summary>
-        public bool IsStrict { get; private set; }
+        public readonly bool IsStrict;
+
+        /// <summary>
+        /// Is matrix nullable
+        /// </summary>
+        [UsedImplicitly]
+        public readonly bool IsNull;
+
+        /// <summary>
+        /// Matrix width, count of cells in row
+        /// </summary>
+        public int Width { get; private set; }
+
+        /// <summary>
+        /// Matrix height, count of cells in column
+        /// </summary>
+        public int Height { get; private set; }
 
         /// <summary>
         /// Access to data in concrete cell
@@ -94,8 +100,11 @@ namespace BrickGame.Scripts.Models
         /// </summary>
         /// <param name="value">Matrix instance</param>
         /// <returns>An linear array instance</returns>
-        public static implicit operator T[](Matrix<T> value)
+        /// <exception cref="ArgumentNullException"></exception>
+        public static implicit operator T[]([NotNull] Matrix<T> value)
         {
+            if (value == null) throw new ArgumentNullException("value");
+
             int length = value.Width * value.Height;
             T[] result = new T[length];
             Array.Copy(value._matrix, result, length);
@@ -116,9 +125,15 @@ namespace BrickGame.Scripts.Models
         /// <exception cref="ArgumentOutOfRangeException">Destination matrix mast be the same size as souce matrix</exception>
         public static void Copy([NotNull] Matrix<T> source, [NotNull] Matrix<T> dest)
         {
+            if (source == null) throw new ArgumentNullException("source");
+            if (dest == null) throw new ArgumentNullException("dest");
+
             if (source.Width != dest.Width || source.Height != dest.Height)
                 throw new ArgumentOutOfRangeException("dest",
                     "Destination matrix mast be the same size as souce matrix");
+
+            if(source.Equals(dest))return;
+
             for (int i = 0; i < source._matrix.Length; i++)
                 dest._matrix[i] = source._matrix[i];
         }
@@ -145,6 +160,7 @@ namespace BrickGame.Scripts.Models
         // ReSharper disable once MethodOverloadWithOptionalParameter
         public static Matrix<T> Clone([NotNull] Matrix<T> source, bool isStrict = false, bool isReadOnly = false)
         {
+            if (source == null) throw new ArgumentNullException("source");
             return new Matrix<T>(source._matrix, source.Width, source.Height, isStrict, isReadOnly);
         }
 
@@ -190,12 +206,10 @@ namespace BrickGame.Scripts.Models
         /// <param name="isReadOnly">Flag of read only access.</param>
         /// <seealso cref="IsStrict"/>
         /// <seealso cref="IsReadOnly"/>
-        /// <exception cref="ArgumentException">Width and height of the matrix can be lass that 1</exception>
         /// <exception cref="ArgumentOutOfRangeException">Size of the matrix doesn't match width * height!</exception>
         public Matrix([NotNull] T[] matrix, int width, int height, bool isStrict = false, bool isReadOnly = true)
         {
-            if (width <= 0 || height <= 0)
-                throw new ArgumentException("Width and height of the matrix can be lass that 1");
+            if (matrix == null) throw new ArgumentNullException("matrix");
             if (matrix.Length != width * height)
                 throw new ArgumentOutOfRangeException("matrix", "Size of the matrix doesn't match width * height!");
             _matrix = matrix;
@@ -273,8 +287,9 @@ namespace BrickGame.Scripts.Models
         /// cells with same coordinates have values that not equals to default value
         /// I n other cases return false.
         /// </returns>
-        public bool HasIntersection(Matrix<T> target, int xOffset, int yOffset)
+        public bool HasIntersection([NotNull] Matrix<T> target, int xOffset, int yOffset)
         {
+            if (target == null) throw new ArgumentNullException("target");
             int width = target.Width;
             int height = target.Height;
             T @default = default(T);
@@ -298,12 +313,14 @@ namespace BrickGame.Scripts.Models
         }
         //================================ Equals methods ==========================================
         /// <inheritdoc />
+        [ContractAnnotation("null=>false")]
         private bool Equals(Matrix<T> other)
         {
             return Equals(_matrix, other._matrix) && Width == other.Width && Height == other.Height;
         }
 
         /// <inheritdoc />
+        [ContractAnnotation("null=>false")]
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -335,6 +352,13 @@ namespace BrickGame.Scripts.Models
                    " of type " + typeof(T);
         }
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Constructor of null object
+        /// </summary>
+        protected Matrix() : this(0,0)
+        {
+            IsNull = true;
+        }
 
         /// <summary>
         /// Calculate cell index in linear array that represents a clockwise rotated matrix.

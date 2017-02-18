@@ -5,22 +5,38 @@
 // <date>02/18/2017 21:05</date>
 
 using BrickGame.Scripts.Models;
+using JetBrains.Annotations;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
-    /// FigureControls
+    /// FigureControls - a figure controls.
     /// </summary>
-    public class FigureControls : IFigureContols
+    public class FigureControls : GameBehaviour, IFigureContols
     {
         //================================       Public Setup       =================================
 
         //================================    Systems properties    =================================
-        private FigureMatrix _figure;
-        private PlaygroundMatrix _playground;
+        /// <summary>
+        /// Figure matrix, initialized with empty object
+        /// </summary>
+        [NotNull] private Figure _figure = new Figure();
+        /// <summary>
+        /// Playground matrix (model of the playground), initialized with empty object
+        /// </summary>
+        [NotNull] private Matrix<bool> _matrix = new Matrix<bool>(0, 0);
         //================================      Public methods      =================================
-
-        //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Update current controls links
+        /// </summary>
+        /// <param name="figure">New instance of figure</param>
+        /// <param name="matrix">New instance of matrix</param>
+        public void UpdateControls([CanBeNull] Figure figure, [CanBeNull] Matrix<bool> matrix)
+        {
+            _figure = figure ?? new Figure();
+            _matrix = matrix ?? new Matrix<bool>(0, 0);
+        }
         /// <inheritdoc />
         public void Rotate(bool clockwise = true)
         {
@@ -35,11 +51,11 @@ namespace BrickGame.Scripts.Figures
                 y = y + (int) ((_figure.Height - _figure.Width) * 0.5F);
                 //shift from borders
                 if (x < 0) x = 0;
-                else if (x + _figure.Height >= _playground.Width)
-                    x = _playground.Width - _figure.Height;
+                else if (x + _figure.Height >= _matrix.Width)
+                    x = _matrix.Width - _figure.Height;
             }
             //Check if figure can be rotated
-            if (!_playground.HasIntersection(_figure, x, y))
+            if (!_matrix.HasIntersection(_figure, x, y))
             {
                 //Rotate figure back
                 _figure.Rotate(!clockwise);
@@ -56,15 +72,15 @@ namespace BrickGame.Scripts.Figures
         {
             int x = _figure.x + xShift;
             //Check bounds
-            if (x < 0 || x + _figure.Width > _playground.Width) return false;
+            if (x < 0 || x + _figure.Width > _matrix.Width) return false;
             //Check intersection
-            return _playground.HasIntersection(_figure, x, _figure.y);
+            return _matrix.HasIntersection(_figure, x, _figure.y);
         }
 
         /// <inheritdoc />
         public void MoveHorizontal(int xShift)
         {
-            if(!CanMoveHorizontal(xShift))return;
+            if(xShift == 0 || !CanMoveHorizontal(xShift))return;
             _figure.x += xShift;
         }
 
@@ -73,16 +89,29 @@ namespace BrickGame.Scripts.Figures
         {
             int y = _figure.x + yShift;
             //Check bounds
-            if (y < 0 || y + _figure.Height > _playground.Height) return false;
+            if (y < 0 || y + _figure.Height > _matrix.Height) return false;
             //Check intersection
-            return _playground.HasIntersection(_figure, _figure.x, y);
+            return _matrix.HasIntersection(_figure, _figure.x, y);
         }
 
         /// <inheritdoc />
         public void MoveVertical(int yShift)
         {
-            if(CanMoveHorizontal(yShift))return;
+            if(yShift == 0 || CanMoveHorizontal(yShift))return;
             _figure.y -= yShift;
+        }
+        //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Initialize controls
+        /// </summary>
+        private void Start()
+        {
+            if (gameObject.tag != SRTags.Player || gameObject.tag != SRTags.AI)
+            {
+                Debug.LogWarning("Controls not set to play or AI, and will be set to AI automatically!");
+                gameObject.tag = SRTags.AI;
+            }
+            Matrix<bool>.Copy(_figure, _figure);
         }
     }
 }
