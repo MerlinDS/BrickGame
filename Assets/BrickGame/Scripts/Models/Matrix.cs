@@ -301,8 +301,10 @@ namespace BrickGame.Scripts.Models
             unchecked
             {
                 var hashCode = _matrix != null ? _matrix.GetHashCode() : 0;
+                // ReSharper disable NonReadonlyMemberInGetHashCode
                 hashCode = (hashCode * 397) ^ Width;
                 hashCode = (hashCode * 397) ^ Height;
+                // ReSharper restore NonReadonlyMemberInGetHashCode
                 return hashCode;
             }
         }
