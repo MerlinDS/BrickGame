@@ -16,7 +16,6 @@ namespace BrickGame.Scripts.Controllers
     /// <summary>
     /// ColorPalleteManager
     /// </summary>
-    [ExecuteInEditMode]
     public class ColorPalleteManager : GameManager
     {
         //================================       Public Setup       =================================
