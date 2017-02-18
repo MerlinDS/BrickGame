@@ -28,13 +28,14 @@ namespace BrickGame.Scripts.Models
         }
 
         /// <inheritdoc />
-        public FigureMatrix(bool[,] matrix, bool isStrict = false, bool isReadOnly = true) :
+        public FigureMatrix([NotNull] bool[,] matrix, bool isStrict = false, bool isReadOnly = true) :
             base(matrix, isStrict, isReadOnly)
         {
         }
 
         /// <inheritdoc />
-        public FigureMatrix([NotNull] bool[] matrix, int width, int height) : base(matrix, width, height, true, true)
+        public FigureMatrix([NotNull] bool[] matrix, int width, int height) :
+            base(matrix, width, height, true, true)
         {
         }
 

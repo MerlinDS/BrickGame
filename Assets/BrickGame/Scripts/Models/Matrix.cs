@@ -169,7 +169,7 @@ namespace BrickGame.Scripts.Models
         /// <seealso cref="IsReadOnly"/>
         /// <exception cref="ArgumentException">Width and height of the matrix can be lass that 1</exception>
         /// <exception cref="ArgumentOutOfRangeException">Size of the matrix doesn't match width * height!</exception>
-        public Matrix(T[,]matrix, bool isStrict = false, bool isReadOnly = true):
+        public Matrix([NotNull] T[,]matrix, bool isStrict = false, bool isReadOnly = true):
             this(new T[matrix.GetLength(0) * matrix.GetLength(1)], matrix.GetLength(0), matrix.GetLength(1),
                 isStrict, isReadOnly)
         {
