@@ -56,7 +56,7 @@ namespace BrickGame.Scripts.Models
         /// Access to data in concrete cell
         /// </summary>
         /// <param name="x">X of cell in matrix</param>
-        /// <param name="y">Y of cell in matrix</param>
+        /// <param name="y">y of cell in matrix</param>
         /// <exception cref="IndexOutOfRangeException">Coordinates is out of the matrix bounds.
         /// <see cref="IsStrict"/> flag equals true</exception>
         /// <exception cref="InvalidOperationException">
@@ -209,14 +209,20 @@ namespace BrickGame.Scripts.Models
         /// <summary>
         /// Rotate matrix to 90 degrees.
         /// <para>Width and Height of the matrix will be swapped</para>
+        /// <param name="clockwise">If true clockwise rotation will happen,
+        /// in other cases counterclockwise rotation will happen.</param>
         /// </summary>
-        public void Rotate()
+        public void Rotate(bool clockwise = true)
         {
             T[] matrix = new T[_matrix.Length]; //temp matrix
             Array.Copy(_matrix, matrix, _matrix.Length);
 
             for (int i = 0; i < _matrix.Length; ++i)
-                _matrix[RotateCell(i, Width, Height)] = matrix[i];
+            {
+                int c = RotateCellClockwise(i, Width, Height);
+                if (!clockwise) c = _matrix.Length - 1 - c;//flip
+                _matrix[c] = matrix[i];
+            }
             //Swap width and height
             int temp = Width;
             Width = Height;
@@ -261,7 +267,7 @@ namespace BrickGame.Scripts.Models
         /// </summary>
         /// <param name="target">Target matrix to interact with</param>
         /// <param name="xOffset">X offset in current matrix</param>
-        /// <param name="yOffset">Y offset in current matrix</param>
+        /// <param name="yOffset">y offset in current matrix</param>
         /// <returns>
         /// True if matrices have a cell that intersects with a cell in target matrix:
         /// cells with same coordinates have values that not equals to default value
@@ -331,13 +337,13 @@ namespace BrickGame.Scripts.Models
         //================================ Private|Protected methods ================================
 
         /// <summary>
-        /// Calculate cell index in linear array that represents a rotated matrix.
+        /// Calculate cell index in linear array that represents a clockwise rotated matrix.
         /// </summary>
         /// <param name="c">current index of cell in a liner array</param>
         /// <param name="w">width of matrix</param>
         /// <param name="h">height of matrix</param>
-        /// <returns>index of cell in rotated matrix</returns>
-        private int RotateCell(int c, int w, int h)
+        /// <returns>index of cell in clockwise  rotated matrix</returns>
+        private int RotateCellClockwise(int c, int w, int h)
         {
             int y = c / w;
             return h - 1 - y + (c - y * w) * h;
