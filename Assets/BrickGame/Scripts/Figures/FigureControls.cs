@@ -54,27 +54,35 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public bool CanMoveHorizontal(int xShift)
         {
-            throw new System.NotImplementedException();
+            int x = _figure.x + xShift;
+            //Check bounds
+            if (x < 0 || x + _figure.Width > _playground.Width) return false;
+            //Check intersection
+            return _playground.HasIntersection(_figure, x, _figure.y);
         }
 
         /// <inheritdoc />
         public void MoveHorizontal(int xShift)
         {
+            if(!CanMoveHorizontal(xShift))return;
             _figure.x += xShift;
-            throw new System.NotImplementedException();
         }
 
         /// <inheritdoc />
         public bool CanMoveVertical(int yShift)
         {
-            throw new System.NotImplementedException();
+            int y = _figure.x + yShift;
+            //Check bounds
+            if (y < 0 || y + _figure.Height > _playground.Height) return false;
+            //Check intersection
+            return _playground.HasIntersection(_figure, _figure.x, y);
         }
 
         /// <inheritdoc />
         public void MoveVertical(int yShift)
         {
-            _figure.y = yShift;
-            throw new System.NotImplementedException();
+            if(CanMoveHorizontal(yShift))return;
+            _figure.y -= yShift;
         }
     }
 }
