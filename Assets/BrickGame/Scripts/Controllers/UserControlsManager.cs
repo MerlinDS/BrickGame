@@ -19,41 +19,41 @@ namespace BrickGame.Scripts.Controllers
     public class UserControlsManager : GameManager
     {
         //================================       Public Setup       =================================
-        [Range(0.01F, 1F)]
-        public float HorCooldown = 0.1F;
-        [Range(0.01F, 1F)]
-        public float VerCooldown = 0.1F;
+        [Range(0.01F, 1F)] public float HorCooldown = 0.1F;
 
-        [Range(40F, 100F)]
-        public float SwapDonw;
-        [Range(0F, 20F)]
-        public float SwapHorisontal = 5F;
+        [Range(0.01F, 1F)] public float VerCooldown = 0.1F;
+
+        [Range(40F, 100F)] public float SwapDonw;
+
+        [Range(0F, 20F)] public float SwapHorisontal = 5F;
         //================================    Systems properties    =================================
 
         private float _hTimer;
         private float _vTimer;
-        private List<IFigureController> _controller;
+        private List<IFigureControls> _controls;
 
         private Vector2 _began;
 
         private IInputAdapter _input;
 
         private double _swapHorisontal;
+
         //================================      Public methods      =================================
         /// <summary>
         /// Refresh game controllers
         /// </summary>
         public void RefreshControllers()
         {
-            _controller.Clear();
+            _controls.Clear();
             GameObject[] playgrounds = GameObject.FindGameObjectsWithTag(SRTags.Player);
             foreach (GameObject playground in playgrounds)
             {
-                IFigureController controller = playground.GetComponent<IFigureController>();
+                IFigureControls controller = playground.GetComponent<IFigureControls>();
 //                Debug.LogFormat("Refreshed {0} controller", controller);
-                _controller.Add(controller);
+                _controls.Add(controller);
             }
         }
+
         //================================ Private|Protected methods ================================
         /// <summary>
         /// Initialize manager, adding of necessary listeners and links.
@@ -61,7 +61,7 @@ namespace BrickGame.Scripts.Controllers
         private void Awake()
         {
             _began = new Vector2();
-            _controller = new List<IFigureController>();
+            _controls = new List<IFigureControls>();
             _input = Context.GetActor<IInputAdapter>();
             Context.AddListener(PlaygroundNotification.Start, GameNotificationHandler);
             Context.AddListener(FigureNotification.Changed, GameNotificationHandler);
@@ -74,9 +74,8 @@ namespace BrickGame.Scripts.Controllers
         {
             Context.RemoveListener(PlaygroundNotification.Start, GameNotificationHandler);
             Context.RemoveListener(FigureNotification.Changed, GameNotificationHandler);
-            _controller.Clear();
+            _controls.Clear();
         }
-
 
 
         /// <summary>
@@ -103,7 +102,7 @@ namespace BrickGame.Scripts.Controllers
             {
                 case TouchPhase.Ended:
                     //TODO: avoid turn if position out of playground
-                    if (gesture == InputGesture.Tap)Turn();
+                    if (gesture == InputGesture.Tap) Turn();
                     //TODO: avoid movement
                     else if (gesture == InputGesture.Swipe) MoveDown(20);
                     _began = Vector2.zero;
@@ -129,18 +128,17 @@ namespace BrickGame.Scripts.Controllers
         }
 
 
-
         /// <summary>
         /// Execute turning of figures on playground
         /// </summary>
         private void Turn()
         {
-            int n = _controller.Count;
+            int n = _controls.Count;
             for (int i = 0; i < n; i++)
             {
-//                var controller = _controller[i] as Component;
+//                var controller = _controls[i] as Component;
                 //controller.transform
-                _controller[i].Turn();
+                _controls[i].Rotate();
             }
         }
 
@@ -157,13 +155,12 @@ namespace BrickGame.Scripts.Controllers
             }
             for (var j = 0; j < count; j++)
             {
-                int n = _controller.Count;
+                int n = _controls.Count;
                 for (int i = 0; i < n; i++)
                 {
-                    _controller[i].MoveDown();
+                    _controls[i].MoveVertical(1);
                 }
             }
-
         }
 
         /// <summary>
@@ -175,11 +172,10 @@ namespace BrickGame.Scripts.Controllers
             if ((_hTimer += Time.deltaTime) < HorCooldown) return;
             _hTimer = 0;
 
-            int n = _controller.Count;
+            int n = _controls.Count;
             for (int i = 0; i < n; i++)
             {
-                if (h < 0) _controller[i].MoveLeft();
-                else _controller[i].MoveRight();
+                _controls[i].MoveHorizontal(h > 0 ? 1 : -1);
             }
         }
     }

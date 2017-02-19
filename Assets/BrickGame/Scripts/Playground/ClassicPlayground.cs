@@ -26,16 +26,15 @@ namespace BrickGame.Scripts.Playground
         //================================    Systems properties    =================================
         private float _colldown;
         private Coroutine _finalization;
-        private IFigureController _figureController;
         //================================      Public methods      =================================
         /// <summary>
         /// Inintialize controllers and rebuild playground if it needed
         /// </summary>
         public void Start()
         {
-            _figureController = GetComponent<IFigureController>();
+           /* _figureController = GetComponent<IFigureController>();
             if (Application.isPlaying)enabled = false;
-            BroadcastNofitication(PlaygroundNotification.Restore, new SessionDataProvider(name, Rules));
+            BroadcastNofitication(PlaygroundNotification.Restore, new SessionDataProvider(name, Rules));*/
         }
         //================================ Private|Protected methods ================================
 
@@ -44,7 +43,7 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         private void LateUpdate()
         {
-            //Check if cooldwon was passed
+           /* //Check if cooldwon was passed
             if ((_colldown += Time.deltaTime) < Speed) return;
             _colldown = 0;
             //Try to move figureMatrix down
@@ -56,7 +55,7 @@ namespace BrickGame.Scripts.Playground
                         End of the turn.
                         FigureMatrix can't be moved further.
                         Need to finalize playground.
-                    */
+                    #1#
                     if(_finalization == null)
                         _finalization = StartCoroutine(FinalizePlayground());
                 }
@@ -65,7 +64,7 @@ namespace BrickGame.Scripts.Playground
                     /*
                         One of the figures is upper than top edge.
                         The game is over.
-                    */
+                    #1#
                     _figureController.Remove();
                     //TODO TASK: Execute end of the game animation
                     BroadcastNofitication(PlaygroundNotification.End);
@@ -75,7 +74,7 @@ namespace BrickGame.Scripts.Playground
             //FigureMatrix moded down, remove finalization
             if (_finalization == null) return;
             StopCoroutine(_finalization);
-            _finalization = null;
+            _finalization = null;*/
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         private IEnumerator FinalizePlayground()
         {
-            yield return new WaitForSeconds(Rules.FinalizingGap);
+           /* yield return new WaitForSeconds(Rules.FinalizingGap);
             if (_figureController.MoveDown())
             {
                 _finalization = null;
@@ -106,6 +105,7 @@ namespace BrickGame.Scripts.Playground
 
             RemoveLines(lines);
             enabled = false;//Stop updating
+            */
             yield return null;
         }
 
