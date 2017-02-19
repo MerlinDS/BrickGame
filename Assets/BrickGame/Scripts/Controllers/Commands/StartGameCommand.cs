@@ -5,6 +5,7 @@
 // <date>02/15/2017 13:07</date>
 
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Playgrounds;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers.Commands
@@ -23,7 +24,7 @@ namespace BrickGame.Scripts.Controllers.Commands
         public override void Execute()
         {
             var matrix = new PlaygroundMatrix(10, 20);
-            var playgrounds = Object.FindObjectsOfType<Playgrounds.Playground>();
+            var playgrounds = Object.FindObjectsOfType<Playground>();
             foreach (var playground in playgrounds)
             {
                 playground.SendMessage(MessageReceiver.UpdateMatix, matrix,
