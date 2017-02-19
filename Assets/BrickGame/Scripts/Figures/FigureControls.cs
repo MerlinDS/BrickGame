@@ -77,31 +77,31 @@ namespace BrickGame.Scripts.Figures
             //Check bounds
             if (x < 0 || x + _figure.Width > _matrix.Width) return false;
             //Check intersection
-            return _matrix.HasIntersection(_figure, x, _figure.y);
+            return !_matrix.HasIntersection(_figure, x, _figure.y);
         }
 
         /// <inheritdoc />
         public void MoveHorizontal(int xShift)
         {
-            if(xShift == 0 || !CanMoveHorizontal(xShift))return;
-            _figure.x += xShift;
+            if(xShift != 0 && CanMoveHorizontal(xShift))
+                _figure.x += xShift;
         }
 
         /// <inheritdoc />
         public bool CanMoveVertical(int yShift)
         {
-            int y = _figure.x + yShift;
+            int y = _figure.y + yShift;
             //Check bounds
             if (y < 0 || y + _figure.Height > _matrix.Height) return false;
             //Check intersection
-            return _matrix.HasIntersection(_figure, _figure.x, y);
+            return !_matrix.HasIntersection(_figure, _figure.y, y);
         }
 
         /// <inheritdoc />
         public void MoveVertical(int yShift)
         {
-            if(yShift == 0 || CanMoveHorizontal(yShift))return;
-            _figure.y -= yShift;
+            if(yShift != 0 && CanMoveVertical(yShift))
+                _figure.y += yShift;
         }
         //================================ Private|Protected methods ================================
         /// <summary>

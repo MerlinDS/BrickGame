@@ -23,11 +23,14 @@ namespace BrickGame.Scripts.Figures
         private const float Reducer = 0.5F;
         //================================       Public Setup       =================================
         [Tooltip("Min count of figures in the stack.")]
-        public int Count = 3;
+        [SerializeField]
+        private int _count = 3;
         [Tooltip("Creation seed. Affects on chances of figures creation.")]
-        public int Seed = 5;
+        [SerializeField]
+        private int _seed = 5;
         [Tooltip("Available glyphs for current builder")]
-        public Glyph[] Glyphs;
+        [SerializeField]
+        private Glyph[] _glyphs;
         //================================    Systems properties    =================================
         /// <summary>
         /// An index of previously created figure.
@@ -85,7 +88,7 @@ namespace BrickGame.Scripts.Figures
         private void Awake()
         {
             _previousIndex = -1;
-            _chances = CalculateChances(Glyphs.Length, Seed);
+            _chances = CalculateChances(_glyphs.Length, _seed);
         }
 
         /// <summary>
@@ -93,7 +96,7 @@ namespace BrickGame.Scripts.Figures
         /// </summary>
         private void FillStack()
         {
-            while (_figures.Count < Count)
+            while (_figures.Count < _count)
             {
                 int index = RandomIndex;
                 float chance = Random.value;
@@ -103,12 +106,12 @@ namespace BrickGame.Scripts.Figures
                         _repeatChance *= Reducer;
                     else
                     {
-                        if (--index < 0) index = Glyphs.Length - 1;
+                        if (--index < 0) index = _glyphs.Length - 1;
                         _repeatChance = Reducer;
                     }
                 }
                 _previousIndex = index;
-                Figure figure = new Figure(Glyphs[index]);
+                Figure figure = new Figure(_glyphs[index]);
                 if(chance > 0.5F)figure.Flip();
                 if(Random.value > 0.5)figure.Rotate();
                 _figures.Push(figure);
