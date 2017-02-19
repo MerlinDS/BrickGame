@@ -63,7 +63,7 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <param name="cacheModel"></param>
         private void SaveMatrices(CacheModel cacheModel)
         {
-            int i, n = Playgrounds.Length;
+            //int i, n = Playgrounds.Length;
             /*for (i = 0; i < n; i++)
             {
                 PlaygroundController pc = Playgrounds[i];
@@ -79,7 +79,7 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// </summary>
         private void ScoreUpdate(CacheModel cacheModel)
         {
-            ScoreModel scoreModel = Context.GetActor<ScoreModel>();
+           /* ScoreModel scoreModel = Context.GetActor<ScoreModel>();
             int i, n = Playgrounds.Length;
             for (i = 0; i < n; i++)
             {
@@ -88,7 +88,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                 cacheModel.UpdateScore(rules.name, name,
                     scoreModel[ScoreModel.FieldName.Score, name],
                     scoreModel[ScoreModel.FieldName.Lines, name]);
-            }
+            }*/
         }
 
         /// <summary>
@@ -97,14 +97,14 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <param name="cacheModel"></param>
         private void CleanCache(CacheModel cacheModel)
         {
-            int i, n = Playgrounds.Length;
+           /* int i, n = Playgrounds.Length;
             for (i = 0; i < n; i++)
             {
                 string name = Playgrounds[i].name;
                 GameRules rules = Playgrounds[i].Rules;
                 cacheModel.UpdateScore(rules.name, name, 0, 0);
                 cacheModel.CleanPlayground(rules.name, name);
-            }
+            }*/
         }
 
     }

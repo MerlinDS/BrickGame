@@ -20,7 +20,6 @@ namespace BrickGame.Editor
 
         //================================    Systems properties    =================================
         private SerializedProperty _figure;
-        private SerializedProperty _playground;
 
         private SerializedProperty _prefab;
         private SerializedProperty _content;
@@ -33,7 +32,6 @@ namespace BrickGame.Editor
             EditorGUILayout.PropertyField(_prefab);
             EditorGUILayout.PropertyField(_content);
             EditorGUILayout.PropertyField(_figure);
-            EditorGUILayout.PropertyField(_playground);
         }
 
         /// <inheritdoc />
@@ -48,7 +46,6 @@ namespace BrickGame.Editor
             _prefab = serializedObject.FindProperty("_brickPrefab");
             _content = serializedObject.FindProperty("_content");
             _figure = serializedObject.FindProperty("Figure");
-            _playground = serializedObject.FindProperty("Playground");
         }
     }
 }

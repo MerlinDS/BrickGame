@@ -14,7 +14,7 @@ namespace BrickGame.Scripts.Bricks
     /// <summary>
     /// PlaygroundDrawer - component that resonsible for playground bricks state updating
     /// </summary>
-    public class PlaygroundDrawer : BricksDrawer
+    public class PlaygroundDrawer : BricksDrawer,MessageReceiver.IPlaygroundReceiver
     {
         //================================       Public Setup       =================================
         [Tooltip("Width in bricks of the component, can be changed by playground.")]
@@ -23,9 +23,8 @@ namespace BrickGame.Scripts.Bricks
         public int Height = 20;
         [Tooltip("Figure to draw.")]
         public Figure Figure;
-        [Tooltip("Playground to draw.")]
-        public Playgrounds.Playground Playground;
         //================================    Systems properties    =================================
+        [NotNull] private Matrix<bool> _matrix = new Matrix<bool>(0, 0);
         [NotNull] private Brick[] _bricks = new Brick[0];
         //================================      Public methods      =================================
         public void UpdateSize()
@@ -34,29 +33,30 @@ namespace BrickGame.Scripts.Bricks
             _bricks = RestoreBricks(Width, Height, transform.localScale);
         }
 
-        private void OnEnable()
+        /// <inheritdoc />
+        public void UpdateMatix(Matrix<bool> matrix)
         {
+            _matrix = matrix ?? new PlaygroundMatrix(Width, Height);
             UpdateSize();
         }
         //================================ Private|Protected methods ================================
 
         private void Update()
         {
+            if(_matrix.IsNull)return;
             //Update form playground matrix
-            if (Playground == null || Playground.Matrix.IsNull) return;
-            Matrix<bool> matrix = Playground.Matrix;
-            if (matrix.Width != Width || matrix.Height != Height)
+            if (_matrix.Width != Width || _matrix.Height != Height)
             {
-                Width = matrix.Width;
-                Height = matrix.Height;
+                Width = _matrix.Width;
+                Height = _matrix.Height;
                 UpdateSize();
             }
 
-            for (int x = 0; x < matrix.Width; ++x)
+            for (int x = 0; x < _matrix.Width; ++x)
             {
-                for (int y = 0; y < matrix.Height; ++y)
+                for (int y = 0; y < _matrix.Height; ++y)
                 {
-                    _bricks[x + y * matrix.Width].Active = matrix[x, y];
+                    _bricks[x + y * _matrix.Width].Active = _matrix[x, y];
                 }
             }
 
@@ -67,11 +67,13 @@ namespace BrickGame.Scripts.Bricks
             {
                 for (int y = 0; y < figure.Height; ++y)
                 {
-                    int c = (figure.x + x) + (figure.y + y) * matrix.Width;
+                    int c = (figure.x + x) + (figure.y + y) * Width;
                     if(c < 0 || c >= _bricks.Length)continue;
                     _bricks[ c ].Active = figure[x, y];
                 }
             }
         }
+
+
     }
 }

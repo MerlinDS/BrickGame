@@ -15,13 +15,18 @@ namespace BrickGame.Scripts.Playgrounds
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("BrickGame/Game Components/Playground")]
-    public class Playground : GameBehaviour
+    public class Playground : GameBehaviour, MessageReceiver.IPlaygroundReceiver
     {
         //================================       Public Setup       =================================
         [NotNull]public Matrix<bool> Matrix{get{return _matrix;}}
         //================================    Systems properties    =================================
-        private PlaygroundMatrix _matrix = new PlaygroundMatrix(10, 20);
+        private Matrix<bool> _matrix = new PlaygroundMatrix(10, 20);
         //================================      Public methods      =================================
+        /// <inheritdoc />
+        public void UpdateMatix(Matrix<bool> matrix)
+        {
+            _matrix = matrix ?? new PlaygroundMatrix(10, 20);
+        }
 
         //================================ Private|Protected methods ================================
     }

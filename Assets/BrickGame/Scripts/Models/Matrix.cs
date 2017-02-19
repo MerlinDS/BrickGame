@@ -46,8 +46,7 @@ namespace BrickGame.Scripts.Models
         /// <summary>
         /// Is matrix nullable
         /// </summary>
-        [UsedImplicitly]
-        public readonly bool IsNull;
+        public bool IsNull { get { return _matrix.Length == 0; } }
 
         /// <summary>
         /// Matrix width, count of cells in row
@@ -358,7 +357,7 @@ namespace BrickGame.Scripts.Models
         /// </summary>
         protected Matrix() : this(0,0)
         {
-            IsNull = true;
+
         }
 
         /// <summary>

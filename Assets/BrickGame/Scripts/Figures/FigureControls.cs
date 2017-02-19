@@ -6,7 +6,6 @@
 
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
 {
@@ -104,18 +103,5 @@ namespace BrickGame.Scripts.Figures
                 _figureMatrix.y += yShift;
         }
         //================================ Private|Protected methods ================================
-        /// <summary>
-        /// Initialize controls
-        /// </summary>
-        private void Start()
-        {
-            if (!gameObject.CompareTag(SRTags.Player) &&
-                !gameObject.CompareTag(SRTags.AI))
-            {
-                Debug.LogWarning("Controls not set to play or AI, and will be set to AI automatically!");
-                gameObject.tag = SRTags.AI;
-            }
-            Matrix<bool>.Copy(_figureMatrix, _figureMatrix);
-        }
     }
 }
