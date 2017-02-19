@@ -13,7 +13,7 @@ namespace BrickGame.Scripts.Figures
     /// <summary>
     /// FigureControls - a figure controls.
     /// </summary>
-    public class FigureControls : GameBehaviour, IFigureContols,
+    public class FigureControls : GameBehaviour, IFigureControls,
         MessageReceiver.IPlaygroundReceiver, MessageReceiver.IFigureReceiver
     {
         //================================       Public Setup       =================================

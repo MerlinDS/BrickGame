@@ -1,4 +1,4 @@
-﻿// <copyright file="IFigureContols.cs" company="Near Fancy">
+﻿// <copyright file="IFigureControls.cs" company="Near Fancy">
 // Copyright (c) 2017 All Rights Reserved
 // </copyright>
 // <author>Andrew Salomatin</author>
@@ -6,9 +6,9 @@
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
-    /// IFigureContols - Provide the public interface for controls of the matrix of a figure.
+    /// IFigureControls - Provide the public interface for controls of the matrix of a figure.
     /// </summary>
-    public interface IFigureContols
+    public interface IFigureControls
     {
         //================================       Getters|Setters       =================================
         //================================			 Methods		   =================================
