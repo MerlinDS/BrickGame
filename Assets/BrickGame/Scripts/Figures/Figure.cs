@@ -16,13 +16,14 @@ namespace BrickGame.Scripts.Figures
     [DisallowMultipleComponent]
     [AddComponentMenu("BrickGame/Game Components/Figure")]
     [RequireComponent(typeof(FigureController))]
-    public class Figure : GameBehaviour, MessageReceiver.IFigureReceiver
+    public class Figure : GameBehaviour, MessageReceiver.IFigureReceiver, MessageReceiver.IPlaygroundReceiver
     {
         //================================       Public Setup       =================================
         [NotNull]
         public FigureMatrix Matrix { get { return _matrix; } }
         //================================    Systems properties    =================================
-        private FigureMatrix _matrix = new FigureMatrix();
+        [NotNull]private FigureMatrix _matrix = new FigureMatrix();
+        [NotNull]private Matrix<bool> _playground = new PlaygroundMatrix(0, 0);
         //================================      Public methods      =================================
         /// <inheritdoc />
         public void UpdateFigure(FigureMatrix matrix)
@@ -30,6 +31,28 @@ namespace BrickGame.Scripts.Figures
             _matrix = matrix ?? new FigureMatrix();
         }
 
+        /// <inheritdoc />
+        public void UpdateMatix(Matrix<bool> matrix)
+        {
+            _playground = matrix ?? new PlaygroundMatrix(0, 0);
+        }
+
+        /// <summary>
+        /// Append figure data to playground matrix
+        /// </summary>
+        [UsedImplicitly]
+        public void AppendFigure()
+        {
+            if(_matrix.IsNull || _playground.IsNull)return;
+            for (int x = 0; x < _matrix.Width; ++x)
+            {
+                for (int y = 0; y < _matrix.Height; ++y)
+                {
+                    if(!_matrix[x, y])continue;
+                    _playground[_matrix.x + x, _matrix.y + y] = _matrix[x, y];
+                }
+            }
+        }
         //================================ Private|Protected methods ================================
     }
 }

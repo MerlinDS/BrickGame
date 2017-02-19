@@ -297,9 +297,10 @@ namespace BrickGame.Scripts.Models
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if(target._matrix[x + y * width].Equals(@default))continue;
+                    T value = target._matrix[x + y * width];
+                    if(value.Equals(@default))continue;
                     //target matrix has value in the cell
-                    int c = xOffset * x + (yOffset + y) * Width;
+                    int c = (xOffset + x) + (yOffset + y) * Width;
                     if(c < 0 || c >= _matrix.Length) continue;
                     //the cell is in bounds of current matrix
                     if (_matrix[c].Equals(@default))continue;

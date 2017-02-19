@@ -22,6 +22,7 @@ namespace BrickGame.Scripts.Models
         /// </para>
         /// </summary>
         public const string UpdateMatix = "UpdateMatix";
+
         /// <summary>
         /// Methods for playground receiver
         /// </summary>
@@ -41,6 +42,10 @@ namespace BrickGame.Scripts.Models
         /// </para>
         /// </summary>
         public const string UpdateFigure = "UpdateFigure";
+        /// <summary>
+        ///
+        /// </summary>
+        public const string AppendFigure = "AppendFigure";
         /// <summary>
         /// Methods for matrix receiver
         /// </summary>

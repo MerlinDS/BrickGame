@@ -6,7 +6,6 @@
 
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
 {

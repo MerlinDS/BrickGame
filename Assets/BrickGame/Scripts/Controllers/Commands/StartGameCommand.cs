@@ -23,10 +23,10 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <inheritdoc />
         public override void Execute()
         {
-            var matrix = new PlaygroundMatrix(10, 20);
             var playgrounds = Object.FindObjectsOfType<Playground>();
             foreach (var playground in playgrounds)
             {
+                var matrix = new PlaygroundMatrix(playground.Width, playground.Height);
                 playground.SendMessage(MessageReceiver.UpdateMatix, matrix,
                     SendMessageOptions.DontRequireReceiver);
                 //Send model to childrens
