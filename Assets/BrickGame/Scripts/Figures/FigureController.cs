@@ -13,7 +13,8 @@ namespace BrickGame.Scripts.Figures
     /// FigureController - component for controlling figure behaviour in the playground.
     /// </summary>
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(IFigureControls), typeof(FigureBuilder))]
+    [AddComponentMenu("BrickGame/Figures/FigureController")]
+    [RequireComponent(typeof(FigureControls), typeof(FigureBuilder))]
     public class FigureController : GameBehaviour
     {
         private const float Step = 1.0F;
