@@ -50,7 +50,7 @@ namespace BrickGame.Scripts.Models
         /// </summary>
         /// <param name="row">Index of row</param>
         /// <param name="value">Specified vlaue to fill the row</param>
-        public void FillRow(int row, bool value = false)
+        public void FillRow(int row, bool value)
         {
             for (int x = 0; x < Width; ++x)this[x, row] = value;
         }

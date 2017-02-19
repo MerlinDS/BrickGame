@@ -77,7 +77,7 @@ namespace BrickGame.Scripts.Figures
                 return;
             }
             //Current figureMatrix can't fall further. Get a new figureMatrix.
-            SendMessage(MessageReceiver.AppendFigure, SendMessageOptions.DontRequireReceiver);
+            SendMessageUpwards(MessageReceiver.AppendFigure, SendMessageOptions.DontRequireReceiver);
             PlaygroundHandler();
         }
     }
