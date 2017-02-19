@@ -14,9 +14,9 @@ namespace BrickGame.Scripts.Figures
     /// FigureController - component for controlling figureMatrix behaviour in the playground.
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("BrickGame/Figures/FigureController")]
+    [AddComponentMenu("BrickGame/Figures/Figure")]
     [RequireComponent(typeof(FigureControls), typeof(FigureBuilder))]
-    public class FigureController : GameBehaviour
+    public class FigureController : Figure
     {
         private const float Step = 1.0F;
         //================================       Public Setup       =================================
@@ -50,11 +50,12 @@ namespace BrickGame.Scripts.Figures
         private void PlaygroundHandler(string n = null)
         {
             //Create new figureMatrix
-            FigureMatrix figureMatrix = _builder.Pop();
-            figureMatrix.x = (int)SpawnPoint.x;
-            figureMatrix.y = (int)SpawnPoint.y;
-            Debug.Log("Create new figureMatrix: \n" + figureMatrix.Format(true));
-            SendMessage(MessageReceiver.UpdateFigure, figureMatrix);
+            FigureMatrix matrix = _builder.Pop();
+            matrix.x = (int)(SpawnPoint.x - matrix.Width * 0.5F);
+            matrix.y = (int)SpawnPoint.y;
+            Debug.Log("Create new figureMatrix: \n" + matrix.Format(true));
+            SendMessage(MessageReceiver.UpdateFigure, matrix);
+
             BroadcastNofitication(FigureNotification.Changed);
             //
             if (n == PlaygroundNotification.Start)

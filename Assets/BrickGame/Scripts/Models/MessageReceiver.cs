@@ -35,22 +35,22 @@ namespace BrickGame.Scripts.Models
         }
 
         /// <summary>
-        /// Message for updating figureMatrix in figureMatrix receiver.
+        /// Message for updating matrix in matrix receiver.
         /// <para>
         /// This message will execute <see cref="IFigureReceiver.UpdateFigure"/> method in receiver.
         /// </para>
         /// </summary>
         public const string UpdateFigure = "UpdateFigure";
         /// <summary>
-        /// Methods for figureMatrix receiver
+        /// Methods for matrix receiver
         /// </summary>
         public interface IFigureReceiver
         {
             /// <summary>
             /// Update fiugre matrix in receiver
             /// </summary>
-            /// <param name="figureMatrix">Instance of the new figureMatrix</param>
-            void UpdateFigure([CanBeNull] FigureMatrix figureMatrix);
+            /// <param name="matrix">Instance of the new matrix</param>
+            void UpdateFigure([CanBeNull] FigureMatrix matrix);
         }
         //================================            FigureMatrix            =============================
     }

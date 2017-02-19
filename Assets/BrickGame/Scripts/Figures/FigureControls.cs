@@ -11,7 +11,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
-    /// FigureControls - a figureMatrix controls.
+    /// FigureControls - a matrix controls.
     /// </summary>
     public class FigureControls : GameBehaviour, IFigureControls,
         MessageReceiver.IPlaygroundReceiver, MessageReceiver.IFigureReceiver
@@ -35,9 +35,9 @@ namespace BrickGame.Scripts.Figures
         }
 
         /// <inheritdoc />
-        public void UpdateFigure(FigureMatrix figureMatrix)
+        public void UpdateFigure(FigureMatrix matrix)
         {
-            _figureMatrix = figureMatrix ?? new FigureMatrix();
+            _figureMatrix = matrix ?? new FigureMatrix();
         }
         //================================      Public methods      =================================
         /// <inheritdoc />
@@ -46,10 +46,10 @@ namespace BrickGame.Scripts.Figures
             _figureMatrix.Rotate(clockwise);
             int x = _figureMatrix.x;
             int y = _figureMatrix.y;
-            //Calculate new position of the figureMatrix and
+            //Calculate new position of the matrix and
             if (_figureMatrix.Width != _figureMatrix.Height)
             {
-                //Get new center of the figureMatrix
+                //Get new center of the matrix
                 x = x + (int) ((_figureMatrix.Width - _figureMatrix.Height) * 0.5F);
                 y = y + (int) ((_figureMatrix.Height - _figureMatrix.Width) * 0.5F);
                 //shift from borders
@@ -57,14 +57,14 @@ namespace BrickGame.Scripts.Figures
                 else if (x + _figureMatrix.Height >= _matrix.Width)
                     x = _matrix.Width - _figureMatrix.Height;
             }
-            //Check if figureMatrix can be rotated
+            //Check if matrix can be rotated
             if (!_matrix.HasIntersection(_figureMatrix, x, y))
             {
-                //Rotate figureMatrix back
+                //Rotate matrix back
                 _figureMatrix.Rotate(!clockwise);
                 return;
             }
-            //set new position to the figureMatrix
+            //set new position to the matrix
             _figureMatrix.x = x;
             _figureMatrix.y = y;
 

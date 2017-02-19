@@ -16,9 +16,8 @@ namespace BrickGame.Scripts.Bricks
     public class PlaygroundDrawer : BricksDrawer
     {
         //================================       Public Setup       =================================
-        public FigureMatrix FigureMatrix;
+        public Figure Figure;
         //================================    Systems properties    =================================
-        [NotNull] private FigureMatrix _figureMatrix = new FigureMatrix();
         [NotNull] private Matrix<bool> _matrix = new Matrix<bool>(10,20);
         [NotNull] private Brick[] _bricks = new Brick[0];
         //================================      Public methods      =================================
@@ -41,13 +40,16 @@ namespace BrickGame.Scripts.Bricks
                     _bricks[x + y * _matrix.Width].Active = _matrix[x, y];
                 }
             }
+
+            if(Figure == null)return;
+            FigureMatrix figure = Figure.Matrix;
             //Update from figureMatrix
-            for (int x = 0; x < _figureMatrix.Width; ++x)
+            for (int x = 0; x < figure.Width; ++x)
             {
-                for (int y = 0; y < _figureMatrix.Height; ++y)
+                for (int y = 0; y < figure.Height; ++y)
                 {
-                    _bricks[ (_figureMatrix.x + x) + (_figureMatrix.y + y) * _matrix.Width].Active
-                        = _figureMatrix[x, y];
+                    _bricks[ (figure.x + x) + (figure.y + y) * _matrix.Width].Active
+                        = figure[x, y];
                 }
             }
         }
