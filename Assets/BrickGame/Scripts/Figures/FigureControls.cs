@@ -13,7 +13,8 @@ namespace BrickGame.Scripts.Figures
     /// <summary>
     /// FigureControls - a figure controls.
     /// </summary>
-    public class FigureControls : GameBehaviour, IFigureContols
+    public class FigureControls : GameBehaviour, IFigureContols,
+        MessageReceiver.IPlaygroundReceiver, MessageReceiver.IFigureReceiver
     {
         //================================       Public Setup       =================================
 
@@ -26,17 +27,19 @@ namespace BrickGame.Scripts.Figures
         /// Playground matrix (model of the playground), initialized with empty object
         /// </summary>
         [NotNull] private Matrix<bool> _matrix = new Matrix<bool>(0, 0);
-        //================================      Public methods      =================================
-        /// <summary>
-        /// Update current controls links
-        /// </summary>
-        /// <param name="figure">New instance of figure</param>
-        /// <param name="matrix">New instance of matrix</param>
-        public void UpdateControls([CanBeNull] Figure figure, [CanBeNull] Matrix<bool> matrix)
+        //================================     Receiver methods      ================================
+        /// <inheritdoc />
+        public void UpdateMatix(Matrix<bool> matrix)
         {
-            _figure = figure ?? new Figure();
             _matrix = matrix ?? new Matrix<bool>(0, 0);
         }
+
+        /// <inheritdoc />
+        public void UpdateFigure(Figure figure)
+        {
+            _figure = figure ?? new Figure();
+        }
+        //================================      Public methods      =================================
         /// <inheritdoc />
         public void Rotate(bool clockwise = true)
         {
