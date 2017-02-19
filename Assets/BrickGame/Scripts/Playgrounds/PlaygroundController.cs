@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Playgrounds
 {
