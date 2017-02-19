@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
 {
+    //TODO: Mode to model package
     /// <summary>
     /// Glyph of figure
     /// </summary>
