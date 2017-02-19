@@ -64,7 +64,6 @@ namespace BrickGame.Scripts.Figures
                 _figureMatrix.Rotate(!clockwise);
                 return;
             }
-            Debug.Log("Rotate" + 3);
             //set new position to the matrix
             _figureMatrix.x = x;
             _figureMatrix.y = y;

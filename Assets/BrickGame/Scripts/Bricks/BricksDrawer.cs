@@ -93,7 +93,7 @@ namespace BrickGame.Scripts.Bricks
                     offset.x = x * bw;
                     offset.y = y * -bh;
                     SetBrickPosition(instance.transform, offset);
-                    instance.isStatic = true;
+                    //instance.isStatic = true;
                     bricks[x + y * width] = brick;
                 }
             }

@@ -30,6 +30,10 @@ namespace BrickGame.Scripts.Bricks
         public void UpdateSize()
         {
             if(!Validate())return;
+            _rectTransform = _content.GetComponent<RectTransform>();
+            _offset = _rectTransform.rect.size * 0.5F;
+            _offset -= _brickPrefab.Size * 0.5F;
+            _offset.x *= -1;
             _bricks = RestoreBricks(Width, Height);
         }
 
@@ -65,10 +69,6 @@ namespace BrickGame.Scripts.Bricks
         private void Start()
         {
             _builder = GetComponent<FigureBuilder>();
-            _rectTransform = _content.GetComponent<RectTransform>();
-            _offset = _rectTransform.rect.size * 0.5F;
-            _offset -= _brickPrefab.Size * 0.5F;
-            _offset.x *= -1;
             UpdateSize();
         }
     }
