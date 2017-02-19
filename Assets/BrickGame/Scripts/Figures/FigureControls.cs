@@ -106,7 +106,7 @@ namespace BrickGame.Scripts.Figures
         /// </summary>
         private void Start()
         {
-            if (gameObject.tag != SRTags.Player || gameObject.tag != SRTags.AI)
+            if (!gameObject.CompareTag(SRTags.Player) || !gameObject.CompareTag(SRTags.AI))
             {
                 Debug.LogWarning("Controls not set to play or AI, and will be set to AI automatically!");
                 gameObject.tag = SRTags.AI;
