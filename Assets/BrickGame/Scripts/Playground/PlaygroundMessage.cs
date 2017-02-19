@@ -12,7 +12,7 @@ namespace BrickGame.Scripts.Playground
     public static class PlaygroundMessage
     {
         /// <summary>
-        /// Execute figure creation.
+        /// Execute figureMatrix creation.
         /// </summary>
         public const string CreateFigure = "CreateFigure";
 
@@ -28,12 +28,12 @@ namespace BrickGame.Scripts.Playground
     public interface IFigureMessageResiver
     {
         /// <summary>
-        /// Restore figure from cache
+        /// Restore figureMatrix from cache
         /// </summary>
-        /// <param name="figure">array of figure cells in playground matrix</param>
+        /// <param name="figure">array of figureMatrix cells in playground matrix</param>
         void RestoreFigure(int[] figure);
         /// <summary>
-        /// Create new figure
+        /// Create new figureMatrix
         /// </summary>
         void CreateFigure();
     }

@@ -1,4 +1,4 @@
-﻿// <copyright file="Figure.cs" company="Near Fancy">
+﻿// <copyright file="FigureMatrix.cs" company="Near Fancy">
 // Copyright (c) 2017 All Rights Reserved
 // </copyright>
 // <author>Andrew Salomatin</author>
@@ -10,9 +10,9 @@ using JetBrains.Annotations;
 namespace BrickGame.Scripts.Models
 {
     /// <summary>
-    /// Figure - class that represent figures in the game as the rectangular matrix.
+    /// FigureMatrix - class that represent figures in the game as the rectangular matrix.
     /// </summary>
-    public class Figure : Matrix<bool>
+    public class FigureMatrix : Matrix<bool>
     {
         //================================       Public Setup       =================================
         // ReSharper disable InconsistentNaming
@@ -23,17 +23,17 @@ namespace BrickGame.Scripts.Models
 
         //================================      Public methods      =================================
         /// <summary>
-        /// Constructor for epmty figure
+        /// Constructor for epmty figureMatrix
         /// </summary>
-        public Figure()
+        public FigureMatrix()
         {
 
         }
         /// <summary>
-        /// Create new figure from the template
+        /// Create new figureMatrix from the template
         /// </summary>
-        /// <param name="glyph">tamplate of a figure</param>
-        public Figure([NotNull] Glyph glyph):base(glyph.GetFigureMatrix(), true)
+        /// <param name="glyph">tamplate of a figureMatrix</param>
+        public FigureMatrix([NotNull] Glyph glyph):base(glyph.GetFigureMatrix(), true)
         {
 
         }

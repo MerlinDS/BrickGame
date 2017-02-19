@@ -28,15 +28,15 @@ namespace BrickGame.Scripts.Utils
         public static string ToString(bool[] data, int[] figure)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(figure.Length.ToHex());//Save count of cell in figure to header
+            sb.Append(figure.Length.ToHex());//Save count of cell in figureMatrix to header
             bool hasGarbage = false;
-            //Remove figure from playground matrix and save them to header
+            //Remove figureMatrix from playground matrix and save them to header
             for (int i = 0; i < figure.Length; i++)
             {
                 sb.Append(figure[i].ToHex());
                 if (figure[i] < 0)
                 {
-                    //garbage was found in figure data.
+                    //garbage was found in figureMatrix data.
                     hasGarbage = true;
                     continue;
                 }
@@ -45,7 +45,7 @@ namespace BrickGame.Scripts.Utils
             //Remove corupted data
             if (hasGarbage)
             {
-                Debug.LogWarningFormat("Data of figure has garbage: {0}", sb);
+                Debug.LogWarningFormat("Data of figureMatrix has garbage: {0}", sb);
                 sb = new StringBuilder();
                 sb.Append(0.ToHex());
             }
@@ -89,13 +89,13 @@ namespace BrickGame.Scripts.Utils
         /// </summary>
         /// <param name="data">Compresed string</param>
         /// <param name="matrix">Playground matrix</param>
-        /// <param name="figure">Active figure cells in playground</param>
+        /// <param name="figure">Active figureMatrix cells in playground</param>
         public static void GetMatrix(string data, out bool[] matrix, out int[] figure)
         {
             const int lp = 2;
             //Read header
             int length = data.Substring(0, lp).FormHex();
-            //Read figure cells
+            //Read figureMatrix cells
             figure = new int[length];
             for (int i = 0; i < length; i++)
                 figure[i] = data.Substring(lp + i * lp, lp).FormHex();

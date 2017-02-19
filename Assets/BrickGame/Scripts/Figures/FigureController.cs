@@ -11,7 +11,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
-    /// FigureController - component for controlling figure behaviour in the playground.
+    /// FigureController - component for controlling figureMatrix behaviour in the playground.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("BrickGame/Figures/FigureController")]
@@ -22,7 +22,7 @@ namespace BrickGame.Scripts.Figures
         //================================       Public Setup       =================================
         [Tooltip("Spaw point for figures")]
         public Vector2 SpawnPoint;
-        [Tooltip("Falling speed of a figure")]
+        [Tooltip("Falling speed of a figureMatrix")]
         public float Speed = 1F;
         //================================    Systems properties    =================================
         private float _position;
@@ -49,12 +49,12 @@ namespace BrickGame.Scripts.Figures
 
         private void PlaygroundHandler(string n = null)
         {
-            //Create new figure
-            Figure figure = _builder.Pop();
-            figure.x = (int)SpawnPoint.x;
-            figure.y = (int)SpawnPoint.y;
-            Debug.Log("Create new figure: \n" + figure.Format(true));
-            SendMessage(MessageReceiver.UpdateFigure, figure);
+            //Create new figureMatrix
+            FigureMatrix figureMatrix = _builder.Pop();
+            figureMatrix.x = (int)SpawnPoint.x;
+            figureMatrix.y = (int)SpawnPoint.y;
+            Debug.Log("Create new figureMatrix: \n" + figureMatrix.Format(true));
+            SendMessage(MessageReceiver.UpdateFigure, figureMatrix);
             BroadcastNofitication(FigureNotification.Changed);
             //
             if (n == PlaygroundNotification.Start)
@@ -62,7 +62,7 @@ namespace BrickGame.Scripts.Figures
         }
 
         /// <summary>
-        /// Update figure position
+        /// Update figureMatrix position
         /// </summary>
         private void Update()
         {
@@ -70,13 +70,13 @@ namespace BrickGame.Scripts.Figures
             if (!(_position >= Step)) return;
             //set position to zero
             _position = 0;
-            //Move figure down
+            //Move figureMatrix down
             if (_controls.CanMoveVertical(1))
             {
                 _controls.MoveVertical(1);
                 return;
             }
-            //Current figure can't fall further. Get a new figure.
+            //Current figureMatrix can't fall further. Get a new figureMatrix.
             PlaygroundHandler();
         }
     }

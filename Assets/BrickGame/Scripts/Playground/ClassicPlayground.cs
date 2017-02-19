@@ -41,21 +41,21 @@ namespace BrickGame.Scripts.Playground
         //================================ Private|Protected methods ================================
 
         /// <summary>
-        /// Move active figure to down edge
+        /// Move active figureMatrix to down edge
         /// </summary>
         private void LateUpdate()
         {
             //Check if cooldwon was passed
             if ((_colldown += Time.deltaTime) < Speed) return;
             _colldown = 0;
-            //Try to move figure down
+            //Try to move figureMatrix down
             if (!_figureController.MoveDown())
             {
                 if (!_figureController.OutOfBounds)
                 {
                     /*
                         End of the turn.
-                        Figure can't be moved further.
+                        FigureMatrix can't be moved further.
                         Need to finalize playground.
                     */
                     if(_finalization == null)
@@ -73,7 +73,7 @@ namespace BrickGame.Scripts.Playground
                 }
                 return;
             }
-            //Figure moded down, remove finalization
+            //FigureMatrix moded down, remove finalization
             if (_finalization == null) return;
             StopCoroutine(_finalization);
             _finalization = null;
@@ -97,14 +97,14 @@ namespace BrickGame.Scripts.Playground
             {
                 if (Model.FullLine(y))lines.Add(y);
             }
-            //Full lines were not found. Create a new figure.
+            //Full lines were not found. Create a new figureMatrix.
             if (lines.Count == 0)
             {
                 SendMessage(PlaygroundMessage.CreateFigure);
                 _finalization = null;
                 yield break;
             }
-            //Full lines exist, need to remove these lines and create a new figure.
+            //Full lines exist, need to remove these lines and create a new figureMatrix.
             _view.EndOfBlinking += RemoveCells;
             _view.Blink(lines.ToArray());
             RemoveLines(lines);

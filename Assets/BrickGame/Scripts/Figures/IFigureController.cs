@@ -9,7 +9,7 @@ using System;
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
-    /// IFigureController - interface of the figure controls.
+    /// IFigureController - interface of the figureMatrix controls.
     /// </summary>
     [Obsolete("Interface is deprecated.")]
     public interface IFigureController
@@ -17,31 +17,31 @@ namespace BrickGame.Scripts.Figures
         //================================       Getters|Setters       =================================
         //================================			 Methods		   =================================
         /// <summary>
-        /// Remove figure from contoroller
+        /// Remove figureMatrix from contoroller
         /// </summary>
         void Remove();
         /// <summary>
-        /// Rotation of a figure of matrix to 90 deg.
+        /// Rotation of a figureMatrix of matrix to 90 deg.
         /// </summary>
-        /// <returns>True if figure matrix was turned, false in other cases</returns>
+        /// <returns>True if figureMatrix matrix was turned, false in other cases</returns>
         bool Turn();
         /// <summary>
-        /// Move figure matrix to left
+        /// Move figureMatrix matrix to left
         /// </summary>
         /// <returns></returns>
         bool MoveLeft();
         /// <summary>
-        /// Move figure matrix to write
+        /// Move figureMatrix matrix to write
         /// </summary>
         /// <returns></returns>
         bool MoveRight();
         /// <summary>
-        /// Move figure to bottom border
+        /// Move figureMatrix to bottom border
         /// </summary>
         /// <returns></returns>
         bool MoveDown();
         /// <summary>
-        /// Is figure out of playground bound
+        /// Is figureMatrix out of playground bound
         /// </summary>
         bool OutOfBounds { get; }
     }

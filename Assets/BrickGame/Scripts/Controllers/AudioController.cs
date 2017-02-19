@@ -20,7 +20,7 @@ namespace BrickGame.Scripts.Controllers
         [Tooltip("Lose sound")] public AudioClip Lose;
 
         [Tooltip("Delete lines sound")] public AudioClip Delete;
-        [Tooltip("Turn figure sound")] public AudioClip Turn;
+        [Tooltip("Turn figureMatrix sound")] public AudioClip Turn;
 
         /// <inheritdoc />
         public bool Muted

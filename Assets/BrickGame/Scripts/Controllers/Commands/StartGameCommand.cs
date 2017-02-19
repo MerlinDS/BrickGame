@@ -5,7 +5,6 @@
 // <date>02/15/2017 13:07</date>
 
 using BrickGame.Scripts.Models;
-using BrickGame.Scripts.Playground;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers.Commands
@@ -27,7 +26,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             var objs = GameObject.FindGameObjectsWithTag(SRTags.Player);
             foreach (GameObject obj in objs)
             {
-                if(obj.GetComponent<MessageReceiver.IFigureReceiver>()== null)continue;
+                if(obj.GetComponent<MessageReceiver.IPlaygroundReceiver>()== null)continue;
                 obj.SendMessage(MessageReceiver.UpdateMatix, matrix, SendMessageOptions.DontRequireReceiver);
             }
             /*if (Playgrounds == null || Playgrounds.Length == 0)
@@ -39,7 +38,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             RestoreModel restoreModel = Context.GetActor<RestoreModel>();
             foreach (PlaygroundController controller in Playgrounds)
             {
-                int[] figure = null;
+                int[] figureMatrix = null;
                 string name = controller.name;
                 GameRules rules = controller.Rules;
 
@@ -49,7 +48,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                 {
                     //Restored start
                     RestoreModel.RestoredData data = restoreModel.Pop(controller.name);
-                    figure = data.Figure;
+                    figureMatrix = data.FigureMatrix;
                     model = new PlaygroundModel(controller.Width, controller.Height, data.Lines, data.Matrix);
                     scoreModel.UpdateSocre(controller.name, data.Score, data.Level, data.Lines);
                 }
@@ -62,9 +61,9 @@ namespace BrickGame.Scripts.Controllers.Commands
 
                 controller.SendMessage(PlaygroundMessage.UpdateModel, model, SendMessageOptions.DontRequireReceiver);
                 Context.Notify(GameNotification.ScoreUpdated, scoreDataProvider);
-                //Create first figure or restore old one
-                if(figure == null)controller.SendMessage(PlaygroundMessage.CreateFigure);
-                else controller.SendMessage(PlaygroundMessage.RestoreFigure, figure);
+                //Create first figureMatrix or restore old one
+                if(figureMatrix == null)controller.SendMessage(PlaygroundMessage.CreateFigure);
+                else controller.SendMessage(PlaygroundMessage.RestoreFigure, figureMatrix);
             }*/
         }
 

@@ -11,7 +11,7 @@ namespace BrickGame.Scripts.Figures
 {
     //TODO: Mode to model package
     /// <summary>
-    /// Glyph of figure
+    /// Glyph of figureMatrix
     /// </summary>
     public class Glyph : ScriptableObject
     {
@@ -37,7 +37,7 @@ namespace BrickGame.Scripts.Figures
         }
 
         /// <summary>
-        /// Get figure matrix from empty borders
+        /// Get figureMatrix matrix from empty borders
         /// </summary>
         /// <returns></returns>
         [Obsolete("Method is deprecated. Use Flip method if Matrix<> instead")]
@@ -56,9 +56,9 @@ namespace BrickGame.Scripts.Figures
         }
 
         /// <summary>
-        /// Get figure matrix from empty borders
+        /// Get figureMatrix matrix from empty borders
         /// </summary>
-        /// <returns>matrix of figure</returns>
+        /// <returns>matrix of figureMatrix</returns>
         public bool[,] GetFigureMatrix()
         {
             int i, x = 1, y = 1, width = Width - 1, height = Height - 1;

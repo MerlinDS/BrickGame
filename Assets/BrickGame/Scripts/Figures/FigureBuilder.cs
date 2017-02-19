@@ -13,7 +13,7 @@ namespace BrickGame.Scripts.Figures
     /// <summary>
     /// FigureBuilder - builder of game figures (specific matrices).
     /// This class build figures from the list of glyphs, depend on rules of creation.
-    /// Also, this class provide access to the next figure matrix.
+    /// Also, this class provide access to the next figureMatrix matrix.
     /// </summary>
     public class FigureBuilder : GameBehaviour
     {
@@ -33,11 +33,11 @@ namespace BrickGame.Scripts.Figures
         private Glyph[] _glyphs;
         //================================    Systems properties    =================================
         /// <summary>
-        /// An index of previously created figure.
+        /// An index of previously created figureMatrix.
         /// </summary>
         private int _previousIndex;
         /// <summary>
-        /// The chance to create a same figure as previous.
+        /// The chance to create a same figureMatrix as previous.
         /// </summary>
         private float _repeatChance;
         /// <summary>
@@ -47,7 +47,7 @@ namespace BrickGame.Scripts.Figures
         /// <summary>
         /// Stack of created figures.
         /// </summary>
-        private readonly Stack<Figure> _figures = new Stack<Figure>();
+        private readonly Stack<FigureMatrix> _figures = new Stack<FigureMatrix>();
 
         /// <summary>
         /// Random index of a glyph
@@ -64,22 +64,22 @@ namespace BrickGame.Scripts.Figures
         }
         //================================      Public methods      =================================
         /// <summary>
-        /// Removing the first figure from builder and return it.
+        /// Removing the first figureMatrix from builder and return it.
         /// </summary>
         /// <returns>Instance of the figure matrix</returns>
-        public Figure Pop()
+        public FigureMatrix Pop()
         {
             FillStack();
             return _figures.Pop();
         }
         /// <summary>
-        /// Get copy of the first figure matrix in the builder stack.
+        /// Get copy of the first figureMatrix matrix in the builder stack.
         /// </summary>
-        /// <returns>Copy of the first figure matrix in the builder stack</returns>
+        /// <returns>Copy of the first figureMatrix matrix in the builder stack</returns>
         public Matrix<bool> Peek()
         {
             FillStack();
-            return Figure.Clone(_figures.Peek(), true, true);
+            return FigureMatrix.Clone(_figures.Peek(), true, true);
         }
         //================================ Private|Protected methods ================================
         /// <summary>
@@ -111,10 +111,10 @@ namespace BrickGame.Scripts.Figures
                     }
                 }
                 _previousIndex = index;
-                Figure figure = new Figure(_glyphs[index]);
-                if(chance > 0.5F)figure.Flip();
-                if(Random.value > 0.5)figure.Rotate();
-                _figures.Push(figure);
+                FigureMatrix figureMatrix = new FigureMatrix(_glyphs[index]);
+                if(chance > 0.5F)figureMatrix.Flip();
+                if(Random.value > 0.5)figureMatrix.Rotate();
+                _figures.Push(figureMatrix);
             }
         }
 

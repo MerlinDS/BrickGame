@@ -43,7 +43,7 @@ namespace BrickGame.Editor
 
         protected override void ConcreteOnEnable()
         {
-            _factory = serializedObject.FindProperty("Figure");
+            _factory = serializedObject.FindProperty("FigureMatrix");
             _prefab = serializedObject.FindProperty("_brickPrefab");
             _content = serializedObject.FindProperty("_content");
         }

@@ -12,12 +12,12 @@ using UnityEngine;
 namespace BrickGame.Scripts.UI
 {
     /// <summary>
-    /// NexFigureBehaviour - Component for drawing next figure of the game
+    /// NexFigureBehaviour - Component for drawing next figureMatrix of the game
     /// </summary>
     public class NexFigureBehaviour : BricksDrawer
     {
         //================================       Public Setup       =================================
-        [Tooltip("Figure game object")]
+        [Tooltip("FigureMatrix game object")]
         public FigureBuilder Figure;
         [Tooltip("Width in brick, count of columns")]
         public int Width = 4;
