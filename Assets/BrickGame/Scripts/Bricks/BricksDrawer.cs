@@ -21,7 +21,8 @@ namespace BrickGame.Scripts.Bricks
         protected Brick _brickPrefab;
         [SerializeField]
         [Tooltip("Content holder")]
-        private Transform _content;
+        // ReSharper disable once InconsistentNaming
+        protected Transform _content;
         //================================    Systems properties    =================================
         /// <summary>
         /// Flag of the component validity

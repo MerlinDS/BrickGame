@@ -4,7 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/16/2017 19:51</date>
 
-using BrickGame.Scripts.UI;
+using BrickGame.Scripts.Bricks;
 using UnityEditor;
 
 namespace BrickGame.Editor
@@ -13,13 +13,12 @@ namespace BrickGame.Editor
     /// NextFigureInspector
     /// </summary>
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(NexFigureBehaviour), true)]
+    [CustomEditor(typeof(FigureDrawer))]
     public class NextFigureInspector : BasePlaygroundInspector
     {
         //================================       Public Setup       =================================
 
         //================================    Systems properties    =================================
-        private SerializedProperty _factory;
         private SerializedProperty _prefab;
         private SerializedProperty _content;
 
@@ -29,7 +28,6 @@ namespace BrickGame.Editor
         /// <inheritdoc />
         protected override void ConcreteOnInspectorGUI()
         {
-            EditorGUILayout.PropertyField(_factory);
             EditorGUILayout.PropertyField(_prefab);
             EditorGUILayout.PropertyField(_content);
         }
@@ -37,13 +35,12 @@ namespace BrickGame.Editor
         /// <inheritdoc />
         protected override void UpdateInstance(int width, int height)
         {
-            NexFigureBehaviour @group = (NexFigureBehaviour) serializedObject.targetObject;
-            group.Rebuild();
+            FigureDrawer @group = (FigureDrawer) serializedObject.targetObject;
+            group.UpdateSize();
         }
 
         protected override void ConcreteOnEnable()
         {
-            _factory = serializedObject.FindProperty("Figure");
             _prefab = serializedObject.FindProperty("_brickPrefab");
             _content = serializedObject.FindProperty("_content");
         }
