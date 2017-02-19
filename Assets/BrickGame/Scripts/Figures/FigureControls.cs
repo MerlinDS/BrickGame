@@ -91,8 +91,8 @@ namespace BrickGame.Scripts.Figures
         public bool CanMoveVertical(int yShift)
         {
             int y = _figureMatrix.y + yShift;
-            //Check bounds
-            if (y < 0 || y + _figureMatrix.Height > _matrix.Height) return false;
+            //Check bounds: ignore top bounds y < 0 ||
+            if (y + _figureMatrix.Height > _matrix.Height) return false;
             //Check intersection
             return !_matrix.HasIntersection(_figureMatrix, _figureMatrix.x, y);
         }

@@ -48,8 +48,9 @@ namespace BrickGame.Scripts.Bricks
             {
                 for (int y = 0; y < figure.Height; ++y)
                 {
-                    _bricks[ (figure.x + x) + (figure.y + y) * _matrix.Width].Active
-                        = figure[x, y];
+                    int c = (figure.x + x) + (figure.y + y) * _matrix.Width;
+                    if(c < 0 || c >= _bricks.Length)continue;
+                    _bricks[ c ].Active = figure[x, y];
                 }
             }
         }

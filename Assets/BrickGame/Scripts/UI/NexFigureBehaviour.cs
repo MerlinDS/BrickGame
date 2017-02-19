@@ -76,6 +76,8 @@ namespace BrickGame.Scripts.UI
         {
             for (int i = 0; i < _bricks.Length; i++)
                 _bricks[i].Active = false;
+
+            if(Figure == null || !Figure.gameObject.activeInHierarchy)return;
             Matrix<bool> figure = Figure.Peek();
             int w = figure.Width;
             int h = figure.Height;

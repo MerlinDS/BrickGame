@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/15/2017 13:07</date>
 
+using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using UnityEngine;
 
@@ -23,11 +24,11 @@ namespace BrickGame.Scripts.Controllers.Commands
         public override void Execute()
         {
             var matrix = new PlaygroundMatrix(10, 20);
-            var objs = GameObject.FindGameObjectsWithTag(SRTags.Player);
-            foreach (GameObject obj in objs)
+            var objs = Object.FindObjectsOfType<Figure>();
+            foreach (Figure figure in objs)
             {
-                if(obj.GetComponent<MessageReceiver.IPlaygroundReceiver>()== null)continue;
-                obj.SendMessage(MessageReceiver.UpdateMatix, matrix, SendMessageOptions.DontRequireReceiver);
+                if(figure.GetComponent<MessageReceiver.IPlaygroundReceiver>()== null)continue;
+                figure.SendMessage(MessageReceiver.UpdateMatix, matrix, SendMessageOptions.DontRequireReceiver);
             }
             /*if (Playgrounds == null || Playgrounds.Length == 0)
             {

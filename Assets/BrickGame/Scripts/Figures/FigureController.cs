@@ -5,7 +5,6 @@
 // <date>02/19/2017 17:30</date>
 
 using BrickGame.Scripts.Models;
-using BrickGame.Scripts.Utils;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
@@ -22,6 +21,7 @@ namespace BrickGame.Scripts.Figures
         [Tooltip("Spaw point for figures")]
         public Vector2 SpawnPoint;
         [Tooltip("Falling speed of a figureMatrix")]
+        [Range(0F, 100F)]
         public float Speed = 1F;
         //================================    Systems properties    =================================
         private float _position;
@@ -48,11 +48,11 @@ namespace BrickGame.Scripts.Figures
 
         private void PlaygroundHandler(string n = null)
         {
+            if(!gameObject.activeInHierarchy)return;
             //Create new figureMatrix
             FigureMatrix matrix = _builder.Pop();
             matrix.x = (int)(SpawnPoint.x - matrix.Width * 0.5F);
-            matrix.y = (int)SpawnPoint.y;
-//            Debug.Log("Create new figureMatrix: \n" + matrix.Format(true));
+            matrix.y = (int)(SpawnPoint.y - (matrix.Height - 1));
             SendMessage(MessageReceiver.UpdateFigure, matrix);
             BroadcastNofitication(FigureNotification.Changed);
             //
@@ -66,7 +66,7 @@ namespace BrickGame.Scripts.Figures
         private void Update()
         {
             _position = Mathf.MoveTowards(_position, Step, Time.deltaTime * Speed);
-            if (!(_position >= Step)) return;
+            if (_position < Step) return;
             //set position to zero
             _position = 0;
             //Move figureMatrix down
