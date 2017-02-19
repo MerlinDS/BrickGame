@@ -4,14 +4,17 @@
 // <author>Andrew Salomatin</author>
 // <date>02/08/2017 20:00</date>
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
     /// FigureFactory - Factory of game figures
     /// </summary>
+    [Obsolete("Class is deprecated. Use BrickGame.Scripts.Figures.FigureBuilder instead")]
     public abstract class FigureFactory : GameBehaviour, IFigureController
     {
         //================================       Public Setup       =================================

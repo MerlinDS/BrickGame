@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/08/2017 17:09</date>
 
+using System;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
@@ -38,6 +39,7 @@ namespace BrickGame.Scripts.Figures
         /// Get figure matrix from empty borders
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Method is deprecated. Use Flip method if Matrix<> instead")]
         public bool[,] GetFlippedFigureMatrix()
         {
             bool[,] t = GetFigureMatrix();

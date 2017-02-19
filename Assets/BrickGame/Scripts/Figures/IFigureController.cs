@@ -3,11 +3,15 @@
 // </copyright>
 // <author>Andrew Salomatin</author>
 // <date>02/08/2017 18:57</date>
+
+using System;
+
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
     /// IFigureController - interface of the figure controls.
     /// </summary>
+    [Obsolete("Interface is deprecated.")]
     public interface IFigureController
     {
         //================================       Getters|Setters       =================================

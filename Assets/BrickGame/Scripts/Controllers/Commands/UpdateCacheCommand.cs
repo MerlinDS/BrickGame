@@ -68,7 +68,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             {
                 PlaygroundController pc = Playgrounds[i];
                 bool[] matrix = pc.Matrix;
-                int[] figure = pc.GetComponent<FigureController>().FigureIndexes();
+                int[] figure = pc.GetComponent<OldFigureController>().FigureIndexes();
                 string compressed = DataConverter.ToString(matrix, figure);
                 cacheModel.UpdatePlayground(pc.Rules.name, pc.name, compressed);
             }
