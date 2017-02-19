@@ -7,6 +7,7 @@
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playground;
+using BrickGame.Scripts.Playgrounds;
 using BrickGame.Scripts.Utils;
 using UnityEngine;
 

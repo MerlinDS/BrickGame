@@ -3,12 +3,16 @@
 // </copyright>
 // <author>Andrew Salomatin</author>
 // <date>02/08/2017 18:37</date>
+
+using System;
+
 namespace BrickGame.Scripts.Playground
 {
     /// <summary>
     /// PlaygroundMessage - internal playground message.
     /// Invoke internal methods.
     /// </summary>
+    [Obsolete("Depricated class.")]
     public static class PlaygroundMessage
     {
         /// <summary>

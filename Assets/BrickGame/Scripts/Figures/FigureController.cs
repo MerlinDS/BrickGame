@@ -5,6 +5,7 @@
 // <date>02/19/2017 17:30</date>
 
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Playgrounds;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Figures

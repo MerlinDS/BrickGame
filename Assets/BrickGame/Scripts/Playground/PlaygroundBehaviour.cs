@@ -13,6 +13,7 @@ namespace BrickGame.Scripts.Playground
     /// <summary>
     /// PlaygroundBehaviour - concrete playground drawer
     /// </summary>
+    [Obsolete("Depricated class.")]
     public class PlaygroundBehaviour : BricksDrawer, IModelMessageResiver
     {
         //================================       Public Setup       =================================

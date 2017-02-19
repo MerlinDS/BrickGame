@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Playgrounds;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Playground
@@ -16,6 +17,7 @@ namespace BrickGame.Scripts.Playground
     /// Moving figures to down edge.
     /// Finalizing playground on end of figures movement.
     /// </summary>
+    [Obsolete("Depricated class.")]
     public abstract class PlaygroundController : GameBehaviour, IModelMessageResiver
     {
         /// <summary>

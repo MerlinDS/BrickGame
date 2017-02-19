@@ -4,11 +4,14 @@
 // <author>Andrew Salomatin</author>
 // <date>02/08/2017 13:33</date>
 
+using System;
+
 namespace BrickGame.Scripts.Playground
 {
     /// <summary>
     /// PlaygroundModel - model of the playground
     /// </summary>
+    [Obsolete("Depricated class.")]
     public class PlaygroundModel
     {
         //================================       Public Setup       =================================

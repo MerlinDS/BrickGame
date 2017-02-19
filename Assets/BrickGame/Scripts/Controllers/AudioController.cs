@@ -6,6 +6,7 @@
 
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Playgrounds;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers

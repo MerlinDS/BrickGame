@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Playgrounds;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Playground
@@ -17,6 +18,7 @@ namespace BrickGame.Scripts.Playground
     /// ClassicPlayground - playground controller with classic rules behaviour
     /// </summary>
     [DisallowMultipleComponent]
+    [Obsolete("Depricated class.")]
     [RequireComponent(typeof(PlaygroundBehaviour), typeof(IFigureController))]
     public class ClassicPlayground : PlaygroundController
     {
