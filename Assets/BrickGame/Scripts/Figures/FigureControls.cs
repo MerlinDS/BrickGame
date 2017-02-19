@@ -6,6 +6,7 @@
 
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
 {
@@ -42,7 +43,6 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public void Rotate(bool clockwise = true)
         {
-            _matrix.Rotate(clockwise);
             int x = _matrix.x;
             int y = _matrix.y;
             //Calculate new position of the matrix and
@@ -56,6 +56,7 @@ namespace BrickGame.Scripts.Figures
                 else if (x + _matrix.Height >= _playground.Width)
                     x = _playground.Width - _matrix.Height;
             }
+            _matrix.Rotate(clockwise);
             //Check if matrix can be rotated
             if (_playground.HasIntersection(_matrix, x, y))
             {
