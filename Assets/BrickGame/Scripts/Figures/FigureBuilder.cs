@@ -76,7 +76,7 @@ namespace BrickGame.Scripts.Figures
         public Matrix<bool> Peek()
         {
             FillStack();
-            return Figure.Clone(_figures.Peek());
+            return Figure.Clone(_figures.Peek(), true, true);
         }
         //================================ Private|Protected methods ================================
         /// <summary>
