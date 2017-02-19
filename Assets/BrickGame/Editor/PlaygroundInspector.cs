@@ -4,9 +4,8 @@
 // <author>Andrew Salomatin</author>
 // <date>02/07/2017 16:52</date>
 
-using BrickGame.Scripts.Playground;
+using BrickGame.Scripts.Bricks;
 using UnityEditor;
-using UnityEngine;
 
 namespace BrickGame.Editor
 {
@@ -14,35 +13,42 @@ namespace BrickGame.Editor
     /// PlaygroundInspector 
     /// </summary>
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(PlaygroundController), true)]
+    [CustomEditor(typeof(PlaygroundDrawer))]
     public class PlaygroundInspector : BasePlaygroundInspector
     {
         //================================       Public Setup       =================================
 
         //================================    Systems properties    =================================
-        private SerializedProperty _rules;
+        private SerializedProperty _figure;
+        private SerializedProperty _playground;
 
+        private SerializedProperty _prefab;
+        private SerializedProperty _content;
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
         /// <inheritdoc />
         protected override void ConcreteOnInspectorGUI()
         {
-            EditorGUILayout.PropertyField(_rules);
+            EditorGUILayout.PropertyField(_prefab);
+            EditorGUILayout.PropertyField(_content);
+            EditorGUILayout.PropertyField(_figure);
+            EditorGUILayout.PropertyField(_playground);
         }
 
         /// <inheritdoc />
         protected override void UpdateInstance(int width, int height)
         {
-            Component component = (Component) serializedObject.targetObject;
-            if (component.GetComponent<PlaygroundBehaviour>() == null) return;
-            component.GetComponent<PlaygroundBehaviour>().UpdateModel(
-                new PlaygroundModel(width, height));
+            PlaygroundDrawer component = (PlaygroundDrawer) serializedObject.targetObject;
+            component.UpdateSize();
         }
 
         protected override void ConcreteOnEnable()
         {
-            _rules = serializedObject.FindProperty("Rules");
+            _prefab = serializedObject.FindProperty("_brickPrefab");
+            _content = serializedObject.FindProperty("_content");
+            _figure = serializedObject.FindProperty("Figure");
+            _playground = serializedObject.FindProperty("Playground");
         }
     }
 }

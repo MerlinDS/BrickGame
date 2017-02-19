@@ -7,6 +7,7 @@
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Bricks
 {
@@ -16,39 +17,57 @@ namespace BrickGame.Scripts.Bricks
     public class PlaygroundDrawer : BricksDrawer
     {
         //================================       Public Setup       =================================
+        [Tooltip("Width in bricks of the component, can be changed by playground.")]
+        public int Width = 10;
+        [Tooltip("Height in bricks of the component, can be changed by playground.")]
+        public int Height = 20;
+        [Tooltip("Figure to draw.")]
         public Figure Figure;
+        [Tooltip("Playground to draw.")]
+        public Playgrounds.Playground Playground;
         //================================    Systems properties    =================================
-        [NotNull] private Matrix<bool> _matrix = new Matrix<bool>(10,20);
         [NotNull] private Brick[] _bricks = new Brick[0];
         //================================      Public methods      =================================
-
-        //================================ Private|Protected methods ================================
+        public void UpdateSize()
+        {
+            if(!Validate())return;
+            _bricks = RestoreBricks(Width, Height, transform.localScale);
+        }
 
         private void OnEnable()
         {
-            if(!Validate())return;
-            _bricks = RestoreBricks(_matrix.Width, _matrix.Height, transform.localScale);
+            UpdateSize();
         }
+        //================================ Private|Protected methods ================================
 
         private void Update()
         {
             //Update form playground matrix
-            for (int x = 0; x < _matrix.Width; ++x)
+            if (Playground == null || Playground.Matrix.IsNull) return;
+            Matrix<bool> matrix = Playground.Matrix;
+            if (matrix.Width != Width || matrix.Height != Height)
             {
-                for (int y = 0; y < _matrix.Height; ++y)
+                Width = matrix.Width;
+                Height = matrix.Height;
+                UpdateSize();
+            }
+
+            for (int x = 0; x < matrix.Width; ++x)
+            {
+                for (int y = 0; y < matrix.Height; ++y)
                 {
-                    _bricks[x + y * _matrix.Width].Active = _matrix[x, y];
+                    _bricks[x + y * matrix.Width].Active = matrix[x, y];
                 }
             }
 
-            if(Figure == null)return;
+            if(Figure == null || Figure.Matrix.IsNull)return;
             FigureMatrix figure = Figure.Matrix;
             //Update from figureMatrix
             for (int x = 0; x < figure.Width; ++x)
             {
                 for (int y = 0; y < figure.Height; ++y)
                 {
-                    int c = (figure.x + x) + (figure.y + y) * _matrix.Width;
+                    int c = (figure.x + x) + (figure.y + y) * matrix.Width;
                     if(c < 0 || c >= _bricks.Length)continue;
                     _bricks[ c ].Active = figure[x, y];
                 }

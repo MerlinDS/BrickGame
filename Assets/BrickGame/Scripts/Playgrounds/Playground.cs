@@ -1,34 +1,27 @@
-﻿// <copyright file="Figure.cs" company="Near Fancy">
+﻿// <copyright file="Playground.cs" company="Near Fancy">
 // Copyright (c) 2017 All Rights Reserved
 // </copyright>
 // <author>Andrew Salomatin</author>
-// <date>02/19/2017 19:41</date>
+// <date>02/19/2017 21:16</date>
 
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace BrickGame.Scripts.Figures
+namespace BrickGame.Scripts.Playgrounds
 {
     /// <summary>
-    /// Figure - Component represent access to
+    /// Playground
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("BrickGame/Game Components/Figure")]
-    [RequireComponent(typeof(FigureController))]
-    public class Figure : GameBehaviour, MessageReceiver.IFigureReceiver
+    [AddComponentMenu("BrickGame/Game Components/Playground")]
+    public class Playground : GameBehaviour
     {
         //================================       Public Setup       =================================
-        [NotNull]
-        public FigureMatrix Matrix { get { return _matrix; } }
+        [NotNull]public Matrix<bool> Matrix{get{return _matrix;}}
         //================================    Systems properties    =================================
-        private FigureMatrix _matrix = new FigureMatrix();
+        private PlaygroundMatrix _matrix = new PlaygroundMatrix(10, 20);
         //================================      Public methods      =================================
-        /// <inheritdoc />
-        public void UpdateFigure(FigureMatrix matrix)
-        {
-            _matrix = matrix ?? new FigureMatrix();
-        }
 
         //================================ Private|Protected methods ================================
     }
