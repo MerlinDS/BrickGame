@@ -6,6 +6,7 @@
 
 using System;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Models
 {
@@ -300,7 +301,7 @@ namespace BrickGame.Scripts.Models
                     if(target._matrix[x + y * width].Equals(@default))continue;
                     //target matrix has value in the cell
                     int c = xOffset * x + (yOffset + y) * Width;
-                    if(c < 0 || c > _matrix.Length) continue;
+                    if(c < 0 || c >= _matrix.Length) continue;
                     //the cell is in bounds of current matrix
                     if (_matrix[c].Equals(@default))continue;
                     //current matrix has value in the cell

@@ -6,13 +6,16 @@
 
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
 {
     /// <summary>
-    /// Figure
+    /// Figure - Component represent access to
     /// </summary>
-    public abstract class Figure : GameBehaviour, MessageReceiver.IFigureReceiver
+    [AddComponentMenu("BrickGame/Figures/Figure")]
+    [RequireComponent(typeof(FigureController))]
+    public class Figure : GameBehaviour, MessageReceiver.IFigureReceiver
     {
         //================================       Public Setup       =================================
         [NotNull]

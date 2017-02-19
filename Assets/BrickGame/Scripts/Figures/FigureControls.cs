@@ -94,7 +94,7 @@ namespace BrickGame.Scripts.Figures
             //Check bounds
             if (y < 0 || y + _figureMatrix.Height > _matrix.Height) return false;
             //Check intersection
-            return !_matrix.HasIntersection(_figureMatrix, _figureMatrix.y, y);
+            return !_matrix.HasIntersection(_figureMatrix, _figureMatrix.x, y);
         }
 
         /// <inheritdoc />
