@@ -5,6 +5,7 @@
 // <date>02/19/2017 17:30</date>
 
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Utils;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
@@ -37,6 +38,26 @@ namespace BrickGame.Scripts.Figures
         {
             _builder = GetComponent<FigureBuilder>();
             _controls = GetComponent<IFigureControls>();
+            Context.AddListener(PlaygroundNotification.Start, PlaygroundHandler);
+            enabled = false;
+        }
+
+        private void OnDestroy()
+        {
+            Context.RemoveListener(PlaygroundNotification.Start, PlaygroundHandler);
+        }
+
+        private void PlaygroundHandler(string n = null)
+        {
+            //Create new figure
+            Figure figure = _builder.Pop();
+            figure.x = (int)SpawnPoint.x;
+            figure.y = (int)SpawnPoint.y;
+            Debug.Log("Create new figure: \n" + figure.Format(true));
+            SendMessage(MessageReceiver.UpdateFigure, figure);
+            //
+            if (n == PlaygroundNotification.Start)
+                enabled = true;
         }
 
         /// <summary>
@@ -55,7 +76,7 @@ namespace BrickGame.Scripts.Figures
                 return;
             }
             //Current figure can't fall further. Get a new figure.
-            SendMessage(MessageReceiver.UpdateFigure, _builder.Pop());
+            PlaygroundHandler();
         }
     }
 }

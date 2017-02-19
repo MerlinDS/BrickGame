@@ -23,8 +23,14 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <inheritdoc />
         public override void Execute()
         {
-
-            if (Playgrounds == null || Playgrounds.Length == 0)
+            var matrix = new PlaygroundMatrix(10, 20);
+            var objs = GameObject.FindGameObjectsWithTag(SRTags.Player);
+            foreach (GameObject obj in objs)
+            {
+                if(obj.GetComponent<MessageReceiver.IFigureReceiver>()== null)continue;
+                obj.SendMessage(MessageReceiver.UpdateMatix, matrix, SendMessageOptions.DontRequireReceiver);
+            }
+            /*if (Playgrounds == null || Playgrounds.Length == 0)
             {
                 Debug.LogError("Playground controllers was not found!");
                 return;
@@ -59,7 +65,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                 //Create first figure or restore old one
                 if(figure == null)controller.SendMessage(PlaygroundMessage.CreateFigure);
                 else controller.SendMessage(PlaygroundMessage.RestoreFigure, figure);
-            }
+            }*/
         }
 
         //================================ Private|Protected methods ================================
