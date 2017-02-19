@@ -18,7 +18,7 @@ namespace BrickGame.Scripts.Playground
     /// Finalizing playground on end of figures movement.
     /// </summary>
     [Obsolete("Depricated class.")]
-    public abstract class PlaygroundController : GameBehaviour, IModelMessageResiver
+    public abstract class PlaygroundController : GameBehaviour
     {
         /// <summary>
         /// Enum of internal controller's states
@@ -71,12 +71,6 @@ namespace BrickGame.Scripts.Playground
 
         protected PlaygroundModel Model { get; private set; }
         //================================      Public methods      =================================
-
-        /// <inheritdoc />
-        public void UpdateModel(PlaygroundModel model)
-        {
-            Model = model;
-        }
 
         //================================ Private|Protected methods ================================
         public void Awake()

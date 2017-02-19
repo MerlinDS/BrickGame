@@ -4,7 +4,6 @@
 // <author>Andrew Salomatin</author>
 // <date>02/18/2017 19:23</date>
 
-using BrickGame.Scripts.Figures;
 using JetBrains.Annotations;
 
 namespace BrickGame.Scripts.Models

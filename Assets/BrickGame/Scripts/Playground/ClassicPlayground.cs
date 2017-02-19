@@ -19,7 +19,6 @@ namespace BrickGame.Scripts.Playground
     /// </summary>
     [DisallowMultipleComponent]
     [Obsolete("Depricated class.")]
-    [RequireComponent(typeof(PlaygroundBehaviour), typeof(IFigureController))]
     public class ClassicPlayground : PlaygroundController
     {
         //================================       Public Setup       =================================
@@ -27,7 +26,6 @@ namespace BrickGame.Scripts.Playground
         //================================    Systems properties    =================================
         private float _colldown;
         private Coroutine _finalization;
-        private PlaygroundBehaviour _view;
         private IFigureController _figureController;
         //================================      Public methods      =================================
         /// <summary>
@@ -35,7 +33,6 @@ namespace BrickGame.Scripts.Playground
         /// </summary>
         public void Start()
         {
-            _view = GetComponent<PlaygroundBehaviour>();
             _figureController = GetComponent<IFigureController>();
             if (Application.isPlaying)enabled = false;
             BroadcastNofitication(PlaygroundNotification.Restore, new SessionDataProvider(name, Rules));
@@ -106,25 +103,12 @@ namespace BrickGame.Scripts.Playground
                 _finalization = null;
                 yield break;
             }
-            //Full lines exist, need to remove these lines and create a new figureMatrix.
-            _view.EndOfBlinking += RemoveCells;
-            _view.Blink(lines.ToArray());
+
             RemoveLines(lines);
             enabled = false;//Stop updating
             yield return null;
         }
 
-        /// <summary>
-        /// Handler for playground view callback
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RemoveCells(object sender, EventArgs e)
-        {
-            _view.EndOfBlinking -= RemoveCells;
-            SendMessage(PlaygroundMessage.CreateFigure);
-            enabled = true;//Rebuild updating
-        }
 
     }
 }
