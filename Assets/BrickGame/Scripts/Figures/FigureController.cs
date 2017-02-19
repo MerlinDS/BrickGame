@@ -55,6 +55,7 @@ namespace BrickGame.Scripts.Figures
             figure.y = (int)SpawnPoint.y;
             Debug.Log("Create new figure: \n" + figure.Format(true));
             SendMessage(MessageReceiver.UpdateFigure, figure);
+            BroadcastNofitication(FigureNotification.Changed);
             //
             if (n == PlaygroundNotification.Start)
                 enabled = true;

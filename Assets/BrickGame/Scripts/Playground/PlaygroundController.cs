@@ -25,7 +25,7 @@ namespace BrickGame.Scripts.Playground
         private enum InternalState
         {
             /// <summary>
-            /// Factory was initialized
+            /// Figure was initialized
             /// </summary>
             Initialized = 0x1,
             /// <summary>

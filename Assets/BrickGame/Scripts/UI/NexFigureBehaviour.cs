@@ -6,6 +6,7 @@
 
 using BrickGame.Scripts.Bricks;
 using BrickGame.Scripts.Figures;
+using BrickGame.Scripts.Models;
 using UnityEngine;
 
 namespace BrickGame.Scripts.UI
@@ -16,8 +17,8 @@ namespace BrickGame.Scripts.UI
     public class NexFigureBehaviour : BricksDrawer
     {
         //================================       Public Setup       =================================
-        [Tooltip("Factory of figures that provide next figure to show")]
-        public FigureFactory Factory;
+        [Tooltip("Figure game object")]
+        public FigureBuilder Figure;
         [Tooltip("Width in brick, count of columns")]
         public int Width = 4;
         [Tooltip("Height in bricks, count of rows")]
@@ -75,12 +76,15 @@ namespace BrickGame.Scripts.UI
         {
             for (int i = 0; i < _bricks.Length; i++)
                 _bricks[i].Active = false;
-            bool[,] figure = Factory.NextFigure();
-            int w = figure.GetLength(0);
-            int h = figure.GetLength(1);
+            Matrix<bool> figure = Figure.Peek();
+            int w = figure.Width;
+            int h = figure.Height;
 
-            int offsetX =  Width / w - 1;
-            int offsetY =  1;
+
+            // ReSharper disable PossibleLossOfFraction
+            int offsetX = (int) (Width / w * 0.5F);
+            int offsetY = (int) (Height / h * 0.5F);
+            // ReSharper restore PossibleLossOfFraction
 
             //Set new
             for (int x = 0; x < w; x++)

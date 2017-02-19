@@ -64,14 +64,14 @@ namespace BrickGame.Scripts.Controllers.Commands
         private void SaveMatrices(CacheModel cacheModel)
         {
             int i, n = Playgrounds.Length;
-            for (i = 0; i < n; i++)
+            /*for (i = 0; i < n; i++)
             {
                 PlaygroundController pc = Playgrounds[i];
                 bool[] matrix = pc.Matrix;
                 int[] figure = pc.GetComponent<OldFigureController>().FigureIndexes();
                 string compressed = DataConverter.ToString(matrix, figure);
                 cacheModel.UpdatePlayground(pc.Rules.name, pc.name, compressed);
-            }
+            }*/
         }
 
         /// <summary>
