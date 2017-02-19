@@ -139,9 +139,9 @@ namespace BrickGame.Scripts.Figures
             for (int i = 0; i < length; i++)
             {
                 chances[i] = (int) (@base + seed * i);
-                if (i > 0) chances[i] += _chances[i - 1];
+                if (i > 0) chances[i] += chances[i - 1];
             }
-            return _chances;
+            return chances;
         }
     }
 }
