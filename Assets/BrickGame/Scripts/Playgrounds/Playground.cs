@@ -33,7 +33,7 @@ namespace BrickGame.Scripts.Playgrounds
         /// <inheritdoc />
         public void UpdateMatix(Matrix<bool> matrix)
         {
-            _matrix = matrix ?? new PlaygroundMatrix(10, 20);
+            _matrix = matrix ?? new PlaygroundMatrix(Width, Height);
         }
 
         //================================ Private|Protected methods ================================
