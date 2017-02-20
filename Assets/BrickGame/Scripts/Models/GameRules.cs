@@ -15,16 +15,22 @@ namespace BrickGame.Scripts.Models
     public class GameRules : ScriptableObject
     {
         //================================       Public Setup       =================================
+        [Tooltip("Width of the playground in cells")]
+        public int Width;
+
+        [Tooltip("Hight of the playground in cells")]
+        public int Height;
+
         [Tooltip("Level divider")]
         public int LevelDivider;
 
-        [Tooltip("Starting speed of the game, in seconds")]
-        [Range(0.1F, 2F)]
+        [Tooltip("Starting speed of the game")]
+        [Range(0.5F, 2F)]
         public float StartingSpeed;
 
-        [Tooltip("Minimal speed of the game, in seconds")]
-        [Range(0.01F, 0.1F)]
-        public float MinSpeed;
+        [Tooltip("Speed increasing parameter")]
+        [Range(0.01F, 2F)]
+        public float SpeedIncreaser;
 
         [Tooltip("Time gap before playground finalizing, in seconds")]
         [Range(0.1F, 2F)]
@@ -32,6 +38,7 @@ namespace BrickGame.Scripts.Models
 
         [Tooltip("Score by deleted lines")]
         public int[] Score;
+
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
@@ -48,21 +55,15 @@ namespace BrickGame.Scripts.Models
             return Score[lines - 1];
         }
 
-        public int GetLevelByLines(int lines)
+        public int GetLevel(int lines)
         {
             return 1 + (int) Math.Floor((float)lines / LevelDivider);
         }
 
-        public float GetSpeedByLines(int lines)
-        {
-            return GetSpeed(GetLevelByLines(lines));
-        }
-
         public float GetSpeed(int level)
         {
-            float speed = StartingSpeed - level * 0.1F;
-            if (speed <= MinSpeed) speed = MinSpeed;
-            return speed;
+            if (level > 0) level -= 1;
+            return StartingSpeed + level * SpeedIncreaser;
         }
         //================================ Private|Protected methods ================================
     }

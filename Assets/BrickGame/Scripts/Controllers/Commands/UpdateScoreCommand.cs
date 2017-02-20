@@ -25,14 +25,12 @@ namespace BrickGame.Scripts.Controllers.Commands
             ScoreModel model = Context.GetActor<ScoreModel>();
             if (Data.Count == 0)
             {
-                model.UpdateSocre(Data.Name, 0, 1, 0);
+                model.UpdateSocre(Data.Session, 0, 1, 0);
                 return;
             }
-            int score = model[ScoreModel.FieldName.Score, Data.Name] +
-                        Data.Rules.CalculateScore(Data.Count);
-            int lines = model[ScoreModel.FieldName.Lines, Data.Name] + Data.Count;
-            int level = Data.Rules.GetLevelByLines(lines);
-            model.UpdateSocre(Data.Name, score, level, lines);
+            int score = model[ScoreModel.FieldName.Score, Data.Session] + Data.Score;
+            int lines = model[ScoreModel.FieldName.Lines, Data.Session] + Data.Count;
+            model.UpdateSocre(Data.Session, score, Data.Level, lines);
         }
         //================================ Private|Protected methods ================================
     }

@@ -67,7 +67,7 @@ namespace BrickGame.Scripts.UI.Components
                 return;
             }
             //Creating string for textifield
-            int value = Playground == null ? _model[Value] : _model[Value, Playground.name];
+            int value = Playground == null ? _model[Value] : _model[Value, Playground.SessionName];
             int count = CountOfDigits - value.CountOfDigits();
             while (count-- > 0) _builder.Append(EmptyDigit);
             _builder.Append(value);

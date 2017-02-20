@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/19/2017 21:16</date>
 
+using System;
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -18,24 +19,79 @@ namespace BrickGame.Scripts.Playgrounds
     [RequireComponent(typeof(PlaygroundController))]
     public class Playground : GameBehaviour, MessageReceiver.IPlaygroundReceiver
     {
+        private const string WithoutRullesPostfix = "without_rulles";
         //================================       Public Setup       =================================
-        [Tooltip("Playground matrix width in cells")]
-        public int Width = 10;
-        [Tooltip("Playground matrix height in cells")]
-        public int Height = 20;
+        [Tooltip("Game rules for current playground")]
+        [CanBeNull]
+        public GameRules Rules;
+
+        /// <summary>
+        /// Name of the game session on current playground
+        /// </summary>
+        [NotNull]
+        public string SessionName
+        {
+            get
+            {
+                if (Rules == null)
+                    return gameObject.name + WithoutRullesPostfix;
+                return gameObject.name + Rules.name;
+            }
+        }
+
         /// <summary>
         /// Access to playground matrix
         /// </summary>
         [NotNull]public Matrix<bool> Matrix{get{return _matrix;}}
         //================================    Systems properties    =================================
         [NotNull]private Matrix<bool> _matrix = new PlaygroundMatrix(10, 20);
+
+        private int _level;
+        private int _totalCount;
         //================================      Public methods      =================================
         /// <inheritdoc />
         public void UpdateMatix(Matrix<bool> matrix)
         {
-            _matrix = matrix ?? new PlaygroundMatrix(Width, Height);
+            if (Rules == null)
+                Debug.LogWarning("Playground has no rulles. Game will be proceed without rules!");
+            int width = 10, height = 20;
+            if (Rules != null)
+            {
+                width = Rules.Width;
+                height = Rules.Height;
+            }
+            _matrix = matrix ?? new PlaygroundMatrix(width, height);
+            _totalCount = 0;
+            _level = 1;
         }
 
+        /// <summary>
+        /// Update score of the session
+        /// </summary>
+        /// <param name="count">Count of removed lines</param>
+        [UsedImplicitly]
+        public void UpdateScore(int count)
+        {
+            if(count == 0)return;
+            _totalCount += count;
+            int score;
+            float speed;
+            if (Rules == null)
+            {
+                score = count * 100;
+                _level = 1 + (int) Math.Floor((float) _totalCount / 3);
+                speed = 1F + (1 - _level) * 0.5F;
+            }
+            else
+            {
+                score = Rules.CalculateScore(count);
+                _level = Rules.GetLevel(_totalCount);
+                speed = Rules.GetSpeed(_level);
+            }
+            BroadcastNofitication(GameNotification.ScoreUpdated,
+                new ScoreDataProvider( SessionName, count, score, _level));
+            BroadcastMessage(MessageReceiver.AccelerateFigure, speed);
+        }
         //================================ Private|Protected methods ================================
     }
 }

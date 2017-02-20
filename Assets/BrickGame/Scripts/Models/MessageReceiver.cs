@@ -25,6 +25,10 @@ namespace BrickGame.Scripts.Models
         /// <summary>
         ///
         /// </summary>
+        public const string UpdateScore = "UpdateScore";
+        /// <summary>
+        ///
+        /// </summary>
         public const string FinishSession = "FinishSession";
 
         /// <summary>
@@ -54,6 +58,10 @@ namespace BrickGame.Scripts.Models
         ///
         /// </summary>
         public const string ChangeFigure = "ChangeFigure";
+        /// <summary>
+        ///Accelerate figure falling speed
+        /// </summary>
+        public const string AccelerateFigure = "AccelerateFigure";
         /// <summary>
         /// Methods for matrix receiver
         /// </summary>

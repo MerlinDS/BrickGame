@@ -14,31 +14,27 @@ namespace BrickGame.Scripts.Models
     public class ScoreDataProvider : DataProvider
     {
         //================================       Public Setup       =================================
-        /// <summary>
-        /// Name of the playground instance
-        /// </summary>
-        public readonly string Name;
+        public readonly int Level;
 
+        public readonly int Score;
         /// <summary>
         /// Count of removed lines
         /// </summary>
         public readonly int Count;
-
         /// <summary>
-        /// Current rules
+        /// Name of the playground instance
         /// </summary>
-        public readonly GameRules Rules;
+        public readonly string Session;
         //================================    Systems properties    =================================
 
 
         //================================      Public methods      =================================
-
-        /// <inheritdoc />
-        public ScoreDataProvider(GameRules rules, string name, int count)
+        public ScoreDataProvider(string session, int count, int score, int level)
         {
-            Rules = rules;
-            Name = name;
+            Session = session;
             Count = count;
+            Score = score;
+            Level = level;
         }
 
         /// <inheritdoc />

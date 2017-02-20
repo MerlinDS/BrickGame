@@ -6,6 +6,7 @@
 
 using BrickGame.Scripts.Models;
 using System.Collections;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
@@ -45,6 +46,7 @@ namespace BrickGame.Scripts.Figures
             _builder = GetComponent<FigureBuilder>();
             _controls = GetComponent<IFigureControls>();
             Context.AddListener(GameState.Start, StateHandler);
+            Context.AddListener(GameState.End, StateHandler);
             Context.AddListener(GameState.Pause, StateHandler);
             enabled = false;
         }
@@ -53,6 +55,17 @@ namespace BrickGame.Scripts.Figures
         {
             Context.RemoveListener(GameState.Start, StateHandler);
             Context.RemoveListener(GameState.Pause, StateHandler);
+            Context.RemoveListener(GameState.End, StateHandler);
+        }
+
+        /// <summary>
+        /// Accelerate figure speed
+        /// </summary>
+        /// <param name="speed">new speed of the figure</param>
+        [UsedImplicitly]
+        private void AccelerateFigure(float speed)
+        {
+            Speed = speed;
         }
 
         private void ChangeFigure()
@@ -73,6 +86,11 @@ namespace BrickGame.Scripts.Figures
                 ChangeFigure();
             else if (state == GameState.Pause)
                 enabled = !enabled;
+            else if (state == GameState.End)
+            {
+                enabled = false;
+                Speed = 1;
+            }
         }
 
         /// <summary>

@@ -42,7 +42,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                 //Restore score
                 int score, lines;
                 cacheModel.GetScore(Data.Rules.name, Data.Name, out score, out lines);
-                int level = Data.Rules.GetLevelByLines(lines);
+                int level = Data.Rules.GetLevel(lines);
                 Debug.LogFormat("Restore game {0} for {1}: score = {2}, lines = {3}, level = {4}",
                     Data.Rules.name, Data.Name, score, lines, level);
                 Context.GetActor<RestoreModel>()

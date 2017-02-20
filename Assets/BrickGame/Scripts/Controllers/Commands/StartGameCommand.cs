@@ -6,6 +6,7 @@
 
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playgrounds;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers.Commands
@@ -26,7 +27,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             var playgrounds = Object.FindObjectsOfType<Playground>();
             foreach (var playground in playgrounds)
             {
-                var matrix = new PlaygroundMatrix(playground.Width, playground.Height);
+                PlaygroundMatrix matrix = CreateMatrix(playground.Rules);
                 playground.SendMessage(MessageReceiver.UpdateMatix, matrix,
                     SendMessageOptions.DontRequireReceiver);
                 //Send model to childrens
@@ -37,7 +38,9 @@ namespace BrickGame.Scripts.Controllers.Commands
                         .SendMessage(MessageReceiver.UpdateMatix, matrix,
                             SendMessageOptions.DontRequireReceiver);
                 }
-
+                //Clean score
+                Context.Notify(GameNotification.ScoreUpdated,
+                    new ScoreDataProvider(playground.SessionName, 0, 0, 1));
             }
             /*if (Playgrounds == null || Playgrounds.Length == 0)
             {
@@ -78,5 +81,32 @@ namespace BrickGame.Scripts.Controllers.Commands
         }
 
         //================================ Private|Protected methods ================================
+
+        /// <summary>
+        /// Create new matrix depended on game rules and restored data
+        /// </summary>
+        /// <param name="rules">Game rules</param>
+        /// <param name="restored">Playground data restored from cache</param>
+        /// <returns>Instance of new Playground matrix</returns>
+        [NotNull]
+        private PlaygroundMatrix CreateMatrix([CanBeNull]GameRules rules, bool[] restored = null)
+        {
+            int width = 0, height = 0;
+            if (rules != null)
+            {
+                width = rules.Width;
+                height = rules.Height;
+            }
+            //Set default values if has no rules, or rules ar broken
+            if (width == 0 || height == 0)
+            {
+                width = 10;//Default
+                height = 20;//Default
+            }
+            //Remove restored data if broken
+            if(restored == null || restored.Length != width * height)
+                restored = new bool[width*height];
+            return new PlaygroundMatrix(restored, width, height);
+        }
     }
 }

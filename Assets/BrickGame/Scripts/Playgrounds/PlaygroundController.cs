@@ -65,7 +65,6 @@ namespace BrickGame.Scripts.Playgrounds
                 return;
             }
             //Full lines exist, need to remove these lines.
-            //TODO: Send lines to score and update figure speed
             float delay = 0.0F;
             if(_bricksBlinking != null && _drawer != null)
             {
@@ -84,6 +83,7 @@ namespace BrickGame.Scripts.Playgrounds
             yield return new WaitForSeconds(delay);
             foreach (int y in lines)_matrix.FillRow(y, false);
             _matrix.MoveDownRows(lines[0] - 1, lines[lines.Count - 1]);
+            SendMessage(MessageReceiver.UpdateScore, lines.Count);
             BroadcastMessage(MessageReceiver.ChangeFigure);
             if(_drawer != null)_drawer.Resume();
             yield return null;
