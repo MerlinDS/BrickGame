@@ -45,13 +45,15 @@ namespace BrickGame.Scripts.Figures
         {
             _builder = GetComponent<FigureBuilder>();
             _controls = GetComponent<IFigureControls>();
-            Context.AddListener(PlaygroundNotification.Start, PlaygroundHandler);
+            Context.AddListener(GameState.Start, StateHandler);
+            Context.AddListener(GameState.Pause, StateHandler);
             enabled = false;
         }
 
         private void OnDestroy()
         {
-            Context.RemoveListener(PlaygroundNotification.Start, PlaygroundHandler);
+            Context.RemoveListener(GameState.Start, StateHandler);
+            Context.RemoveListener(GameState.Pause, StateHandler);
         }
 
         private void ChangeFigure()
@@ -65,11 +67,13 @@ namespace BrickGame.Scripts.Figures
             if (!enabled) enabled = true;
         }
 
-        private void PlaygroundHandler(string n = null)
+        private void StateHandler(string n = null)
         {
             if(!gameObject.activeInHierarchy)return;
-            if (n == PlaygroundNotification.Start)
+            if (n == GameState.Start)
                 ChangeFigure();
+            else if (n == GameState.Pause)
+                enabled = !enabled;
         }
 
         /// <summary>

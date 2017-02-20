@@ -42,7 +42,7 @@ namespace BrickGame.Scripts.Playgrounds
         {
             if(_sceneBlinking != null)
                 _sceneBlinking.Execute();
-            BroadcastNofitication(PlaygroundNotification.End);
+            BroadcastNofitication(GameState.End);
         }
         /// <summary>
         ///

@@ -29,7 +29,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             string compressed = cacheModel.GetPlaygroundCache(Data.Rules.name, Data.Name);
             if (compressed.Length == 0)
             {
-                Context.Notify(PlaygroundNotification.Start);
+                Context.Notify(GameState.Start);
                 return; //Nothing to restore
             }
             Debug.LogFormat("{0} has compressed string {1}", Data.Name, compressed);
@@ -64,7 +64,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             }
             finally
             {
-                Context.Notify(PlaygroundNotification.Start);
+                Context.Notify(GameState.Start);
             }
         }
 

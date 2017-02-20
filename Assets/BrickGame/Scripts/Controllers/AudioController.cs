@@ -61,7 +61,7 @@ namespace BrickGame.Scripts.Controllers
         {
             _mainSource = GetComponent<AudioSource>();
             Context.AddListener(GameNotification.ScoreUpdated, GameNotificationHandler);
-            Context.AddListener(PlaygroundNotification.End, GameNotificationHandler);
+            Context.AddListener(GameState.End, GameNotificationHandler);
             Context.AddListener(FigureNotification.Turned, GameNotificationHandler);
             Context.AddListener(FigureNotification.Moved, GameNotificationHandler);
             Context.AddListener(GameNotification.MuteSound, GameNotificationHandler);
@@ -70,7 +70,7 @@ namespace BrickGame.Scripts.Controllers
         private void OnDestroy()
         {
             Context.RemoveListener(GameNotification.ScoreUpdated, GameNotificationHandler);
-            Context.RemoveListener(PlaygroundNotification.End, GameNotificationHandler);
+            Context.RemoveListener(GameState.End, GameNotificationHandler);
             Context.RemoveListener(FigureNotification.Turned, GameNotificationHandler);
             Context.RemoveListener(FigureNotification.Moved, GameNotificationHandler);
             Context.RemoveListener(GameNotification.MuteSound, GameNotificationHandler);
@@ -92,7 +92,7 @@ namespace BrickGame.Scripts.Controllers
                 case GameNotification.ScoreUpdated:
                     PlaySfx(Delete);
                     break;
-                case PlaygroundNotification.End:
+                case GameState.End:
                     PlaySfx(Lose);
                     break;
                 case FigureNotification.Turned:

@@ -49,7 +49,7 @@ namespace BrickGame.Scripts.Controllers
         public void Exit2Menu()
         {
             //provokes cache updating
-            BroadcastNofitication(PlaygroundNotification.Pause);
+            BroadcastNofitication(GameState.Pause);
             //Load menu
             ChangeCurrentSceneTo(SRScenes.MainMenuScene);
         }

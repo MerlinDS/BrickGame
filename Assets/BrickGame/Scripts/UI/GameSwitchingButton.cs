@@ -52,16 +52,16 @@ namespace BrickGame.Scripts.UI
         private void Awake()
         {
             ResetState();
-            Context.AddListener(PlaygroundNotification.Start, GameNotificationHandler);
-            Context.AddListener(PlaygroundNotification.Pause, GameNotificationHandler);
-            Context.AddListener(PlaygroundNotification.End, GameNotificationHandler);
+            Context.AddListener(GameState.Start, StateHandler);
+            Context.AddListener(GameState.Pause, StateHandler);
+            Context.AddListener(GameState.End, StateHandler);
             _button = GetComponent<Button>();
             _button.onClick.AddListener(() =>
             {
                 if(_state == ButtonState.Start)
-                    BroadcastNofitication(PlaygroundNotification.Start);
+                    BroadcastNofitication(GameState.Start);
                 else
-                    BroadcastNofitication(PlaygroundNotification.Pause);
+                    BroadcastNofitication(GameState.Pause);
             });
         }
 
@@ -72,18 +72,18 @@ namespace BrickGame.Scripts.UI
         private void OnDestroy()
         {
             _button.onClick.RemoveAllListeners();
-            Context.RemoveListener(PlaygroundNotification.Start, GameNotificationHandler);
-            Context.RemoveListener(PlaygroundNotification.End, GameNotificationHandler);
-            Context.RemoveListener(PlaygroundNotification.Pause, GameNotificationHandler);
+            Context.RemoveListener(GameState.Start, StateHandler);
+            Context.RemoveListener(GameState.End, StateHandler);
+            Context.RemoveListener(GameState.Pause, StateHandler);
         }
 
         /// <summary>
         /// Handle game notifications from context and change button state
         /// </summary>
         /// <param name="notification">Name of a notification</param>
-        private void GameNotificationHandler(string notification)
+        private void StateHandler(string notification)
         {
-            if(notification == PlaygroundNotification.End)ResetState();
+            if(notification == GameState.End)ResetState();
             else ChangeState();
         }
 
