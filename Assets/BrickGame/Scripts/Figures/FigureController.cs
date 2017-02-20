@@ -67,12 +67,12 @@ namespace BrickGame.Scripts.Figures
             if (!enabled) enabled = true;
         }
 
-        private void StateHandler(string n = null)
+        private void StateHandler(string state = null)
         {
             if(!gameObject.activeInHierarchy)return;
-            if (n == GameState.Start)
+            if (state == GameState.Start)
                 ChangeFigure();
-            else if (n == GameState.Pause)
+            else if (state == GameState.Pause)
                 enabled = !enabled;
         }
 

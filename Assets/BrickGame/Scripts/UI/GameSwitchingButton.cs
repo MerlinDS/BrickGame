@@ -80,10 +80,10 @@ namespace BrickGame.Scripts.UI
         /// <summary>
         /// Handle game notifications from context and change button state
         /// </summary>
-        /// <param name="notification">Name of a notification</param>
-        private void StateHandler(string notification)
+        /// <param name="state">Name of a game state</param>
+        private void StateHandler(string state)
         {
-            if(notification == GameState.End)ResetState();
+            if(state == GameState.End)ResetState();
             else ChangeState();
         }
 

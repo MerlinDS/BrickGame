@@ -78,10 +78,10 @@ namespace BrickGame.Scripts.Bricks
             Context.RemoveListener(GameState.Pause, StateHandler);
         }
 
-        private void StateHandler(string n)
+        private void StateHandler(string state)
         {
             if(!gameObject.activeInHierarchy)return;
-            switch (n)
+            switch (state)
             {
                 case GameState.Start:
                     enabled = true;
