@@ -25,13 +25,15 @@ namespace BrickGame.Scripts.Playgrounds
         private List<Brick> _briks;//For effects
         private PlaygroundMatrix _matrix;
         private PlaygroundDrawer _drawer;
-        private BricksBlinkingEffectBehaviour _blinking;
+        private BricksBlinkingEffectBehaviour _bricksBlinking;
+        private SceneBlinkingEffect _sceneBlinking;
         //================================      Public methods      =================================
         /// <inheritdoc />
         public void UpdateMatix(Matrix<bool> matrix)
         {
             _matrix = (PlaygroundMatrix)matrix ?? new PlaygroundMatrix(0, 0);
-            _blinking = GetComponent<BricksBlinkingEffectBehaviour>();
+            _bricksBlinking = GetComponent<BricksBlinkingEffectBehaviour>();
+            _sceneBlinking = GetComponent<SceneBlinkingEffect>();
             _drawer = GetComponentInChildren<PlaygroundDrawer>();
         }
 
@@ -58,14 +60,15 @@ namespace BrickGame.Scripts.Playgrounds
             //Full lines exist, need to remove these lines.
             //TODO: Send lines to score and update figure speed
             float delay = 0.0F;
-            if(_blinking != null && _drawer != null)
+            if(_bricksBlinking != null && _drawer != null)
             {
                 _drawer.Pause();
                 if(_briks == null)_briks = new List<Brick>();
                 _briks.Clear();
                 foreach (int y in lines) _drawer.GetRow(y, ref _briks);
-                delay = _blinking.Execute(_briks);
+                delay = _bricksBlinking.Execute(_briks);
             }
+//            delay = _sceneBlinking.Execute();
             StartCoroutine(RemoveLines(lines, delay));
         }
         //================================ Private|Protected methods ================================

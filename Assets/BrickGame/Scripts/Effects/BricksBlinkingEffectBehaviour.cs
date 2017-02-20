@@ -36,6 +36,7 @@ namespace BrickGame.Scripts.Effects
         {
             if (!enabled) return 0;
             _blincked = 0;
+            _time = Time / Count;
             StartCoroutine(Blinck(bricks));
             return Time;
         }
@@ -51,9 +52,11 @@ namespace BrickGame.Scripts.Effects
             yield return null;
         }
 
+        /// <summary>
+        /// Only for controling from inspector
+        /// </summary>
         private void Start()
         {
-            _time = Time / Count;
         }
     }
 }
