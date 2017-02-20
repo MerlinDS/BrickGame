@@ -80,15 +80,15 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <param name="cacheModel"></param>
         private void SaveMatrices(CacheModel cacheModel)
         {
-            //int i, n = Playgrounds.Length;
-            /*for (i = 0; i < n; i++)
+            int i, n = Playgrounds.Length;
+            for (i = 0; i < n; i++)
             {
-                PlaygroundController pc = Playgrounds[i];
+                Playground pc = Playgrounds[i];
+                if(pc.Rules == null)continue;
                 bool[] matrix = pc.Matrix;
-                int[] figureMatrix = pc.GetComponent<OldFigureController>().FigureIndexes();
-                string compressed = DataConverter.ToString(matrix, figureMatrix);
-                cacheModel.UpdatePlayground(pc.Rules.name, pc.name, compressed);
-            }*/
+                string compressed = DataConverter.ToString(matrix);
+                cacheModel.UpdatePlayground(pc.Rules.name, pc.SessionName, compressed);
+            }
         }
         /// <summary>
         /// Clean cache from playground

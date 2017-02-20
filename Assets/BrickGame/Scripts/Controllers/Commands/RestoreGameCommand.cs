@@ -6,7 +6,6 @@
 
 using System;
 using BrickGame.Scripts.Models;
-using BrickGame.Scripts.Playgrounds;
 using BrickGame.Scripts.Utils;
 using UnityEngine;
 
@@ -36,9 +35,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             //Restore playground from cache
             try
             {
-                bool[] matrix;
-                int[] figure;
-                DataConverter.GetMatrix(compressed, out matrix, out figure);
+                bool[] matrix = DataConverter.GetMatrix(compressed);
                 //Restore score
                 int score, lines, level = 1;
                 cacheModel.GetScore(Data.Mode, Data.Session, out score, out lines);
@@ -51,7 +48,6 @@ namespace BrickGame.Scripts.Controllers.Commands
                             Level = level,
                             Score = score,
                             Lines = lines,
-                            Figure = figure,
                             Matrix = matrix
                         });
             }

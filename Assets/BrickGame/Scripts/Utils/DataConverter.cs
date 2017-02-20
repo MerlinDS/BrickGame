@@ -8,7 +8,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Utils
 {
@@ -25,32 +24,6 @@ namespace BrickGame.Scripts.Utils
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
-        public static string ToString(bool[] data, int[] figure)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(figure.Length.ToHex());//Save count of cell in figureMatrix to header
-            bool hasGarbage = false;
-            //Remove figureMatrix from playground matrix and save them to header
-            for (int i = 0; i < figure.Length; i++)
-            {
-                sb.Append(figure[i].ToHex());
-                if (figure[i] < 0)
-                {
-                    //garbage was found in figureMatrix data.
-                    hasGarbage = true;
-                    continue;
-                }
-                data[figure[i]] = false;
-            }
-            //Remove corupted data
-            if (hasGarbage)
-            {
-                Debug.LogWarningFormat("Data of figureMatrix has garbage: {0}", sb);
-                sb = new StringBuilder();
-                sb.Append(0.ToHex());
-            }
-            return sb.Append(ToString(data)).ToString();
-        }
         /// <summary>
         /// Convert a playground model to compressed string
         /// </summary>
@@ -82,55 +55,6 @@ namespace BrickGame.Scripts.Utils
                 sb.Append(ToString(bits));
 
             return sb.Append(Separator).ToString();
-        }
-
-        /// <summary>
-        /// Comvert compressed string to playground matrix
-        /// </summary>
-        /// <param name="data">Compresed string</param>
-        /// <param name="matrix">Playground matrix</param>
-        /// <param name="figure">Active figureMatrix cells in playground</param>
-        public static void GetMatrix(string data, out bool[] matrix, out int[] figure)
-        {
-            const int lp = 2;
-            //Read header
-            int length = data.Substring(0, lp).FormHex();
-            //Read figureMatrix cells
-            figure = new int[length];
-            for (int i = 0; i < length; i++)
-                figure[i] = data.Substring(lp + i * lp, lp).FormHex();
-            //Read matrix
-            matrix = GetMatrix(data.Substring(lp + lp * length));
-        }
-
-        /// <summary>
-        /// Convert compressed string to an array of playground matrices.
-        /// </summary>
-        /// <param name="data">
-        /// Compressed string, from method
-        /// <see>
-        ///     <cref>ToString(int[])</cref>
-        /// </see>
-        ///     or
-        /// <see>
-        ///     <cref>ToString(int[][])</cref>
-        /// </see>
-        /// </param>
-        /// <returns>An array of playground matrices</returns>
-        /// <exception cref="ArgumentNullException">data can't be null</exception>
-        public static bool[][] GetArray(string data)
-        {
-            if(data == null)
-                throw new ArgumentNullException("data");
-            string[] datas = data.Split(Separator);
-            int n = datas.Length;
-            List<bool[]> result = new List<bool[]>();
-            for (int i = 0; i < n; i++)
-            {
-                if(datas[i].Length == 0)continue;
-                result.Add(GetMatrix(datas[i]));
-            }
-            return result.ToArray();
         }
 
         /// <summary>

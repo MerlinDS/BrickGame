@@ -35,20 +35,19 @@ namespace BrickGame.Scripts.Controllers.Commands
                 string session = playground.SessionName;
                 ScoreDataProvider scoreDataProvider;
 
+                bool[] restored = null;
                 //Has or hasn't restored data
                 if (restoreModel.Has(session))
                 {
                     //Restored start
                     RestoreModel.RestoredData data = restoreModel.Pop(session);
+                    restored = data.Matrix;
                     scoreDataProvider = new ScoreDataProvider(session, data.Score, data.Level, data.Lines);
                 }
                 else
-                {
                     scoreDataProvider = new ScoreDataProvider(session, 0, 0, 1);
-                }
-
                 //Send starting messages
-                PlaygroundMatrix matrix = CreateMatrix(playground.Rules);
+                PlaygroundMatrix matrix = CreateMatrix(playground.Rules, ref restored);
                 playground.SendMessage(MessageReceiver.UpdateMatix, matrix,
                     SendMessageOptions.DontRequireReceiver);
                 //Send model to childrens
@@ -73,7 +72,7 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <param name="restored">Playground data restored from cache</param>
         /// <returns>Instance of new Playground matrix</returns>
         [NotNull]
-        private PlaygroundMatrix CreateMatrix([CanBeNull]GameRules rules, bool[] restored = null)
+        private PlaygroundMatrix CreateMatrix([CanBeNull]GameRules rules, ref bool[] restored)
         {
             int width = 0, height = 0;
             if (rules != null)
@@ -88,9 +87,21 @@ namespace BrickGame.Scripts.Controllers.Commands
                 height = 20;//Default
             }
             //Remove restored data if broken
-            if(restored == null || restored.Length != width * height)
-                restored = new bool[width*height];
-            return new PlaygroundMatrix(restored, width, height);
+            PlaygroundMatrix pm = null;
+            if (restored != null)
+            {
+                int i = width * height;
+                int delta = restored.Length - i;
+                if (delta > 0)
+                {
+                    bool[] data = new bool[i];
+                    for (i = i - 1; i >= delta; i--)
+                        data[i] = restored[i];
+                    pm = new PlaygroundMatrix(data, width, height);
+                }
+            }
+
+            return pm ?? new PlaygroundMatrix(width, height);
         }
     }
 }
