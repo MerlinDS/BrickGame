@@ -12,6 +12,7 @@ namespace BrickGame.Scripts.Effects
     /// PaletteSwappingEffectBehaviour
     /// </summary>
     [ExecuteInEditMode]
+    [AddComponentMenu("BrickGame/Effects/Palette Swapping")]
     public class PaletteSwappingEffectBehaviour: GameBehaviour
     {
         //================================       Public Setup       =================================

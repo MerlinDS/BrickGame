@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/19/2017 19:10</date>
 
+using System.Collections.Generic;
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
@@ -14,7 +15,7 @@ namespace BrickGame.Scripts.Bricks
     /// <summary>
     /// PlaygroundDrawer - component that resonsible for playground bricks state updating
     /// </summary>
-    public class PlaygroundDrawer : BricksDrawer,MessageReceiver.IPlaygroundReceiver
+    public class PlaygroundDrawer : BricksDrawer, MessageReceiver.IPlaygroundReceiver
     {
         //================================       Public Setup       =================================
         [Tooltip("Width in bricks of the component, can be changed by playground.")]
@@ -38,6 +39,27 @@ namespace BrickGame.Scripts.Bricks
         {
             _matrix = matrix ?? new PlaygroundMatrix(Width, Height);
             UpdateSize();
+        }
+
+        public void Pause()
+        {
+            if(!gameObject.activeInHierarchy)return;
+            enabled = false;
+        }
+
+        public void Resume()
+        {
+            if(!gameObject.activeInHierarchy)return;
+            enabled = true;
+        }
+
+        /// <inheritdoc />
+        public void GetRow(int y, ref List<Brick> list)
+        {
+            if(y < 0 || y >= Height)return;
+            if (list == null) list = new List<Brick>();
+            for (int x = 0; x < Width; ++x)
+                list.Add(_bricks[x + y * Width]);
         }
         //================================ Private|Protected methods ================================
 

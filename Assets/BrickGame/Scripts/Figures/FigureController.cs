@@ -62,16 +62,14 @@ namespace BrickGame.Scripts.Figures
             matrix.y = (int)(SpawnPoint.y - (matrix.Height - 1));
             SendMessage(MessageReceiver.UpdateFigure, matrix);
             BroadcastNofitication(FigureNotification.Changed);
+            if (!enabled) enabled = true;
         }
 
         private void PlaygroundHandler(string n = null)
         {
             if(!gameObject.activeInHierarchy)return;
             if (n == PlaygroundNotification.Start)
-            {
                 ChangeFigure();
-                enabled = true;
-            }
         }
 
         /// <summary>
@@ -112,6 +110,7 @@ namespace BrickGame.Scripts.Figures
                 _finisher = null;
                 yield break;
             }
+            enabled = false;
             SendMessageUpwards(MessageReceiver.AppendFigure, SendMessageOptions.DontRequireReceiver);
             _finisher = null;
             yield return null;

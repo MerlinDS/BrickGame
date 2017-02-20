@@ -12,7 +12,7 @@ namespace BrickGame.Scripts.Effects
     /// GhostingEffectBehaviour - component for GhostingEffect
     /// </summary>
 //    [ExecuteInEditMode]
-    [AddComponentMenu("BrickGame/Effects/GhostingEffect")]
+    [AddComponentMenu("BrickGame/Effects/Ghosting")]
     public class GhostingEffectBehaviour : GameBehaviour
     {
         //================================       Public Setup       =================================
