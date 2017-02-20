@@ -25,7 +25,6 @@ namespace BrickGame.Scripts.Effects
         private int _blincked;
         private float _time;
 
-        private Camera _camera;
         private PaletteSwappingEffectBehaviour _effect;
 
         private Color _c0;
@@ -66,7 +65,6 @@ namespace BrickGame.Scripts.Effects
                 enabled = false;
                 return;
             }
-            _camera = cam;
             _effect = cam.GetComponent<PaletteSwappingEffectBehaviour>();
         }
     }
