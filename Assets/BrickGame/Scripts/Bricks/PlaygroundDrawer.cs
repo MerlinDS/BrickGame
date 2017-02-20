@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
-using BrickGame.Scripts.Playgrounds;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -64,18 +63,18 @@ namespace BrickGame.Scripts.Bricks
         }
         //================================ Private|Protected methods ================================
 
-        private void Awake()
+        private void Start()
         {
             Context.AddListener(GameState.Start, StateHandler);
-            Context.AddListener(GameState.End, StateHandler);
             Context.AddListener(GameState.Pause, StateHandler);
+            Context.AddListener(GameState.End, StateHandler);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             Context.RemoveListener(GameState.Start, StateHandler);
-            Context.RemoveListener(GameState.End, StateHandler);
             Context.RemoveListener(GameState.Pause, StateHandler);
+            Context.RemoveListener(GameState.End, StateHandler);
         }
 
         private void StateHandler(string state)

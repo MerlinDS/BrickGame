@@ -4,9 +4,8 @@
 // <author>Andrew Salomatin</author>
 // <date>02/19/2017 17:30</date>
 
-using System.Collections;
 using BrickGame.Scripts.Models;
-using BrickGame.Scripts.Playgrounds;
+using System.Collections;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Figures

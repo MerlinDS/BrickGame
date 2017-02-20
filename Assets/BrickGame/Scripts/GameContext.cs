@@ -6,7 +6,6 @@
 
 using BrickGame.Scripts.Controllers.Commands;
 using BrickGame.Scripts.Models;
-using BrickGame.Scripts.Playgrounds;
 using BrickGame.Scripts.Utils.Input;
 using MiniMoca;
 using UnityEngine;
@@ -38,11 +37,11 @@ namespace BrickGame.Scripts
             CommandMap.MapCommand<UpdateScoreCommand>(GameNotification.ScoreUpdated);
             CommandMap.MapCommand<StartGameCommand>(GameState.Start);
             //Cache command
-            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound);
+            /*CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound);
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ColorChanged);
             CommandMap.MapCommand<UpdateCacheCommand>(GameState.End);
             CommandMap.MapCommand<UpdateCacheCommand>(GameState.Pause);
-            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);
+            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);*/
         }
     }
 }
