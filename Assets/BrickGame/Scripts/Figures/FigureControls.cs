@@ -16,16 +16,29 @@ namespace BrickGame.Scripts.Figures
         MessageReceiver.IPlaygroundReceiver, MessageReceiver.IFigureReceiver
     {
         //================================       Public Setup       =================================
+        /// <inheritdoc />
+        public int X
+        {
+            get { return _matrix.x; }
+        }
+
+        /// <inheritdoc />
+        public int Y
+        {
+            get { return _matrix.y; }
+        }
 
         //================================    Systems properties    =================================
         /// <summary>
         /// FigureMatrix matrix, initialized with empty object
         /// </summary>
         [NotNull] private FigureMatrix _matrix = new FigureMatrix();
+
         /// <summary>
         /// Playground matrix (model of the playground), initialized with empty object
         /// </summary>
         [NotNull] private Matrix<bool> _playground = new Matrix<bool>(0, 0);
+
         //================================     Receiver methods      ================================
         /// <inheritdoc />
         public void UpdateMatix(Matrix<bool> matrix)
@@ -38,6 +51,7 @@ namespace BrickGame.Scripts.Figures
         {
             _matrix = matrix ?? new FigureMatrix();
         }
+
         //================================      Public methods      =================================
         /// <inheritdoc />
         public void Rotate(bool clockwise = true)
@@ -66,7 +80,6 @@ namespace BrickGame.Scripts.Figures
             //set new position to the matrix
             _matrix.x = x;
             _matrix.y = y;
-
         }
 
         /// <inheritdoc />
@@ -82,7 +95,7 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public void MoveHorizontal(int xShift)
         {
-            if(xShift != 0 && CanMoveHorizontal(xShift))
+            if (xShift != 0 && CanMoveHorizontal(xShift))
                 _matrix.x += xShift;
         }
 
@@ -99,9 +112,10 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public void MoveVertical(int yShift)
         {
-            if(yShift != 0 && CanMoveVertical(yShift))
+            if (yShift != 0 && CanMoveVertical(yShift))
                 _matrix.y += yShift;
         }
+
         //================================ Private|Protected methods ================================
     }
 }

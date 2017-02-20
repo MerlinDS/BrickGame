@@ -22,6 +22,10 @@ namespace BrickGame.Scripts.Models
         /// </para>
         /// </summary>
         public const string UpdateMatix = "UpdateMatix";
+        /// <summary>
+        ///
+        /// </summary>
+        public const string FinishSession = "FinishSession";
 
         /// <summary>
         /// Methods for playground receiver

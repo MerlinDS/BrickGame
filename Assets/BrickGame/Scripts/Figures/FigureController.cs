@@ -111,7 +111,10 @@ namespace BrickGame.Scripts.Figures
                 yield break;
             }
             enabled = false;
-            SendMessageUpwards(MessageReceiver.AppendFigure, SendMessageOptions.DontRequireReceiver);
+            if (_controls.Y > 0)
+                SendMessageUpwards(MessageReceiver.AppendFigure,  SendMessageOptions.DontRequireReceiver);
+            else
+                SendMessageUpwards(MessageReceiver.FinishSession,  SendMessageOptions.DontRequireReceiver);
             _finisher = null;
             yield return null;
         }

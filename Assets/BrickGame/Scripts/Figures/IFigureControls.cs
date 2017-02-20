@@ -11,6 +11,8 @@ namespace BrickGame.Scripts.Figures
     public interface IFigureControls
     {
         //================================       Getters|Setters       =================================
+        int X { get; }
+        int Y { get; }
         //================================			 Methods		   =================================
         /// <summary>
         /// Rotate a matrix of the figureMatrix to 90 degrees.

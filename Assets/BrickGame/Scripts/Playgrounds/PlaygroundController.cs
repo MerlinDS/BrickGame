@@ -37,6 +37,13 @@ namespace BrickGame.Scripts.Playgrounds
             _drawer = GetComponentInChildren<PlaygroundDrawer>();
         }
 
+        [UsedImplicitly]
+        public void FinishSession()
+        {
+            if(_sceneBlinking != null)
+                _sceneBlinking.Execute();
+            BroadcastNofitication(PlaygroundNotification.End);
+        }
         /// <summary>
         ///
         /// </summary>
@@ -68,7 +75,6 @@ namespace BrickGame.Scripts.Playgrounds
                 foreach (int y in lines) _drawer.GetRow(y, ref _briks);
                 delay = _bricksBlinking.Execute(_briks);
             }
-//            delay = _sceneBlinking.Execute();
             StartCoroutine(RemoveLines(lines, delay));
         }
         //================================ Private|Protected methods ================================
