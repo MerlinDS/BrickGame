@@ -58,6 +58,23 @@ namespace BrickGame.Scripts.Controllers.Commands
         }
         //================================ Private|Protected methods ================================
         /// <summary>
+        /// UpdateColors score
+        /// </summary>
+        private void ScoreUpdate(CacheModel cacheModel)
+        {
+            ScoreModel scoreModel = Context.GetActor<ScoreModel>();
+            int i, n = Playgrounds.Length;
+            for (i = 0; i < n; i++)
+            {
+                GameRules rules = Playgrounds[i].Rules;
+                if (rules == null) continue; //Do not save score for game without rules
+                string name = Playgrounds[i].SessionName;
+                cacheModel.UpdateScore(rules.name, name,
+                    scoreModel[ScoreModel.FieldName.Score, name],
+                    scoreModel[ScoreModel.FieldName.Lines, name]);
+            }
+        }
+        /// <summary>
         /// Save playgrounds matrices to cache for current session
         /// </summary>
         /// <param name="cacheModel"></param>
@@ -73,24 +90,6 @@ namespace BrickGame.Scripts.Controllers.Commands
                 cacheModel.UpdatePlayground(pc.Rules.name, pc.name, compressed);
             }*/
         }
-
-        /// <summary>
-        /// UpdateColors score
-        /// </summary>
-        private void ScoreUpdate(CacheModel cacheModel)
-        {
-           /* ScoreModel scoreModel = Context.GetActor<ScoreModel>();
-            int i, n = Playgrounds.Length;
-            for (i = 0; i < n; i++)
-            {
-                string name = Playgrounds[i].name;
-                GameRules rules = Playgrounds[i].Rules;
-                cacheModel.UpdateScore(rules.name, name,
-                    scoreModel[ScoreModel.FieldName.Score, name],
-                    scoreModel[ScoreModel.FieldName.Lines, name]);
-            }*/
-        }
-
         /// <summary>
         /// Clean cache from playground
         /// </summary>
@@ -106,6 +105,5 @@ namespace BrickGame.Scripts.Controllers.Commands
                 cacheModel.CleanPlayground(rules.name, name);
             }*/
         }
-
     }
 }

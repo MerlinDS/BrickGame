@@ -17,11 +17,9 @@ namespace BrickGame.Scripts.Models
         /// <summary>
         /// Session name
         /// </summary>
-        public readonly string Name;
-        /// <summary>
-        /// Session rules
-        /// </summary>
-        public readonly GameRules Rules;
+        public readonly string Mode;
+
+        public readonly string Session;
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
@@ -32,10 +30,10 @@ namespace BrickGame.Scripts.Models
         }
 
         /// <inheritdoc />
-        public SessionDataProvider(string name, GameRules rules)
+        public SessionDataProvider(string mode, string session)
         {
-            Name = name;
-            Rules = rules;
+            Mode = mode;
+            Session = session;
         }
 
         //================================ Private|Protected methods ================================

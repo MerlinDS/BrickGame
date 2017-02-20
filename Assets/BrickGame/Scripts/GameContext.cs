@@ -37,11 +37,11 @@ namespace BrickGame.Scripts
             CommandMap.MapCommand<UpdateScoreCommand>(GameNotification.ScoreUpdated);
             CommandMap.MapCommand<StartGameCommand>(GameState.Start);
             //Cache command
-            /*CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound);
+            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound);
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ColorChanged);
             CommandMap.MapCommand<UpdateCacheCommand>(GameState.End);
             CommandMap.MapCommand<UpdateCacheCommand>(GameState.Pause);
-            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);*/
+            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);
         }
     }
 }

@@ -93,5 +93,11 @@ namespace BrickGame.Scripts.Playgrounds
             BroadcastMessage(MessageReceiver.AccelerateFigure, speed);
         }
         //================================ Private|Protected methods ================================
+        private void Start()
+        {
+            if(Rules == null)return;
+            BroadcastNofitication(GameState.Restore,
+                new SessionDataProvider(Rules.name, SessionName));
+        }
     }
 }

@@ -5,7 +5,6 @@
 // <date>02/15/2017 13:07</date>
 
 using BrickGame.Scripts.Models;
-using BrickGame.Scripts.Playgrounds;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -24,9 +23,31 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <inheritdoc />
         public override void Execute()
         {
-            var playgrounds = Object.FindObjectsOfType<Playground>();
-            foreach (var playground in playgrounds)
+            if (Playgrounds == null || Playgrounds.Length == 0)
             {
+                Debug.LogError("Playground controllers was not found!");
+                return;
+            }
+            RestoreModel restoreModel = Context.GetActor<RestoreModel>();
+
+            foreach (var playground in Playgrounds)
+            {
+                string session = playground.SessionName;
+                ScoreDataProvider scoreDataProvider;
+
+                //Has or hasn't restored data
+                if (restoreModel.Has(session))
+                {
+                    //Restored start
+                    RestoreModel.RestoredData data = restoreModel.Pop(session);
+                    scoreDataProvider = new ScoreDataProvider(session, data.Score, data.Level, data.Lines);
+                }
+                else
+                {
+                    scoreDataProvider = new ScoreDataProvider(session, 0, 0, 1);
+                }
+
+                //Send starting messages
                 PlaygroundMatrix matrix = CreateMatrix(playground.Rules);
                 playground.SendMessage(MessageReceiver.UpdateMatix, matrix,
                     SendMessageOptions.DontRequireReceiver);
@@ -39,45 +60,8 @@ namespace BrickGame.Scripts.Controllers.Commands
                             SendMessageOptions.DontRequireReceiver);
                 }
                 //Clean score
-                Context.Notify(GameNotification.ScoreUpdated,
-                    new ScoreDataProvider(playground.SessionName, 0, 0, 1));
-            }
-            /*if (Playgrounds == null || Playgrounds.Length == 0)
-            {
-                Debug.LogError("Playground controllers was not found!");
-                return;
-            }
-            ScoreModel scoreModel = Context.GetActor<ScoreModel>();
-            RestoreModel restoreModel = Context.GetActor<RestoreModel>();
-            foreach (PlaygroundController controller in Playgrounds)
-            {
-                int[] figureMatrix = null;
-                string name = controller.name;
-                GameRules rules = controller.Rules;
-
-                PlaygroundModel model;
-                ScoreDataProvider scoreDataProvider = null;
-                if (restoreModel.Has(name))
-                {
-                    //Restored start
-                    RestoreModel.RestoredData data = restoreModel.Pop(controller.name);
-                    figureMatrix = data.FigureMatrix;
-                    model = new PlaygroundModel(controller.Width, controller.Height, data.Lines, data.Matrix);
-                    scoreModel.UpdateSocre(controller.name, data.Score, data.Level, data.Lines);
-                }
-                else
-                {
-                    //Clean start
-                    model = new PlaygroundModel(controller.Width, controller.Height);
-                    scoreDataProvider = new ScoreDataProvider(rules, name, 0);
-                }
-
-                controller.SendMessage(PlaygroundMessage.UpdateModel, model, SendMessageOptions.DontRequireReceiver);
                 Context.Notify(GameNotification.ScoreUpdated, scoreDataProvider);
-                //Create first figureMatrix or restore old one
-                if(figureMatrix == null)controller.SendMessage(PlaygroundMessage.CreateFigure);
-                else controller.SendMessage(PlaygroundMessage.RestoreFigure, figureMatrix);
-            }*/
+            }
         }
 
         //================================ Private|Protected methods ================================
