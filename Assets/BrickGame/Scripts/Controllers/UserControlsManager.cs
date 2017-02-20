@@ -36,7 +36,6 @@ namespace BrickGame.Scripts.Controllers
         private IInputAdapter _input;
 
         private double _swapHorisontal;
-
         //================================      Public methods      =================================
         /// <summary>
         /// Refresh game controllers
@@ -63,6 +62,7 @@ namespace BrickGame.Scripts.Controllers
             _controls = new List<IFigureControls>();
             _input = Context.GetActor<IInputAdapter>();
             Context.AddListener(GameState.Start, GameNotificationHandler);
+            Context.AddListener(GameState.Pause, GameNotificationHandler);
             Context.AddListener(FigureNotification.Changed, GameNotificationHandler);
         }
 
@@ -72,6 +72,7 @@ namespace BrickGame.Scripts.Controllers
         private void OnDestroy()
         {
             Context.RemoveListener(GameState.Start, GameNotificationHandler);
+            Context.RemoveListener(GameState.Pause, GameNotificationHandler);
             Context.RemoveListener(FigureNotification.Changed, GameNotificationHandler);
             _controls.Clear();
         }
@@ -85,6 +86,8 @@ namespace BrickGame.Scripts.Controllers
         {
             if (notification == GameState.Start)
                 RefreshControllers();
+            else if (notification == GameState.Pause)
+                enabled = !enabled;
             else if (notification == FigureNotification.Changed)
                 _input.Reset();
         }

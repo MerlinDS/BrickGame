@@ -42,7 +42,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                     //Restored start
                     RestoreModel.RestoredData data = restoreModel.Pop(session);
                     restored = data.Matrix;
-                    scoreDataProvider = new ScoreDataProvider(session, data.Score, data.Level, data.Lines);
+                    scoreDataProvider = new ScoreDataProvider(session, data.Lines, data.Score, data.Level);
                 }
                 else
                     scoreDataProvider = new ScoreDataProvider(session, 0, 0, 1);

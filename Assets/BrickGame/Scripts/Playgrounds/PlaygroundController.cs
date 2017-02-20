@@ -22,7 +22,9 @@ namespace BrickGame.Scripts.Playgrounds
         //================================       Public Setup       =================================
 
         //================================    Systems properties    =================================
+        private bool _changeFigure;
         private List<Brick> _briks;//For effects
+        private Coroutine _coroutine;
         private PlaygroundMatrix _matrix;
         private PlaygroundDrawer _drawer;
         private BricksBlinkingEffectBehaviour _bricksBlinking;
@@ -35,8 +37,9 @@ namespace BrickGame.Scripts.Playgrounds
             _bricksBlinking = GetComponent<BricksBlinkingEffectBehaviour>();
             _sceneBlinking = GetComponent<SceneBlinkingEffect>();
             _drawer = GetComponentInChildren<PlaygroundDrawer>();
+            if(!Context.HasListener(GameState.Pause, GameStateHandler))
+                Context.AddListener(GameState.Pause, GameStateHandler);
         }
-
         [UsedImplicitly]
         public void FinishSession()
         {
@@ -73,16 +76,44 @@ namespace BrickGame.Scripts.Playgrounds
                 foreach (int y in lines) _drawer.GetRow(y, ref _briks);
                 delay = _bricksBlinking.Execute(_briks);
             }
-            StartCoroutine(RemoveLines(lines, delay));
-        }
-        //================================ Private|Protected methods ================================
-
-        private IEnumerator RemoveLines(List<int> lines, float delay)
-        {
-            yield return new WaitForSeconds(delay);
             foreach (int y in lines)_matrix.FillRow(y, false);
             _matrix.MoveDownRows(lines[0] - 1, lines[lines.Count - 1]);
             SendMessage(MessageReceiver.UpdateScore, lines.Count);
+            //Change figure with delay
+            _coroutine = StartCoroutine(RemoveLines(delay));
+        }
+        //================================ Private|Protected methods ================================
+        private void OnDestroy()
+        {
+            if(Context.HasListener(GameState.Pause, GameStateHandler))
+                Context.RemoveListener(GameState.Pause, GameStateHandler);
+        }
+
+        private void GameStateHandler(string state)
+        {
+          /*  enabled = !enabled;
+            if (!enabled && _coroutine != null)
+            {
+                _bricksBlinking.OnDestroy();
+                StopCoroutine(_coroutine);
+                _changeFigure = true;
+            }
+            else if (enabled && _changeFigure)
+            {
+                StartCoroutine(RemoveLines(0));
+                _changeFigure = false;
+            }
+            //Update drawer state
+            if (_drawer != null)
+            {
+                if(enabled)_drawer.Resume();
+                else _drawer.Pause();
+            }*/
+        }
+
+        private IEnumerator RemoveLines(float delay)
+        {
+            if(delay > 0)yield return new WaitForSeconds(delay);
             BroadcastMessage(MessageReceiver.ChangeFigure);
             if(_drawer != null)_drawer.Resume();
             yield return null;

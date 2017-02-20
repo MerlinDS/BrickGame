@@ -26,22 +26,30 @@ namespace BrickGame.Scripts.Effects
         //================================    Systems properties    ==================================
         private int _blincked;
         private float _time;
+        private Coroutine _coroutine;
         //================================      Public methods      =================================
         /// <summary>
         /// Execute blinking of the bricks list
         /// </summary>
         /// <param name="bricks">List of bricks to blink</param>
         /// <returns>total time of blinking</returns>
-        public float Execute([NotNull] IEnumerable<Brick> bricks)
+        public float Execute([NotNull] ICollection<Brick> bricks)
         {
             if (!enabled) return 0;
             _blincked = 0;
             _time = Time / Count;
-            StartCoroutine(Blinck(bricks));
+            _coroutine = StartCoroutine(Blinck(bricks));
             return Time;
         }
+
+        public void OnDestroy()
+        {
+            if(_coroutine != null)
+                StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
         //================================ Private|Protected methods ================================
-        private IEnumerator Blinck(IEnumerable<Brick> bricks)
+        private IEnumerator Blinck(ICollection<Brick> bricks)
         {
             while (_blincked++ < Count)
             {
@@ -58,5 +66,6 @@ namespace BrickGame.Scripts.Effects
         private void Start()
         {
         }
+
     }
 }

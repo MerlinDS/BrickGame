@@ -46,7 +46,6 @@ namespace BrickGame.Scripts.Figures
             _builder = GetComponent<FigureBuilder>();
             _controls = GetComponent<IFigureControls>();
             Context.AddListener(GameState.Start, StateHandler);
-            Context.AddListener(GameState.End, StateHandler);
             Context.AddListener(GameState.Pause, StateHandler);
             enabled = false;
         }
@@ -55,7 +54,6 @@ namespace BrickGame.Scripts.Figures
         {
             Context.RemoveListener(GameState.Start, StateHandler);
             Context.RemoveListener(GameState.Pause, StateHandler);
-            Context.RemoveListener(GameState.End, StateHandler);
         }
 
         /// <summary>
@@ -70,6 +68,7 @@ namespace BrickGame.Scripts.Figures
 
         private void ChangeFigure()
         {
+            Debug.Log("ChangeFigure");
             //Create new figureMatrix
             FigureMatrix matrix = _builder.Pop();
             matrix.x = (int)(SpawnPoint.x - matrix.Width * 0.5F);
@@ -86,11 +85,6 @@ namespace BrickGame.Scripts.Figures
                 ChangeFigure();
             else if (state == GameState.Pause)
                 enabled = !enabled;
-            else if (state == GameState.End)
-            {
-                enabled = false;
-                Speed = 1;
-            }
         }
 
         /// <summary>
