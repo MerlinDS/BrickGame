@@ -1,7 +1,7 @@
-﻿namespace BrickGame.Scripts.Playgrounds
+﻿namespace BrickGame.Scripts
 {
     /// <summary>
-    /// Playground external notifications
+    /// Game state notification
     /// </summary>
     public static class GameState
     {
