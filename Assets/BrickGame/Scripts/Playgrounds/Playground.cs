@@ -92,6 +92,13 @@ namespace BrickGame.Scripts.Playgrounds
                 new ScoreDataProvider( SessionName, count, score, _level));
             BroadcastMessage(MessageReceiver.AccelerateFigure, speed);
         }
+
+        [UsedImplicitly]
+        public void FinishSession()
+        {
+            _matrix = new PlaygroundMatrix(0, 0);
+            BroadcastNofitication(GameState.End);
+        }
         //================================ Private|Protected methods ================================
         private void Start()
         {

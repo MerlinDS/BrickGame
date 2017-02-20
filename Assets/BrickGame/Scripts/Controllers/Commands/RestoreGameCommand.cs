@@ -26,7 +26,7 @@ namespace BrickGame.Scripts.Controllers.Commands
         {
             CacheModel cacheModel = Context.GetActor<CacheModel>();
             string compressed = cacheModel.GetPlaygroundCache(Data.Mode, Data.Session);
-            if (compressed.Length == 0)
+            if (compressed.Length < 3)
             {
                 Context.Notify(GameState.Start);
                 return; //Nothing to restore

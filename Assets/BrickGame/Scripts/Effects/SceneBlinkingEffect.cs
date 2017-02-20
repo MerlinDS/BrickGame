@@ -25,10 +25,12 @@ namespace BrickGame.Scripts.Effects
         private int _blincked;
         private float _time;
 
-        private PaletteSwappingEffectBehaviour _effect;
-
         private Color _c0;
         private Color _c1;
+        private Coroutine _coroutine;
+
+        private PaletteSwappingEffectBehaviour _effect;
+
         //================================      Public methods      =================================
         public float Execute()
         {
@@ -37,7 +39,8 @@ namespace BrickGame.Scripts.Effects
             _c0 = _effect.Color0;
             _c1 = _effect.Color1;
             _time = Time / Count;
-            StartCoroutine(Blinck());
+            if(_coroutine != null)StopCoroutine(_coroutine);
+            _coroutine = StartCoroutine(Blinck());
             return Time;
         }
 
@@ -66,6 +69,13 @@ namespace BrickGame.Scripts.Effects
                 return;
             }
             _effect = cam.GetComponent<PaletteSwappingEffectBehaviour>();
+        }
+
+        private void OnDisable()
+        {
+            if(_coroutine != null)StopCoroutine(_coroutine);
+            _effect.Color0 = _c0;
+            _effect.Color1 = _c1;
         }
     }
 }

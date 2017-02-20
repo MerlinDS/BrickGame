@@ -4,11 +4,9 @@
 // <author>Andrew Salomatin</author>
 // <date>02/14/2017 20:17</date>
 
-using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playgrounds;
 using BrickGame.Scripts.Utils;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers.Commands
 {
@@ -96,14 +94,15 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <param name="cacheModel"></param>
         private void CleanCache(CacheModel cacheModel)
         {
-           /* int i, n = Playgrounds.Length;
+            int i, n = Playgrounds.Length;
             for (i = 0; i < n; i++)
             {
-                string name = Playgrounds[i].name;
+                string name = Playgrounds[i].SessionName;
                 GameRules rules = Playgrounds[i].Rules;
+                if(rules == null)continue;
                 cacheModel.UpdateScore(rules.name, name, 0, 0);
                 cacheModel.CleanPlayground(rules.name, name);
-            }*/
+            }
         }
     }
 }
