@@ -47,6 +47,10 @@ namespace BrickGame.Scripts.Models
         /// </summary>
         public const string AppendFigure = "AppendFigure";
         /// <summary>
+        ///
+        /// </summary>
+        public const string ChangeFigure = "ChangeFigure";
+        /// <summary>
         /// Methods for matrix receiver
         /// </summary>
         public interface IFigureReceiver

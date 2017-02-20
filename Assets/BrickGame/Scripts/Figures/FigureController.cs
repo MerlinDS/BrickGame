@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/19/2017 17:30</date>
 
+using System.Collections;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playgrounds;
 using UnityEngine;
@@ -17,6 +18,10 @@ namespace BrickGame.Scripts.Figures
     [RequireComponent(typeof(FigureControls), typeof(FigureBuilder))]
     public class FigureController : GameBehaviour
     {
+        /// <summary>
+        /// Delay fo coroutine
+        /// </summary>
+        private const float Delay = 0.8F;
         private const float Step = 1.0F;
         //================================       Public Setup       =================================
         [Tooltip("Spaw point for figures")]
@@ -28,6 +33,8 @@ namespace BrickGame.Scripts.Figures
         private float _position;
         private FigureBuilder _builder;
         private IFigureControls _controls;
+
+        private Coroutine _finisher;
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
@@ -47,18 +54,24 @@ namespace BrickGame.Scripts.Figures
             Context.RemoveListener(PlaygroundNotification.Start, PlaygroundHandler);
         }
 
-        private void PlaygroundHandler(string n = null)
+        private void ChangeFigure()
         {
-            if(!gameObject.activeInHierarchy)return;
             //Create new figureMatrix
             FigureMatrix matrix = _builder.Pop();
             matrix.x = (int)(SpawnPoint.x - matrix.Width * 0.5F);
             matrix.y = (int)(SpawnPoint.y - (matrix.Height - 1));
             SendMessage(MessageReceiver.UpdateFigure, matrix);
             BroadcastNofitication(FigureNotification.Changed);
-            //
+        }
+
+        private void PlaygroundHandler(string n = null)
+        {
+            if(!gameObject.activeInHierarchy)return;
             if (n == PlaygroundNotification.Start)
+            {
+                ChangeFigure();
                 enabled = true;
+            }
         }
 
         /// <summary>
@@ -74,11 +87,34 @@ namespace BrickGame.Scripts.Figures
             if (_controls.CanMoveVertical(1))
             {
                 _controls.MoveVertical(1);
+                if (_finisher == null) return;
+                StopCoroutine(_finisher);
+                _finisher = null;
                 return;
             }
-            //Current figureMatrix can't fall further. Get a new figureMatrix.
+            //Current figureMatrix can't fall further.
+            if(_finisher == null)//Append figure to playground with delay
+                _finisher = StartCoroutine(Try2Append());
+        }
+
+        /// <summary>
+        /// Try to append figure to playground matrix.
+        /// User can move figure horizontally.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator Try2Append()
+        {
+            yield return new WaitForSeconds(Delay);
+            //Figure was moved horizontaly and can be moved down  further.
+            if (_controls.CanMoveVertical(1))
+            {
+                StopCoroutine(_finisher);
+                _finisher = null;
+                yield break;
+            }
             SendMessageUpwards(MessageReceiver.AppendFigure, SendMessageOptions.DontRequireReceiver);
-            PlaygroundHandler();
+            _finisher = null;
+            yield return null;
         }
     }
 }

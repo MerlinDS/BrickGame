@@ -42,6 +42,7 @@ namespace BrickGame.Scripts.Playgrounds
             if (lines.Count == 0)
             {
                 //Full lines were not found. Nothing to do.
+                BroadcastMessage(MessageReceiver.ChangeFigure);
                 return;
             }
             //Full lines exist, need to remove these lines.
@@ -50,6 +51,7 @@ namespace BrickGame.Scripts.Playgrounds
             if (count <= 0) return;
             foreach (int y in lines)_matrix.FillRow(y, false);
             _matrix.MoveDownRows(lines[0] - 1, lines[lines.Count - 1]);
+            BroadcastMessage(MessageReceiver.ChangeFigure);
         }
         //================================ Private|Protected methods ================================
     }
