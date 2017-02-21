@@ -6,7 +6,6 @@
 
 using System;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Models
 {
@@ -19,7 +18,7 @@ namespace BrickGame.Scripts.Models
     /// <seealso cref="IsStrict"/>
     /// </summary>
     /// <typeparam name="T">Type of cells in matrix</typeparam>
-    public class Matrix<T>
+    public class Matrix<T> where T : struct
     {
         //================================       Public Setup       =================================
         /// <summary>

@@ -16,6 +16,8 @@ namespace BrickGame.Scripts.Models
         //================================       Public Setup       =================================
         public readonly int Level;
 
+        public readonly bool Replacement;
+
         public readonly int Score;
         /// <summary>
         /// Count of removed lines
@@ -29,12 +31,13 @@ namespace BrickGame.Scripts.Models
 
 
         //================================      Public methods      =================================
-        public ScoreDataProvider(string session, int count, int score, int level)
+        public ScoreDataProvider(string session, int count = 0, int score = 0, int level = 1, bool replacement = false)
         {
             Session = session;
             Count = count;
             Score = score;
             Level = level;
+            Replacement = replacement;
         }
 
         /// <inheritdoc />

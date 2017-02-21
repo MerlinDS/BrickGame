@@ -66,7 +66,7 @@ namespace BrickGame.Scripts.Bricks
         }
 
         //================================ Private|Protected methods ================================
-        private void Start()
+        private void Awake()
         {
             _builder = GetComponent<FigureBuilder>();
             UpdateSize();

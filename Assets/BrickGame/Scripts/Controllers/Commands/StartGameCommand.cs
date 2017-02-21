@@ -42,10 +42,11 @@ namespace BrickGame.Scripts.Controllers.Commands
                     //Restored start
                     RestoreModel.RestoredData data = restoreModel.Pop(session);
                     restored = data.Matrix;
-                    scoreDataProvider = new ScoreDataProvider(session, data.Lines, data.Score, data.Level);
+                    scoreDataProvider = new ScoreDataProvider(session, data.Lines, data.Score, data.Level, true);
                 }
                 else
-                    scoreDataProvider = new ScoreDataProvider(session, 0, 0, 1);
+                    scoreDataProvider = new ScoreDataProvider(session, 0, 0, 1, true);
+                Debug.LogFormat("Start new game session: {0}", playground.SessionName);
                 //Send starting messages
                 PlaygroundMatrix matrix = CreateMatrix(playground.Rules, ref restored);
                 playground.SendMessage(MessageReceiver.UpdateMatix, matrix,

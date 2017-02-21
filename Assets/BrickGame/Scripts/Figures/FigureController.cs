@@ -41,7 +41,7 @@ namespace BrickGame.Scripts.Figures
         /// <summary>
         /// Get links to components
         /// </summary>
-        private void Start()
+        private void Awake()
         {
             _builder = GetComponent<FigureBuilder>();
             _controls = GetComponent<IFigureControls>();
@@ -81,6 +81,7 @@ namespace BrickGame.Scripts.Figures
         private void StateHandler(string state = null)
         {
             if(!gameObject.activeInHierarchy)return;
+            Debug.Log("StartHandler");
             if (state == GameState.Start)
                 ChangeFigure();
             else if (state == GameState.Pause)

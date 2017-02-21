@@ -21,7 +21,7 @@ namespace BrickGame.Scripts.Utils
         private static readonly StringBuilder _sb = new StringBuilder();
 
         //================================      Public methods      =================================
-        public static string Format<T>(this Matrix<T> matrix, bool asBit)
+        public static string Format<T>(this Matrix<T> matrix, bool asBit) where T : struct
         {
             _sb.Remove(0, _sb.Length);
             for (int y = 0; y < matrix.Height; y++)

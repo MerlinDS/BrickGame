@@ -5,10 +5,12 @@
 // <date>02/11/2017 14:26</date>
 
 using System.Linq;
-using BrickGame.Scripts.Playgrounds;
+using BrickGame.Scripts.Bricks;
 using BrickGame.Scripts.Utils;
+using Lean;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Scene = TypeSafe.Scene;
 
 namespace BrickGame.Scripts.Controllers
 {
@@ -34,7 +36,7 @@ namespace BrickGame.Scripts.Controllers
         /// ReSharper disable once ParameterHidesMember
         public void StartMode(string name)
         {
-            TypeSafe.Scene scene = SRScenes.All.FirstOrDefault(s=>s.name == name);
+            Scene scene = SRScenes.All.FirstOrDefault(s=>s.name == name);
             if (scene == null)
             {
                 Debug.LogError("Unknow mode: " + name);
@@ -48,6 +50,9 @@ namespace BrickGame.Scripts.Controllers
         /// </summary>
         public void Exit2Menu()
         {
+            //despwan bricks (to pool)
+            var drawers = FindObjectsOfType<BricksDrawer>();
+            foreach (var drawer in drawers)drawer.DestroyBricks();
             //provokes cache updating
             BroadcastNofitication(GameState.Pause);
             //Load menu
@@ -59,7 +64,7 @@ namespace BrickGame.Scripts.Controllers
         /// If scenes are equals, will not chages
         /// </summary>
         /// <param name="scene">TypeSafe scene</param>
-        private void ChangeCurrentSceneTo(TypeSafe.Scene scene)
+        private void ChangeCurrentSceneTo(Scene scene)
         {
             if (SceneManager.GetActiveScene().name == scene.name)
             {
@@ -77,10 +82,10 @@ namespace BrickGame.Scripts.Controllers
         /// </summary>
         /// <param name="scene">Unity scene that was loaded</param>
         /// <param name="loadSceneMode">Loading mode</param>
-        private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode loadSceneMode)
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            TypeSafe.Scene link = SRScenes.All.FirstOrDefault(s => s.name == scene.name);
+            Scene link = SRScenes.All.FirstOrDefault(s => s.name == scene.name);
             if (link == null) return;
             Debug.LogFormat("Scene {0} loaded", scene.name);
             CurrentScene = scene.name;

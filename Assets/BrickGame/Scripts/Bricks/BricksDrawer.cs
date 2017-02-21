@@ -15,19 +15,27 @@ namespace BrickGame.Scripts.Bricks
     public class BricksDrawer : GameBehaviour
     {
         //================================       Public Setup       =================================
-        [SerializeField]
-        [Tooltip("Prefab of the brick")]
+        [SerializeField] [Tooltip("Prefab of the brick")]
         // ReSharper disable once InconsistentNaming
         protected Brick _brickPrefab;
-        [SerializeField]
-        [Tooltip("Content holder")]
+
+        [SerializeField] [Tooltip("Content holder")]
         // ReSharper disable once InconsistentNaming
         protected Transform _content;
+
+        /// <inheritdoc />
+        public Brick BrickPrefab
+        {
+            get { return _brickPrefab; }
+            set { _brickPrefab = value; }
+        }
+
         //================================    Systems properties    =================================
         /// <summary>
         /// Flag of the component validity
         /// </summary>
         private bool _valid;
+
         //================================      Public methods      =================================
         public bool Validate()
         {
@@ -48,6 +56,19 @@ namespace BrickGame.Scripts.Bricks
             _valid = true;
             return _valid;
         }
+
+        /// <summary>
+        /// Destroy all briks instances in content holder container
+        /// </summary>
+        public void DestroyBricks()
+        {
+            if (!_valid) return;
+            //Save desctruction of game objects
+            int i = _content.childCount;
+            Queue<GameObject> children = new Queue<GameObject>();
+            while (--i >= 0) children.Enqueue(_content.GetChild(i).gameObject);
+            while (children.Count > 0) Destroy(children.Dequeue());
+        }
         //================================ Private|Protected methods ================================
 
         /// <summary>
@@ -60,6 +81,7 @@ namespace BrickGame.Scripts.Bricks
         {
             return DrawBricks(width, height, Vector3.one);
         }
+
         /// <summary>
         /// Draw bricks
         /// </summary>
@@ -127,24 +149,11 @@ namespace BrickGame.Scripts.Bricks
             for (int i = 0; i < n; i++)
             {
                 Brick brick = _content.GetChild(i).GetComponent<Brick>();
-                bricks[ brick.X + brick.Y * width ] = brick;
-
+                bricks[brick.X + brick.Y * width] = brick;
             }
             return bricks;
         }
 
-        /// <summary>
-        /// Destroy all briks instances in content holder container
-        /// </summary>
-        protected void DestroyBricks()
-        {
-            if (!_valid) return;
-            //Save desctruction of game objects
-            int i = _content.childCount;
-            Queue<GameObject> children = new Queue<GameObject>();
-            while (--i >= 0)children.Enqueue(_content.GetChild(i).gameObject);
-            while (children.Count > 0)Destroy(children.Dequeue());
-        }
 
     }
 }

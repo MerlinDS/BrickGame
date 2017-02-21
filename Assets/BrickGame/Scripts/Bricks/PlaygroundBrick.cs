@@ -25,6 +25,12 @@ namespace BrickGame.Scripts.Bricks
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
+        private void Reset()
+        {
+            ActiveColor = Color.white;
+            PassiveColor = Color.grey;
+        }
+
         /// <inheritdoc />
         protected override void UpdateColor(Color color)
         {

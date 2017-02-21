@@ -85,7 +85,10 @@ namespace BrickGame.Scripts.Controllers
         private void GameNotificationHandler(string notification)
         {
             if (notification == GameState.Start)
+            {
                 RefreshControllers();
+                enabled = true;
+            }
             else if (notification == GameState.Pause)
                 enabled = !enabled;
             else if (notification == FigureNotification.Changed)

@@ -45,7 +45,7 @@
 			{
                 fixed x = tex2D(_MainTex, i.uv).x;//i in color matrix
                 float4 bl = _ColorMatrix[0]; // blackout color
-                float4 rep = _ColorMatrix[(1 - x) * 3]; //Color replasing (i * color length)
+                float4 rep = _ColorMatrix[(1 - x) * 3]; //Invers color and replace Color replasing (i * color length)
                 return lerp(rep, bl, _Intensivity * i.uv.y);
 			}
 			ENDCG
