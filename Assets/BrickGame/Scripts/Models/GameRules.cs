@@ -15,33 +15,48 @@ namespace BrickGame.Scripts.Models
     public class GameRules : ScriptableObject
     {
         //================================       Public Setup       =================================
+        [Header("View setup")]
         [Tooltip("Width of the playground in cells")]
         public int Width;
 
         [Tooltip("Hight of the playground in cells")]
         public int Height;
 
-        [Tooltip("Level divider")]
-        public int LevelDivider;
+        [Tooltip("Sprite for bricks drawing")]
+        public Sprite BricksSprite;
 
-        [Tooltip("Starting speed of the game")]
+        [Tooltip("Sprite for drawing bricks in GUI")]
+        public Sprite BricksImage;
+
+        [Header("Game rules")]
+        [Tooltip("Level divider")]
+        [Range(1, 100)]
+        public int LevelDivider;
+        [Tooltip("Score by deleted lines")]
+        public int[] Score;
+
+        [Header("Figures setup")]
+        [Tooltip("Position of figure spawning")]
+        public Vector2 SpawPosition;
+
+        [Tooltip("Starting speed of the figure falling")]
         [Range(0.5F, 2F)]
         public float StartingSpeed;
 
-        [Tooltip("Speed increasing parameter")]
+        [Tooltip("Speed increasing parameter for the figure falling")]
         [Range(0.01F, 2F)]
         public float SpeedIncreaser;
 
-        [Tooltip("Time gap before playground finalizing, in seconds")]
-        [Range(0.1F, 2F)]
-        public float FinalizingGap;
-
-        [Tooltip("Score by deleted lines")]
-        public int[] Score;
+        [Header("Figures builder setup")]
+        [Tooltip("Seed for figure creation randomness.")]
+        public int Seed;
+        [Tooltip("List of glyphs for availble figures.")]
+        public Glyph[] Figures;
 
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
+        //Score calculation
         /// <summary>
         /// Calculate score from game rules
         /// </summary>
