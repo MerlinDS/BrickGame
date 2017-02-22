@@ -4,7 +4,9 @@
 // <author>Andrew Salomatin</author>
 // <date>02/22/2017 18:18</date>
 
+using System;
 using System.Text;
+using BrickGame.Scripts.Controllers;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Utils;
 using UnityEngine;
@@ -24,11 +26,12 @@ namespace BrickGame.Scripts.UI.MainMenu
         [Tooltip("Default digid value")] public string EmptyDigit = "@";
 
         //================================    Systems properties    =================================
+        private StringBuilder _builder;
         private Text _textField;
 
         private CacheModel _model;
+        private GameModeManager _modes;
 
-        private StringBuilder _builder;
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
@@ -39,7 +42,14 @@ namespace BrickGame.Scripts.UI.MainMenu
         {
             _textField = GetComponent<Text>();
             _model = Context.GetActor<CacheModel>();
+            _modes = Context.GetActor<GameModeManager>();
             _builder = new StringBuilder(CountOfDigits);
+            Context.AddListener(GameNotification.ModeChanged, ModeHandler);
+        }
+
+        private void OnDestroy()
+        {
+            Context.RemoveListener(GameNotification.ModeChanged, ModeHandler);
         }
 
         private void Start()
@@ -49,13 +59,18 @@ namespace BrickGame.Scripts.UI.MainMenu
                 Debug.LogWarning("TextField for value representation was not set yet!");
                 return;
             }
+            ModeHandler(string.Empty);
+        }
+
+        private void ModeHandler(string notification)
+        {
             //Creating string for textifield
-            int value = _model.GetMaxSocre("Classic");
+            int value = _model.GetMaxSocre(_modes.CurrentRules.name);
             int count = CountOfDigits - value.CountOfDigits();
             while (count-- > 0) _builder.Append(EmptyDigit);
             _builder.Append(value);
             _textField.text = _builder.ToString();
-            //Clean builer for next usage
+            //Clean builer for next usages
             _builder.Remove(0, _builder.Length);
         }
     }

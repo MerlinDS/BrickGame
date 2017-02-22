@@ -4,7 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/19/2017 21:16</date>
 
-using System;
+using BrickGame.Scripts.Controllers;
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -22,7 +22,6 @@ namespace BrickGame.Scripts.Playgrounds
         private const string WithoutRullesPostfix = "without_rulles";
         //================================       Public Setup       =================================
         [Tooltip("Game rules for current playground")]
-        [CanBeNull]
         public GameRules Rules;
 
         /// <summary>
@@ -55,8 +54,6 @@ namespace BrickGame.Scripts.Playgrounds
         /// <inheritdoc />
         public void UpdateMatix(Matrix<bool> matrix)
         {
-            if (Rules == null)
-                Debug.LogWarning("Playground has no rulles. Game will be proceed without rules!");
             int width = 10, height = 20;
             if (Rules != null)
             {
@@ -73,7 +70,7 @@ namespace BrickGame.Scripts.Playgrounds
         [UsedImplicitly]
         public void UpdateScore(int count)
         {
-            if(count == 0 || Rules == null)return;
+            if(count == 0)return;
             TotalLines += count;
             BroadcastNofitication(GameNotification.ScoreUpdated,
                 new ScoreDataProvider( SessionName, count));
@@ -86,9 +83,10 @@ namespace BrickGame.Scripts.Playgrounds
             BroadcastNofitication(GameState.End);
         }
         //================================ Private|Protected methods ================================
+
         private void Start()
         {
-            if(Rules == null)return;
+            Rules = Context.GetActor<GameModeManager>().CurrentRules;
             BroadcastNofitication(GameState.Restore,
                 new SessionDataProvider(Rules.name, SessionName));
         }

@@ -23,5 +23,10 @@ namespace BrickGame.Scripts
         /// Application color palette was changed
         /// </summary>
         public const string ColorChanged = "GameNotification:ColorChanged";
+
+        /// <summary>
+        /// Application mode was changed
+        /// </summary>
+        public const string ModeChanged = "GameNotification:ModeChanged";
     }
 }

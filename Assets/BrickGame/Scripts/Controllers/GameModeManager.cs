@@ -23,17 +23,25 @@ namespace BrickGame.Scripts.Controllers
             get { return _index; }
         }
 
+        public GameRules CurrentRules { get; private set; }
         //================================    Systems properties    =================================
         [SerializeField] [ShowOnly] private int _index;
 
+        [Tooltip("List of game rules")]
+        [SerializeField]
+        private GameRules[] _ruleses;
         private CacheModel _cacheModel;
-
         //================================      Public methods      =================================
         public void ChangeMode(int index)
         {
-            if (index < 0)
+            if (_ruleses == null)
             {
-                Debug.LogError("Index coudn't be less than 0");
+                Debug.LogError("Ruleses list is empty ");
+                return;
+            }
+            if (index < 0 && index >= _ruleses.Length)
+            {
+                Debug.LogError("Index coudn't be less than 0 and bigger then ruleses count.");
                 return;
             }
             var bricksPools = GetComponentsInChildren<IBricksSpriteChanger>();
@@ -41,11 +49,13 @@ namespace BrickGame.Scripts.Controllers
                 pool.ChangeSprite(index);
             //Sace index
             _cacheModel.ModeIndex = index;
+            CurrentRules = _ruleses[index];
             _index = index;
+            BroadcastNofitication(GameNotification.ModeChanged);
         }
 
         //================================ Private|Protected methods ================================
-        private void Start()
+        private void Awake()
         {
             _cacheModel = Context.GetActor<CacheModel>();
             ChangeMode(_cacheModel.ModeIndex);
