@@ -43,10 +43,12 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-                fixed x = tex2D(_MainTex, i.uv).x;//i in color matrix
+                fixed x = tex2D(_MainTex, i.uv).x;
+                x = ( 1 - x ) * 3;//Ivertin color and get index of color in matrix
+                fixed t = _Intensivity * i.uv.y; // get blackout intensivity
                 float4 bl = _ColorMatrix[0]; // blackout color
-                float4 rep = _ColorMatrix[(1 - x) * 3]; //Invers color and replace Color replasing (i * color length)
-                return lerp(rep, bl, _Intensivity * i.uv.y);
+                float4 col = _ColorMatrix[x]; // main color
+                return (1 - t) * col + t * bl;//lerp(col, bl, t);
 			}
 			ENDCG
 		}

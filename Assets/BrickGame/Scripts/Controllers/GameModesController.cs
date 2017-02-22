@@ -7,7 +7,6 @@
 using System.Linq;
 using BrickGame.Scripts.Bricks;
 using BrickGame.Scripts.Utils;
-using Lean;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Scene = TypeSafe.Scene;
