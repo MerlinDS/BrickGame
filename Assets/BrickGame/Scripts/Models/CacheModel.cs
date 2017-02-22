@@ -15,10 +15,11 @@ namespace BrickGame.Scripts.Models
     /// </summary>
     public class CacheModel : IMocaActor
     {
-        private const string ModeField = "_Mode";
-        private const string ScoreField = "_Score";
-        private const string LinesField = "_Lines";
-        private const string PlaygroundField = "_Playground";
+        private const string ModePostfix = "_Mode";
+        private const string ScorePostfix = "_Score";
+        private const string LinesPostfix = "_Lines";
+        private const string LevelPostfix = "_Level";
+        private const string PlaygroundPostfix = "_Playground";
         private const string AudioField = "AudioMuted";
         private const string ColorField = "ColorPaletteIndex";
         private const string ModeIndexField = "ModeIndex";
@@ -62,21 +63,20 @@ namespace BrickGame.Scripts.Models
         /// <param name="session">Name of the session</param>
         /// <param name="score">Current score</param>
         /// <param name="lines">Current lines</param>
-        public void UpdateScore(string mode, string session, int score, int lines)
+        /// <param name="level"></param>
+        public void UpdateScore(string mode, string session, int score, int lines, int level)
         {
             StringBuilder sb = new StringBuilder(mode);
-            sb.Append(ModeField);
+            sb.Append(ModePostfix);
             //Get previous score
-            int maxScore = PlayerPrefs.GetInt(sb + ScoreField);
-            int maxLines = PlayerPrefs.GetInt(sb + LinesField);
-            //UpdateColors score in mode
-            if (score > maxScore) PlayerPrefs.SetInt(sb + ScoreField, score);
-            if (lines > maxLines) PlayerPrefs.SetInt(sb + LinesField, lines);
+            int maxScore = PlayerPrefs.GetInt(sb + ScorePostfix);
+            if (score > maxScore) PlayerPrefs.SetInt(sb + ScorePostfix, score);
             //UpdateColors session
             sb.Append('_');
             sb.Append(session);
-            PlayerPrefs.SetInt(sb + ScoreField, score);
-            PlayerPrefs.SetInt(sb + LinesField, lines);
+            PlayerPrefs.SetInt(sb + ScorePostfix, score);
+            PlayerPrefs.SetInt(sb + LinesPostfix, lines);
+            PlayerPrefs.SetInt(sb + LevelPostfix, level);
         }
 
         /// <summary>
@@ -86,16 +86,18 @@ namespace BrickGame.Scripts.Models
         /// <param name="session">Name of the session</param>
         /// <param name="score">Current score</param>
         /// <param name="lines">Current lines</param>
-        public void GetScore(string mode, string session, out int score, out int lines)
+        /// <param name="level">Current level</param>
+        public void GetScore(string mode, string session, out int score, out int lines, out int level)
         {
-            mode += ModeField + '_' + session;
-            score = PlayerPrefs.GetInt(mode + ScoreField);
-            lines = PlayerPrefs.GetInt(mode + LinesField);
+            mode += ModePostfix + '_' + session;
+            score = PlayerPrefs.GetInt(mode + ScorePostfix);
+            lines = PlayerPrefs.GetInt(mode + LinesPostfix);
+            level = PlayerPrefs.GetInt(mode + LevelPostfix);
         }
 
         public int GetMaxSocre(string mode)
         {
-            return PlayerPrefs.GetInt(mode + ModeField + ScoreField);
+            return PlayerPrefs.GetInt(mode + ModePostfix + ScorePostfix);
         }
 
         /// <summary>
@@ -106,9 +108,9 @@ namespace BrickGame.Scripts.Models
         /// <param name="lines">Current lines</param>
         public void GetScore(string mode, out int score, out int lines)
         {
-            mode += ModeField;
-            score = PlayerPrefs.GetInt(mode + ScoreField);
-            lines = PlayerPrefs.GetInt(mode + LinesField);
+            mode += ModePostfix;
+            score = PlayerPrefs.GetInt(mode + ScorePostfix);
+            lines = PlayerPrefs.GetInt(mode + LinesPostfix);
         }
 
         /// <summary>
@@ -118,7 +120,7 @@ namespace BrickGame.Scripts.Models
         /// <param name="session"></param>
         public void CleanPlayground(string mode, string session)
         {
-            PlayerPrefs.DeleteKey(mode + ModeField + session + PlaygroundField);
+            PlayerPrefs.DeleteKey(mode + ModePostfix + session + PlaygroundPostfix);
         }
 
         /// <summary>
@@ -129,7 +131,7 @@ namespace BrickGame.Scripts.Models
         /// <param name="data">Playground cache</param>
         public void UpdatePlayground(string mode, string session, string data)
         {
-            PlayerPrefs.SetString(mode + ModeField + session + PlaygroundField, data);
+            PlayerPrefs.SetString(mode + ModePostfix + session + PlaygroundPostfix, data);
         }
 
         /// <summary>
@@ -140,7 +142,7 @@ namespace BrickGame.Scripts.Models
         /// <returns>Playground cache</returns>
         public string GetPlaygroundCache(string mode, string session)
         {
-            return PlayerPrefs.GetString(mode + ModeField + session + PlaygroundField);
+            return PlayerPrefs.GetString(mode + ModePostfix + session + PlaygroundPostfix);
         }
 
         //================================ Private|Protected methods ================================

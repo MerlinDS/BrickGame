@@ -69,7 +69,8 @@ namespace BrickGame.Scripts.Controllers.Commands
                 string name = Playgrounds[i].SessionName;
                 cacheModel.UpdateScore(rules.name, name,
                     scoreModel[ScoreModel.FieldName.Score, name],
-                    scoreModel[ScoreModel.FieldName.Lines, name]);
+                    scoreModel[ScoreModel.FieldName.Lines, name],
+                    scoreModel[ScoreModel.FieldName.Level, name]);
             }
         }
         /// <summary>
@@ -100,7 +101,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                 string name = Playgrounds[i].SessionName;
                 GameRules rules = Playgrounds[i].Rules;
                 if(rules == null)continue;
-                cacheModel.UpdateScore(rules.name, name, 0, 0);
+                cacheModel.UpdateScore(rules.name, name, 0, 0, 1);
                 cacheModel.CleanPlayground(rules.name, name);
             }
         }

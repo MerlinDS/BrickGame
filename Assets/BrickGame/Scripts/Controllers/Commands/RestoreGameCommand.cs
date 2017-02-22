@@ -37,8 +37,8 @@ namespace BrickGame.Scripts.Controllers.Commands
             {
                 bool[] matrix = DataConverter.GetMatrix(compressed);
                 //Restore score
-                int score, lines, level = 1;
-                cacheModel.GetScore(Data.Mode, Data.Session, out score, out lines);
+                int score, lines, level;
+                cacheModel.GetScore(Data.Mode, Data.Session, out score, out lines, out level);
                 Debug.LogFormat("Restore game {0} for {1}: score = {2}, lines = {3}, level = {4}",
                     Data.Mode, Data.Session, score, lines, level);
                 Context.GetActor<RestoreModel>()
