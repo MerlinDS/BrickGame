@@ -19,6 +19,16 @@ namespace BrickGame.Scripts.Controllers
     public class ColorPalleteManager : GameManager
     {
         //================================       Public Setup       =================================
+        /// <summary>
+        /// Current palette name
+        /// </summary>
+        public string PaletteName
+        {
+            get
+            {
+                return _index >= _palettes.Length ? "Default" : _palettes[_index].name;
+            }
+        }
         [Header("Current color palette")]
         [Tooltip("Color of game backgorund")] public Color Background;
 
@@ -131,11 +141,12 @@ namespace BrickGame.Scripts.Controllers
             var shadows = FindObjectsOfType<Shadow>();
             foreach (Shadow shadow in shadows)
             {
-                if(shadow.tag == SRTags.FixedColor)continue;
+                if(shadow.CompareTag(SRTags.FixedColor))continue;
                 shadow.effectColor = color;
             }
         }
 
+        // ReSharper disable once InconsistentNaming
         private void UpdateUIBricks()
         {
             UIBrick[] bricks = FindObjectsOfType<UIBrick>();
