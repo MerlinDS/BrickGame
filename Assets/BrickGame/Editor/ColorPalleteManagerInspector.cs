@@ -54,6 +54,7 @@ namespace BrickGame.Editor
             for (int i = 0; i < options.Length; i++)
             {
                 var elment = _palettes.GetArrayElementAtIndex(i);
+                if(elment.objectReferenceValue == null)continue;
                 options[i] = elment.objectReferenceValue.name;
             }
             int index = EditorGUILayout.Popup("Current palette", _index.intValue, options);
