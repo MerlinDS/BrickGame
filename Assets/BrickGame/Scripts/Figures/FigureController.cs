@@ -6,6 +6,7 @@
 
 using BrickGame.Scripts.Models;
 using System.Collections;
+using BrickGame.Scripts.Controllers;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -45,6 +46,8 @@ namespace BrickGame.Scripts.Figures
         {
             _builder = GetComponent<FigureBuilder>();
             _controls = GetComponent<IFigureControls>();
+            GameRules rules = Context.GetActor<GameModeManager>().CurrentRules;
+            SpawnPoint = rules.SpawPosition;
             Context.AddListener(GameState.Start, StateHandler);
             Context.AddListener(GameState.Pause, StateHandler);
             enabled = false;
