@@ -21,6 +21,7 @@ namespace BrickGame.Scripts.Models
         private const string PlaygroundField = "_Playground";
         private const string AudioField = "AudioMuted";
         private const string ColorField = "ColorPaletteIndex";
+        private const string ModeIndexField = "ModeIndex";
 
         //================================       Public Setup       =================================
         public bool AudioMuted
@@ -33,6 +34,12 @@ namespace BrickGame.Scripts.Models
         {
             get { return PlayerPrefs.GetInt(ColorField); }
             set { PlayerPrefs.SetInt(ColorField, value); }
+        }
+
+        public int ModeIndex
+        {
+            get { return PlayerPrefs.GetInt(ModeIndexField); }
+            set{ PlayerPrefs.SetInt(ModeIndexField, value);}
         }
         //================================    Systems properties    =================================
 

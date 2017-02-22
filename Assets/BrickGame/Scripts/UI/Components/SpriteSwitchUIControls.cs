@@ -5,6 +5,8 @@
 // <date>02/21/2017 18:01</date>
 
 using BrickGame.Scripts.Controllers;
+using JetBrains.Annotations;
+using UnityEngine.UI;
 
 namespace BrickGame.Scripts.UI.Components
 {
@@ -16,13 +18,33 @@ namespace BrickGame.Scripts.UI.Components
         //================================       Public Setup       =================================
 
         //================================    Systems properties    =================================
+        private GameModeManager _manager;
 
         //================================      Public methods      =================================
+        [UsedImplicitly]
         public void OnClick(int index = 0)
         {
-            Context.GetActor<BricksPrefabManager>().ChangeSprite(index);
+            _manager.ChangeMode(index);
+            UpdateButtons();
         }
         //================================ Private|Protected methods ================================
+        private void Start()
+        {
+            _manager = Context.GetActor<GameModeManager>();
+            UpdateButtons();
+        }
+
+        private void UpdateButtons()
+        {
+            int n = transform.childCount;
+            for (int i = 0; i < n; i++)
+            {
+                var child = transform.GetChild(i);
+                Button button = child.GetComponent<Button>();
+                if(button == null)continue;
+                button.interactable = _manager.Index != i;
+            }
+        }
 
     }
 }

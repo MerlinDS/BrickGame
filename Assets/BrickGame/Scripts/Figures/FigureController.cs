@@ -68,7 +68,7 @@ namespace BrickGame.Scripts.Figures
 
         private void ChangeFigure()
         {
-            Debug.Log("ChangeFigure");
+//            Debug.Log("ChangeFigure");
             //Create new figureMatrix
             FigureMatrix matrix = _builder.Pop();
             matrix.x = (int)(SpawnPoint.x - matrix.Width * 0.5F);
