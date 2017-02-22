@@ -40,14 +40,17 @@ namespace BrickGame.Scripts.Playgrounds
         }
 
         /// <summary>
+        /// Total lines removed
+        /// </summary>
+        public int TotalLines { get; set; }
+
+        /// <summary>
         /// Access to playground matrix
         /// </summary>
         [NotNull]public Matrix<bool> Matrix{get{return _matrix;}}
         //================================    Systems properties    =================================
         [NotNull]private Matrix<bool> _matrix = new PlaygroundMatrix(10, 20);
 
-        private int _level;
-        private int _totalCount;
         //================================      Public methods      =================================
         /// <inheritdoc />
         public void UpdateMatix(Matrix<bool> matrix)
@@ -61,8 +64,6 @@ namespace BrickGame.Scripts.Playgrounds
                 height = Rules.Height;
             }
             _matrix = matrix ?? new PlaygroundMatrix(width, height);
-            _totalCount = 0;
-            _level = 1;
         }
 
         /// <summary>
@@ -72,25 +73,10 @@ namespace BrickGame.Scripts.Playgrounds
         [UsedImplicitly]
         public void UpdateScore(int count)
         {
-            if(count == 0)return;
-            _totalCount += count;
-            int score;
-            float speed;
-            if (Rules == null)
-            {
-                score = count * 100;
-                _level = 1 + (int) Math.Floor((float) _totalCount / 3);
-                speed = 1F + (1 - _level) * 0.5F;
-            }
-            else
-            {
-                score = Rules.CalculateScore(count);
-                _level = Rules.GetLevel(_totalCount);
-                speed = Rules.GetSpeed(_level);
-            }
+            if(count == 0 || Rules == null)return;
+            TotalLines += count;
             BroadcastNofitication(GameNotification.ScoreUpdated,
-                new ScoreDataProvider( SessionName, count, score, _level));
-            BroadcastMessage(MessageReceiver.AccelerateFigure, speed);
+                new ScoreDataProvider( SessionName, count));
         }
 
         [UsedImplicitly]

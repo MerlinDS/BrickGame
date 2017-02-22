@@ -31,13 +31,19 @@ namespace BrickGame.Scripts.Models
 
 
         //================================      Public methods      =================================
-        public ScoreDataProvider(string session, int count = 0, int score = 0, int level = 1, bool replacement = false)
+        public ScoreDataProvider(string session, int count = 0, int score = 0, int level = 1)
         {
             Session = session;
             Count = count;
             Score = score;
             Level = level;
-            Replacement = replacement;
+            Replacement = true;
+        }
+
+        public ScoreDataProvider(string session, int count = 0)
+        {
+            Session = session;
+            Count = count;
         }
 
         /// <inheritdoc />

@@ -39,5 +39,22 @@ namespace BrickGame.Scripts
     /// </summary>
     public abstract class GameCommand<T> :  MocaCommand<GameContext, T> where T : DataProvider
     {
+        protected Playground[] Playgrounds
+        {
+            get
+            {
+                return _playgrounds ?? (_playgrounds = Object.FindObjectsOfType<Playground>());
+            }
+        }
+
+        [CanBeNull]
+        private Playground[] _playgrounds;
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            base.Dispose();
+            _playgrounds = null;
+        }
     }
 }
