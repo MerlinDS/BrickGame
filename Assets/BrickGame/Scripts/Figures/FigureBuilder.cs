@@ -5,7 +5,9 @@
 // <date>02/19/2017 16:25</date>
 
 using System.Collections.Generic;
+using BrickGame.Scripts.Controllers;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Utils;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
@@ -26,6 +28,7 @@ namespace BrickGame.Scripts.Figures
         [SerializeField]
         private int _count = 3;
         [Tooltip("Creation seed. Affects on chances of figures creation.")]
+        [ShowOnly]
         [SerializeField]
         private int _seed = 5;
         [Tooltip("Available glyphs for current builder")]
@@ -89,6 +92,9 @@ namespace BrickGame.Scripts.Figures
         {
             _previousIndex = -1;
             _chances = CalculateChances(_glyphs.Length, _seed);
+            GameRules rules = Context.GetActor<GameModeManager>().CurrentRules;
+            _glyphs = rules.Figures;
+            _seed = rules.Seed;
         }
 
         /// <summary>
