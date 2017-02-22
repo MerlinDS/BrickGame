@@ -86,6 +86,11 @@ namespace BrickGame.Scripts.Models
             lines = PlayerPrefs.GetInt(mode + LinesField);
         }
 
+        public int GetMaxSocre(string mode)
+        {
+            return PlayerPrefs.GetInt(mode + ModeField + ScoreField);
+        }
+
         /// <summary>
         /// Get score of the mode
         /// </summary>
