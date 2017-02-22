@@ -44,13 +44,12 @@ namespace BrickGame.Scripts.Controllers
                 Debug.LogError("Index coudn't be less than 0 and bigger then ruleses count.");
                 return;
             }
-            var bricksPools = GetComponentsInChildren<IBricksSpriteChanger>();
-            foreach (IBricksSpriteChanger pool in bricksPools)
-                pool.ChangeSprite(index);
-            //Sace index
+            _index = index;
             _cacheModel.ModeIndex = index;
             CurrentRules = _ruleses[index];
-            _index = index;
+            var bricksPools = GetComponentsInChildren<IBricksSpriteChanger>();
+            foreach (IBricksSpriteChanger pool in bricksPools)
+                pool.ChangeSprite(pool.Image ? CurrentRules.BricksImage : CurrentRules.BricksSprite);
             BroadcastNofitication(GameNotification.ModeChanged);
         }
 

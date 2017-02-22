@@ -14,7 +14,8 @@ namespace BrickGame.Scripts.Bricks
 {
     public interface IBricksSpriteChanger
     {
-        void ChangeSprite(int index);
+        bool Image { get; }
+        void ChangeSprite(Sprite sprite);
     }
     /// <summary>
     /// BricksPool
@@ -23,34 +24,30 @@ namespace BrickGame.Scripts.Bricks
     {
         private const string PropertyName = "sprite";
         //================================       Public Setup       =================================
-        [SerializeField] private Sprite[] _spritesCollection;
+        /// <inheritdoc />
+        public abstract bool Image { get; }
+
+        /// <inheritdoc />
         //================================    Systems properties    =================================
         private int _index;
         //================================      Public methods      =================================
-        public void ChangeSprite(int index)
+
+        /// <inheritdoc />
+        public void ChangeSprite(Sprite sprite)
         {
             if (Prefab.GetComponent<T>() == null)
             {
                 Debug.LogError("Prefab doesn't contains valid component for sprite updating!");
                 return;
             }
-            if (index < 0)
-            {
-                Debug.LogError("Index coudn't be less than 0");
-                return;
-            }
-            if (index == _index) return; //Nothing to change
-            if (_spritesCollection.Length <= index) return;
-            _index = index;
-            UpdateInPool();
+            UpdateInPool(sprite);
         }
-
-        private void UpdateInPool()
+        private void UpdateInPool(Sprite sprite)
         {
             Type type = Prefab.GetComponent<T>().GetType();
             PropertyInfo prop = type.GetProperty(PropertyName, BindingFlags.Public | BindingFlags.Instance);
             MethodInfo setMethod = prop.GetSetMethod(false);
-            object[] parameters = {_spritesCollection[_index]};
+            object[] parameters = {sprite};
 
             UpdateSprite(transform, setMethod, parameters);
             GameObject[] holders = GameObject.FindGameObjectsWithTag(SRTags.BrickHolder);
