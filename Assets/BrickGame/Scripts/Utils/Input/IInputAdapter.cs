@@ -28,7 +28,7 @@ namespace BrickGame.Scripts.Utils.Input
         /// Swipe down gesture was detected.
         /// Small delay between touch began and touch ended.
         /// Big delta betwee current position of the touch and previous position.
-        /// Direction of gesture is down
+        /// VerticalDirection of gesture is down
         /// </summary>
         Swipe
     }

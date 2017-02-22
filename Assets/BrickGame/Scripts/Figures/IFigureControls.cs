@@ -13,6 +13,8 @@ namespace BrickGame.Scripts.Figures
         //================================       Getters|Setters       =================================
         int X { get; }
         int Y { get; }
+
+        bool OutOfEdge { get; }
         //================================			 Methods		   =================================
         /// <summary>
         /// Rotate a matrix of the figureMatrix to 90 degrees.

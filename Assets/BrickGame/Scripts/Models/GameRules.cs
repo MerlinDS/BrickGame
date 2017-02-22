@@ -5,6 +5,7 @@
 // <date>02/09/2017 20:00</date>
 
 using System;
+using BrickGame.Scripts.Utils;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Models
@@ -35,9 +36,12 @@ namespace BrickGame.Scripts.Models
         [Tooltip("Score by deleted lines")]
         public int[] Score;
 
-        [Header("Figures setup")]
+        [Header("Figures behaviour")]
         [Tooltip("Position of figure spawning")]
         public Vector2 SpawPosition;
+
+        [Tooltip("Direction of a figure falling")]
+        public VerticalDirection FallingDirection = VerticalDirection.Down;
 
         [Tooltip("Starting speed of the figure falling")]
         [Range(0.5F, 2F)]

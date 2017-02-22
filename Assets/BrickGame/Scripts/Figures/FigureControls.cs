@@ -4,8 +4,11 @@
 // <author>Andrew Salomatin</author>
 // <date>02/18/2017 21:05</date>
 
+using BrickGame.Scripts.Controllers;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Utils;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
 {
@@ -28,7 +31,24 @@ namespace BrickGame.Scripts.Figures
             get { return _matrix.y; }
         }
 
+        /// <inheritdoc />
+        public bool OutOfEdge {
+            get
+            {
+                switch (_edge)
+                {
+                    case VerticalDirection.Up:
+                        return _matrix.y + _matrix.Height > _playground.Height;
+                    case VerticalDirection.Down:
+                        return _matrix.y < 0;
+                }
+                return true;
+            }
+        }
+
         //================================    Systems properties    =================================
+
+        private VerticalDirection _edge;
         /// <summary>
         /// FigureMatrix matrix, initialized with empty object
         /// </summary>
@@ -44,6 +64,7 @@ namespace BrickGame.Scripts.Figures
         public void UpdateMatix(Matrix<bool> matrix)
         {
             _playground = matrix ?? new Matrix<bool>(0, 0);
+             _edge = Context.GetActor<GameModeManager>().CurrentRules.FallingDirection;
         }
 
         /// <inheritdoc />
@@ -103,8 +124,9 @@ namespace BrickGame.Scripts.Figures
         public bool CanMoveVertical(int yShift)
         {
             int y = _matrix.y + yShift;
-            //Check bounds: ignore top bounds y < 0 ||
-            if (y + _matrix.Height > _playground.Height) return false;
+            //Check bounds: ignore top bounds
+            if(_edge == VerticalDirection.Down && y + _matrix.Height > _playground.Height) return false;
+            if(_edge == VerticalDirection.Up && y < 0) return false;
             //Check intersection
             return !_playground.HasIntersection(_matrix, _matrix.x, y);
         }

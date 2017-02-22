@@ -7,6 +7,7 @@
 using BrickGame.Scripts.Models;
 using System.Collections;
 using BrickGame.Scripts.Controllers;
+using BrickGame.Scripts.Utils;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -31,11 +32,11 @@ namespace BrickGame.Scripts.Figures
         [Range(0F, 100F)]
         public float Speed = 1F;
         //================================    Systems properties    =================================
+        private int _direction;
         private float _position;
+        private Coroutine _finisher;
         private FigureBuilder _builder;
         private IFigureControls _controls;
-
-        private Coroutine _finisher;
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
@@ -47,6 +48,7 @@ namespace BrickGame.Scripts.Figures
             _builder = GetComponent<FigureBuilder>();
             _controls = GetComponent<IFigureControls>();
             GameRules rules = Context.GetActor<GameModeManager>().CurrentRules;
+            _direction = (int)rules.FallingDirection;
             SpawnPoint = rules.SpawPosition;
             Context.AddListener(GameState.Start, StateHandler);
             Context.AddListener(GameState.Pause, StateHandler);
@@ -75,7 +77,7 @@ namespace BrickGame.Scripts.Figures
             //Create new figureMatrix
             FigureMatrix matrix = _builder.Pop();
             matrix.x = (int)(SpawnPoint.x - matrix.Width * 0.5F);
-            matrix.y = (int)(SpawnPoint.y - (matrix.Height - 1));
+            matrix.y = (int)(SpawnPoint.y - (matrix.Height - 1) * _direction);
             SendMessage(MessageReceiver.UpdateFigure, matrix);
             BroadcastNofitication(FigureNotification.Changed);
             if (!enabled) enabled = true;
@@ -101,9 +103,9 @@ namespace BrickGame.Scripts.Figures
             //set position to zero
             _position = 0;
             //Move figureMatrix down
-            if (_controls.CanMoveVertical(1))
+            if (_controls.CanMoveVertical(_direction))
             {
-                _controls.MoveVertical(1);
+                _controls.MoveVertical(_direction);
                 if (_finisher == null) return;
                 StopCoroutine(_finisher);
                 _finisher = null;
@@ -123,17 +125,16 @@ namespace BrickGame.Scripts.Figures
         {
             yield return new WaitForSeconds(Delay);
             //Figure was moved horizontaly and can be moved down  further.
-            if (_controls.CanMoveVertical(1))
+            if (_controls.CanMoveVertical(_direction))
             {
                 StopCoroutine(_finisher);
                 _finisher = null;
                 yield break;
             }
             enabled = false;
-            if (_controls.Y > 0)
-                SendMessageUpwards(MessageReceiver.AppendFigure,  SendMessageOptions.DontRequireReceiver);
-            else
-                SendMessageUpwards(MessageReceiver.FinishSession,  SendMessageOptions.DontRequireReceiver);
+            SendMessageUpwards( _controls.OutOfEdge ?
+                    MessageReceiver.FinishSession : MessageReceiver.AppendFigure,
+                SendMessageOptions.DontRequireReceiver);
             _finisher = null;
             yield return null;
         }
