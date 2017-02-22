@@ -31,7 +31,7 @@ namespace BrickGame.Scripts.Models
 
 
         //================================      Public methods      =================================
-        public ScoreDataProvider(string session, int count = 0, int score = 0, int level = 1)
+        public ScoreDataProvider(string session, int count, int score, int level)
         {
             Session = session;
             Count = count;

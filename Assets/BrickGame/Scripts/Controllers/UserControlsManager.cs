@@ -18,24 +18,21 @@ namespace BrickGame.Scripts.Controllers
     public class UserControlsManager : GameManager
     {
         //================================       Public Setup       =================================
-        [Range(0.01F, 1F)] public float HorCooldown = 0.1F;
 
-        [Range(0.01F, 1F)] public float VerCooldown = 0.1F;
-
-        [Range(40F, 100F)] public float SwapDonw;
-
-        [Range(0F, 20F)] public float SwapHorisontal = 5F;
+        [Range(2F, 0.5F)]
+        public float Sensifity = 1F;
         //================================    Systems properties    =================================
+        private int _direction;
+        private float _slop;
+        private float _deltaX;
+        private int _breaker;
 
-        private float _hTimer;
-        private float _vTimer;
         private List<IFigureControls> _controls;
 
         private Vector2 _began;
 
         private IInputAdapter _input;
 
-        private double _swapHorisontal;
         //================================      Public methods      =================================
         /// <summary>
         /// Refresh game controllers
@@ -43,6 +40,8 @@ namespace BrickGame.Scripts.Controllers
         public void RefreshControllers()
         {
             _controls.Clear();
+            _slop = Mathf.Round(20F / 252F * Screen.dpi) * 4;
+
             GameObject[] playgrounds = GameObject.FindGameObjectsWithTag(SRTags.Player);
             foreach (GameObject playground in playgrounds)
             {
@@ -64,6 +63,7 @@ namespace BrickGame.Scripts.Controllers
             Context.AddListener(GameState.Start, GameNotificationHandler);
             Context.AddListener(GameState.Pause, GameNotificationHandler);
             Context.AddListener(FigureNotification.Changed, GameNotificationHandler);
+            Context.AddListener(GameNotification.ModeChanged, GameNotificationHandler);
         }
 
         /// <summary>
@@ -74,6 +74,7 @@ namespace BrickGame.Scripts.Controllers
             Context.RemoveListener(GameState.Start, GameNotificationHandler);
             Context.RemoveListener(GameState.Pause, GameNotificationHandler);
             Context.RemoveListener(FigureNotification.Changed, GameNotificationHandler);
+            Context.RemoveListener(GameNotification.ModeChanged, this.GameNotificationHandler);
             _controls.Clear();
         }
 
@@ -84,6 +85,12 @@ namespace BrickGame.Scripts.Controllers
         /// <param name="notification"></param>
         private void GameNotificationHandler(string notification)
         {
+            if (notification == GameNotification.ModeChanged)
+            {
+                _direction = (int)Context.GetActor<GameModeManager>()
+                    .CurrentRules.FallingDirection;
+                return;
+            }
             if (notification == GameState.Start)
             {
                 RefreshControllers();
@@ -94,7 +101,6 @@ namespace BrickGame.Scripts.Controllers
             else if (notification == FigureNotification.Changed)
                 _input.Reset();
         }
-
         /// <summary>
         /// Getting a user input and providing game actions.
         /// </summary>
@@ -111,23 +117,33 @@ namespace BrickGame.Scripts.Controllers
                     //TODO: avoid movement
                     else if (gesture == InputGesture.Swipe) MoveDown(20);
                     _began = Vector2.zero;
+                    _deltaX = 0;
                     break;
                 case TouchPhase.Began:
                     _began = touch.position;
                     break;
                 case TouchPhase.Moved:
-                    float delta = touch.position.y - _began.y;
-                    float swap = SwapHorisontal;
-                    if (delta < -SwapDonw)
+                    if (touch.deltaPosition.y * _direction < 0)
+                        _began = touch.position;
+                    //Falling speedup
+                    Vector2 delta = touch.position - _began;
+                    float sensifity = Sensifity;
+                    if (Math.Abs(delta.y) >= _slop * sensifity)
                     {
-                        MoveDown(1);
-                        swap *= 2;
-                        //Reset mobing down when touch goes up
-                        if (touch.deltaPosition.y < 0)
-                            _began = touch.position;
+                        if (++_breaker > 2)
+                        {
+                            MoveDown(1);
+                            _breaker = 0;
+                        }
+                        sensifity *= 2; //Decrise sensivity temporary
                     }
-                    delta = -touch.deltaPosition.x;
-                    if (Math.Abs(delta) > swap) MoveHorizontal(delta);
+
+                    //Moving horisontaly
+                    _deltaX += touch.deltaPosition.x;
+                    if (Math.Abs(_deltaX) < _slop * sensifity)break;
+                    MoveHorizontal(touch.deltaPosition.x);
+                    _began = touch.position;
+                    _deltaX = 0;
                     break;
             }
         }
@@ -153,17 +169,12 @@ namespace BrickGame.Scripts.Controllers
         /// <param name="count">Count of iterations</param>
         private void MoveDown(int count)
         {
-            if (count <= 1)
-            {
-                if ((_hTimer += Time.deltaTime) < VerCooldown) return;
-                _hTimer = 0;
-            }
             for (var j = 0; j < count; j++)
             {
                 int n = _controls.Count;
                 for (int i = 0; i < n; i++)
                 {
-                    _controls[i].MoveVertical(1);
+                    _controls[i].MoveVertical(_direction);
                 }
             }
         }
@@ -174,13 +185,10 @@ namespace BrickGame.Scripts.Controllers
         /// <param name="h">Horisontal factor</param>
         private void MoveHorizontal(float h)
         {
-            if ((_hTimer += Time.deltaTime) < HorCooldown) return;
-            _hTimer = 0;
-
             int n = _controls.Count;
             for (int i = 0; i < n; i++)
             {
-                _controls[i].MoveHorizontal(h > 0 ? 1 : -1);
+                _controls[i].MoveHorizontal(h < 0 ? 1 : -1);
             }
         }
     }
