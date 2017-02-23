@@ -45,7 +45,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                 return;
             }
             //Calculate score
-            int score = rules.CalculateScore(Data.Count);
+            int score = rules.CalculateScore(Data.Count) + model[ScoreModel.FieldName.Score, Data.Session];
             int level = rules.GetLevel(playground.TotalLines);
             model.UpdateSocre(Data.Session, score, level, playground.TotalLines);
             playground.BroadcastMessage(MessageReceiver.AccelerateFigure,

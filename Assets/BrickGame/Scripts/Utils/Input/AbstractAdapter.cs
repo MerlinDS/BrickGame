@@ -77,7 +77,7 @@ namespace BrickGame.Scripts.Utils.Input
                     {
                         delta.Normalize();
                         //swipe down
-                        if (delta.y < 0 && delta.x > -0.5f && delta.x < 0.5f)
+                        if (/*delta.y < 0 && */delta.x > -0.5f && delta.x < 0.5f)
                             gesture = InputGesture.Swipe;
                     }
                 }
