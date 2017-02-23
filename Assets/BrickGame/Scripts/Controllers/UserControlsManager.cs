@@ -23,10 +23,10 @@ namespace BrickGame.Scripts.Controllers
         public float Sensifity = 1F;
         //================================    Systems properties    =================================
         private int _direction;
+        private int _breaker;
         private float _slop;
         private float _deltaX;
-        private int _breaker;
-
+        private float _topBorder;
         private List<IFigureControls> _controls;
 
         private Vector2 _began;
@@ -41,6 +41,7 @@ namespace BrickGame.Scripts.Controllers
         {
             _controls.Clear();
             _slop = Mathf.Round(20F / 252F * Screen.dpi) * 4;
+            _topBorder = Screen.height - (Screen.height / 6F);
 
             GameObject[] playgrounds = GameObject.FindGameObjectsWithTag(SRTags.Player);
             foreach (GameObject playground in playgrounds)
@@ -120,6 +121,11 @@ namespace BrickGame.Scripts.Controllers
                     _deltaX = 0;
                     break;
                 case TouchPhase.Began:
+                    if (touch.position.y > _topBorder)
+                    {
+                        _input.Reset();
+                        return;
+                    }
                     _began = touch.position;
                     break;
                 case TouchPhase.Moved:
