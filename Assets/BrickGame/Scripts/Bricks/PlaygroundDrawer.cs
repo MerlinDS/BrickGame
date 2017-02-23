@@ -122,7 +122,7 @@ namespace BrickGame.Scripts.Bricks
                 {
                     int c = (figure.x + x) + (figure.y + y) * Width;
                     if(c < 0 || c >= _bricks.Length || !figure[x, y])continue;
-                    _bricks[ c ].Active = figure[x, y];
+                    _bricks[c].Active = true;
                 }
             }
         }
