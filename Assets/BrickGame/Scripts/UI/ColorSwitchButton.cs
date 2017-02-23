@@ -30,13 +30,23 @@ namespace BrickGame.Scripts.UI
         protected override void OnClickHandler()
         {
             _manager.NextPalette();
-            _label.text = Prefix + _manager.PaletteName;
         }
 
         private void Start()
         {
             _label = GetComponent<Text>();
+            Context.AddListener(GameNotification.ColorChanged, Handler);
             _manager = Context.GetActor<ColorPalleteManager>();
+        }
+
+        protected override void OnDestroy()
+        {
+            Context.RemoveListener(GameNotification.ColorChanged, Handler);
+            base.OnDestroy();
+        }
+
+        private void Handler(string s)
+        {
             _label.text = Prefix + _manager.PaletteName;
         }
     }
