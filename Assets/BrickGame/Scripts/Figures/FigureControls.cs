@@ -8,7 +8,6 @@ using BrickGame.Scripts.Controllers;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Utils;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Figures
 {

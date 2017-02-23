@@ -5,7 +5,9 @@
 // <date>02/19/2017 21:16</date>
 
 using BrickGame.Scripts.Controllers;
+using BrickGame.Scripts.Controllers.Strategies;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Playgrounds.Strategies;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -87,6 +89,10 @@ namespace BrickGame.Scripts.Playgrounds
         private void Start()
         {
             Rules = Context.GetActor<GameModeManager>().CurrentRules;
+            //Add strategy
+            if (Rules.Strategy == ModeStrategies.Bubbles)
+                gameObject.AddComponent<BubbleStrategy>();
+            //
             BroadcastNofitication(GameState.Restore,
                 new SessionDataProvider(Rules.name, SessionName));
         }
