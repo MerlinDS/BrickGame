@@ -77,7 +77,9 @@ namespace BrickGame.Scripts.Figures
             //Create new figureMatrix
             FigureMatrix matrix = _builder.Pop();
             matrix.x = (int)(SpawnPoint.x - matrix.Width * 0.5F);
-            matrix.y = (int)(SpawnPoint.y - (matrix.Height - 1) * _direction);
+            matrix.y = (int) (SpawnPoint.y);
+            if(_direction == (int)VerticalDirection.Down)
+                matrix.y -= matrix.Height - 1;
             SendMessage(MessageReceiver.UpdateFigure, matrix);
             BroadcastNofitication(FigureNotification.Changed);
             if (!enabled) enabled = true;

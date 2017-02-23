@@ -100,7 +100,8 @@ namespace BrickGame.Scripts.Controllers.Commands
                     for (i = i - 1; i >= delta; i--)
                         data[i] = restored[i];
                     pm = new PlaygroundMatrix(data, width, height);
-                }
+                }else
+                    pm = new PlaygroundMatrix(restored, width, height);
             }
 
             return pm ?? new PlaygroundMatrix(width, height);

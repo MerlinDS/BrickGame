@@ -4,6 +4,8 @@
 // <author>Andrew Salomatin</author>
 // <date>02/18/2017 18:56</date>
 
+using System.Collections.Generic;
+using BrickGame.Scripts.Utils;
 using JetBrains.Annotations;
 
 namespace BrickGame.Scripts.Models
@@ -30,29 +32,22 @@ namespace BrickGame.Scripts.Models
         }
 
         /// <summary>
-        /// Move rows value down to bottom of playground matrix
+        /// Remove rows, Substitute empty rows and return list of removed lines.
         /// </summary>
-        /// <param name="from">From row</param>
-        /// <param name="to">To row</param>
-        public void MoveDownRows(int @from, int to)
+        /// <param name="direction">Down edge direction.</param>
+        /// <returns>Array of removed lines indexes</returns>
+        public int[] RemoveRows(VerticalDirection direction)
         {
-            do
+            List<int> rows = new List<int>();
+            //Remove filled rows
+            for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < Width; ++x)
-                    this[x, to] = this[x, @from];
-                @from--; to--;
-
-            } while (@from > 0);
-        }
-
-        /// <summary>
-        /// Fill row of playground matrix with specified value
-        /// </summary>
-        /// <param name="row">Index of row</param>
-        /// <param name="value">Specified vlaue to fill the row</param>
-        public void FillRow(int row, bool value)
-        {
-            for (int x = 0; x < Width; ++x)this[x, row] = value;
+                if(!RowContainsValue(y, true))continue;
+                rows.Add(y);
+                FillRow(y);//Remove row from matrix
+            }
+            if(rows.Count > 0)SubstituteRows(direction == VerticalDirection.Down);
+            return rows.ToArray();
         }
         //================================ Private|Protected methods ================================
     }

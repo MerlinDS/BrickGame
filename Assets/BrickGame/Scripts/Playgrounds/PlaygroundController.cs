@@ -7,8 +7,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using BrickGame.Scripts.Bricks;
+using BrickGame.Scripts.Controllers;
 using BrickGame.Scripts.Effects;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Utils;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -23,6 +25,7 @@ namespace BrickGame.Scripts.Playgrounds
 
         //================================    Systems properties    =================================
         private bool _changeFigure;
+        private VerticalDirection _direction;
         private List<Brick> _briks;//For effects
         private Coroutine _coroutine;
         private PlaygroundMatrix _matrix;
@@ -34,9 +37,11 @@ namespace BrickGame.Scripts.Playgrounds
         public void UpdateMatix(Matrix<bool> matrix)
         {
             _matrix = (PlaygroundMatrix)matrix ?? new PlaygroundMatrix(0, 0);
+            _briks = new List<Brick>();
             _bricksBlinking = GetComponent<BricksBlinkingEffectBehaviour>();
             _sceneBlinking = GetComponent<SceneBlinkingEffect>();
             _drawer = GetComponentInChildren<PlaygroundDrawer>();
+            _direction = Context.GetActor<GameModeManager>().CurrentRules.FallingDirection;
             if(!Context.HasListener(GameState.Pause, GameStateHandler))
                 Context.AddListener(GameState.Pause, GameStateHandler);
         }
@@ -52,33 +57,24 @@ namespace BrickGame.Scripts.Playgrounds
         [UsedImplicitly]
         public void AppendFigure()
         {
-            //Find all filled lines and delete them
-            List<int> lines = new List<int>();
-            for (int y = 0; y < _matrix.Height; ++y)
-            {
-                if(_matrix.RowContainsValue(y, true))
-                    lines.Add(y);
-            }
-            int count = lines.Count;
-            if (count <= 0)
+            //Find all filled rows and delete them
+            int[] rows = _matrix.RemoveRows(_direction);
+            if (rows.Length < 1)
             {
                 //Full lines were not found. Nothing to do.
                 BroadcastMessage(MessageReceiver.ChangeFigure);
                 return;
             }
-            //Full lines exist, need to remove these lines.
+            //Execute blinking of rows if they were found
             float delay = 0.0F;
             if(_bricksBlinking != null && _drawer != null)
             {
                 _drawer.Pause();
-                if(_briks == null)_briks = new List<Brick>();
                 _briks.Clear();
-                foreach (int y in lines) _drawer.GetRow(y, ref _briks);
+                foreach (int y in rows) _drawer.GetRow(y, ref _briks);
                 delay = _bricksBlinking.Execute(_briks);
             }
-            foreach (int y in lines)_matrix.FillRow(y, false);
-            _matrix.MoveDownRows(lines[0] - 1, lines[lines.Count - 1]);
-            SendMessage(MessageReceiver.UpdateScore, lines.Count);
+            SendMessage(MessageReceiver.UpdateScore, rows.Length);
             //Change figure with delay
             _coroutine = StartCoroutine(RemoveLines(delay));
         }

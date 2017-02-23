@@ -5,7 +5,9 @@
 // <date>02/18/2017 15:16</date>
 
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Models
 {
@@ -45,10 +47,13 @@ namespace BrickGame.Scripts.Models
         /// <summary>
         /// Is matrix nullable
         /// </summary>
-        public bool IsNull { get { return _matrix.Length == 0; } }
+        public bool IsNull
+        {
+            get { return _matrix.Length == 0; }
+        }
 
         /// <summary>
-        /// Matrix width, count of cells in row
+        /// Matrix width, count of cells in y
         /// </summary>
         public int Width { get; private set; }
 
@@ -109,6 +114,7 @@ namespace BrickGame.Scripts.Models
             Array.Copy(value._matrix, result, length);
             return result;
         }
+
         //================================    Systems properties    =================================
         /// <summary>
         /// Linear representation of the rectangular matrix
@@ -131,7 +137,7 @@ namespace BrickGame.Scripts.Models
                 throw new ArgumentOutOfRangeException("dest",
                     "Destination matrix mast be the same size as souce matrix");
 
-            if(source.Equals(dest))return;
+            if (source.Equals(dest)) return;
 
             for (int i = 0; i < source._matrix.Length; i++)
                 dest._matrix[i] = source._matrix[i];
@@ -166,7 +172,7 @@ namespace BrickGame.Scripts.Models
         /// <summary>
         /// Matrix constructor (Can't be readonly)
         /// </summary>
-        /// <param name="width">Matrix width, count of cells in row</param>
+        /// <param name="width">Matrix width, count of cells in y</param>
         /// <param name="height">Matrix height, count of cells in column</param>
         /// <param name="isStrict">Flag of access strictness.</param>
         /// <seealso cref="IsStrict"/>
@@ -174,6 +180,7 @@ namespace BrickGame.Scripts.Models
             this(new T[width * height], width, height, isStrict, false)
         {
         }
+
         /// <summary>
         /// Matrix constructor
         /// </summary>
@@ -184,7 +191,7 @@ namespace BrickGame.Scripts.Models
         /// <seealso cref="IsReadOnly"/>
         /// <exception cref="ArgumentException">Width and height of the matrix can be lass that 1</exception>
         /// <exception cref="ArgumentOutOfRangeException">Size of the matrix doesn't match width * height!</exception>
-        public Matrix([NotNull] T[,]matrix, bool isStrict = false, bool isReadOnly = true):
+        public Matrix([NotNull] T[,]matrix, bool isStrict = false, bool isReadOnly = true) :
             this(new T[matrix.GetLength(0) * matrix.GetLength(1)], matrix.GetLength(0), matrix.GetLength(1),
                 isStrict, isReadOnly)
         {
@@ -199,7 +206,7 @@ namespace BrickGame.Scripts.Models
         /// Matrix constructor
         /// </summary>
         /// <param name="matrix">Base matrix data</param>
-        /// <param name="width">Matrix width, count of cells in row</param>
+        /// <param name="width">Matrix width, count of cells in y</param>
         /// <param name="height">Matrix height, count of cells in column</param>
         /// <param name="isStrict">Flag of access strictness.</param>
         /// <param name="isReadOnly">Flag of read only access.</param>
@@ -233,7 +240,7 @@ namespace BrickGame.Scripts.Models
             for (int i = 0; i < _matrix.Length; ++i)
             {
                 int c = RotateCellClockwise(i, Width, Height);
-                if (!clockwise) c = _matrix.Length - 1 - c;//flip
+                if (!clockwise) c = _matrix.Length - 1 - c; //flip
                 _matrix[c] = matrix[i];
             }
             //Swap width and height
@@ -255,24 +262,86 @@ namespace BrickGame.Scripts.Models
         }
 
         /// <summary>
-        /// Check if matrix has row with cells of spesified value
+        /// Check if matrix has y with cells of spesified value
         /// </summary>
-        /// <param name="row">Index of row</param>
+        /// <param name="row">Index of y</param>
         /// <param name="value">Value of cells ot compare</param>
-        /// <returns>True if row contains cells equals value, false in other case</returns>
+        /// <returns>True if y contains cells equals value, false in other case</returns>
         /// <exception cref="IndexOutOfRangeException">Row index is out of the matrix bounds</exception>
         public bool RowContainsValue(int row, T value)
         {
             if (row < 0 || row >= Height)
             {
-                if (IsStrict)
-                    throw new IndexOutOfRangeException("Row index is out of the matrix bounds");
+                if (IsStrict) throw new IndexOutOfRangeException("Row index is out of the matrix bounds");
                 return false;
             }
             int offset = row * Width;
             for (int x = 0; x < Width; x++)
                 if (!_matrix[x + offset].Equals(value)) return false;
             return true;
+        }
+
+        /// <summary>
+        /// Fill row of matrix with specified value
+        /// </summary>
+        /// <param name="y">Index of row</param>
+        /// <param name="value">Specified vlaue to fill the row</param>
+        public void FillRow(int y, T value = default(T))
+        {
+            if (y < 0 || y >= Height)
+            {
+                if (IsStrict) throw new IndexOutOfRangeException("Row index is out of the matrix bounds");
+                return;
+            }
+            for (int x = 0; x < Width; ++x)
+                _matrix[x + y * Width] = value;
+        }
+
+        /// <summary>
+        /// Substitute empty rows to rows with data.
+        /// </summary>
+        /// <param name="down">Use down edge as anchor if true, in other cases use up edge.</param>
+        public void SubstituteRows(bool down = true)
+        {
+            //Initialize for top edge
+            int y = 0;
+            int increment = 1;
+            int edge = Height - 1;
+            if (down)
+            {
+                //Initialize for down edge
+                y = edge;
+                increment = -1;
+                edge = 0;
+            }
+            T @default = default(T);
+            Queue<int> emptyRows = new Queue<int>();
+            //Substituting
+            while (y != edge)
+            {
+                bool empty = true;
+                //Check if a row is empty or not
+                for (int x = 0; x < Width; x++)
+                {
+                    empty = _matrix[x + y * Width].Equals(@default);
+                    if (!empty)break;
+                }
+
+                if (empty)emptyRows.Enqueue(y);
+                else if(emptyRows.Count > 0)
+                {
+                    int emptyRow = emptyRows.Dequeue();
+                    for (int x = 0; x < Width; ++x)
+                    {
+                        _matrix[x + emptyRow * Width] = _matrix[x + y * Width];
+                        _matrix[x + y * Width] = @default;
+                    }
+                    emptyRows.Enqueue(y);
+                }
+
+                y += increment;
+            }
+
         }
 
         /// <summary>
@@ -297,12 +366,12 @@ namespace BrickGame.Scripts.Models
                 for (int x = 0; x < width; x++)
                 {
                     T value = target._matrix[x + y * width];
-                    if(value.Equals(@default))continue;
+                    if (value.Equals(@default)) continue;
                     //target matrix has value in the cell
                     int c = (xOffset + x) + (yOffset + y) * Width;
-                    if(c < 0 || c >= _matrix.Length) continue;
+                    if (c < 0 || c >= _matrix.Length) continue;
                     //the cell is in bounds of current matrix
-                    if (_matrix[c].Equals(@default))continue;
+                    if (_matrix[c].Equals(@default)) continue;
                     //current matrix has value in the cell
                     //matrices have an intersection
                     return true;
@@ -311,6 +380,7 @@ namespace BrickGame.Scripts.Models
             //an intersection between matrices was not found
             return false;
         }
+
         //================================ Equals methods ==========================================
         /// <inheritdoc />
         [ContractAnnotation("null=>false")]
@@ -351,13 +421,13 @@ namespace BrickGame.Scripts.Models
                    (IsReadOnly ? ", readonly " : "") +
                    " of type " + typeof(T);
         }
+
         //================================ Private|Protected methods ================================
         /// <summary>
         /// Constructor of null object
         /// </summary>
-        protected Matrix() : this(0,0)
+        protected Matrix() : this(0, 0)
         {
-
         }
 
         /// <summary>

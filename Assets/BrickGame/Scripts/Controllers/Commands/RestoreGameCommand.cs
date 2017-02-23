@@ -12,7 +12,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Controllers.Commands
 {
     /// <summary>
-    /// RestoreGameCommand 
+    /// RestoreGameCommand
     /// </summary>
     public class RestoreGameCommand : GameCommand<SessionDataProvider>
     {
@@ -64,5 +64,18 @@ namespace BrickGame.Scripts.Controllers.Commands
         }
 
         //================================ Private|Protected methods ================================
+
+        private bool[] CreateTextMatrix()
+        {
+            bool[] matrix = new bool[200];
+            int[] linesArr = {19, 18,17, 15};
+            foreach (int y in linesArr)
+            {
+                for (int x = 0; x < 10; x++)matrix[x + y * 10] = true;
+            }
+            matrix[1 + 16 * 10] = true;
+            matrix[1 + 17 * 10] = true;
+            return matrix;
+        }
     }
 }
