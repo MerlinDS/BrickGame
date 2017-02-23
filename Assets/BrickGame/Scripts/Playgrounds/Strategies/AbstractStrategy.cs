@@ -22,11 +22,19 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         private float _timeout;
         private float _cooldown;
         [NotNull]private Matrix<bool> _matrix = new PlaygroundMatrix(10, 20);
+        [NotNull]private FigureMatrix _figure = new FigureMatrix();
         //================================      Public methods      =================================
         /// <inheritdoc />
+        [UsedImplicitly]
         public void UpdateMatix(Matrix<bool> matrix)
         {
             _matrix = matrix ?? new PlaygroundMatrix(10, 20);
+        }
+
+        [UsedImplicitly]
+        public void UpdateFigure(FigureMatrix matrix)
+        {
+            _figure = matrix ?? new FigureMatrix();
         }
         //================================ Private|Protected methods ================================
         private void Awake()
@@ -62,13 +70,13 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
             }
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if((_cooldown += Time.deltaTime) < _timeout)return;
-            Apply(_matrix);
+            Apply(_matrix, _figure);
             _cooldown = 0;
         }
 
-        protected abstract void Apply(Matrix<bool> matrix);
+        protected abstract void Apply(Matrix<bool> matrix, FigureMatrix figure);
     }
 }

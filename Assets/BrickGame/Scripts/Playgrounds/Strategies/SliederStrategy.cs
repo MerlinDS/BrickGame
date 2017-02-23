@@ -1,17 +1,17 @@
-﻿// <copyright file="BubbleStrategy.cs" company="Near Fancy">
+﻿// <copyright file="SliederStrategy.cs" company="Near Fancy">
 // Copyright (c) 2017 All Rights Reserved
 // </copyright>
 // <author>Andrew Salomatin</author>
-// <date>02/23/2017 19:34</date>
+// <date>02/23/2017 20:28</date>
 
 using BrickGame.Scripts.Models;
 
 namespace BrickGame.Scripts.Playgrounds.Strategies
 {
     /// <summary>
-    /// BubbleStrategy
+    /// SliederStrategy
     /// </summary>
-    public class BubbleStrategy : AbstractStrategy
+    public class SliederStrategy : AbstractStrategy
     {
         //================================       Public Setup       =================================
 
@@ -23,9 +23,15 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         /// <inheritdoc />
         protected override void Apply(Matrix<bool> matrix, FigureMatrix figure)
         {
-            for (int x = 0; x < matrix.Width; x+=2)
+            for (int y = 0; y < matrix.Height; y++)
             {
-                if (matrix[x, 0]) matrix[x, 0] = false;
+                for (int x = matrix.Width - 1; x > 0; x--)
+                {
+                    int target = x == matrix.Width - 1 ? 0 : x + 1;
+                    bool temp = matrix[target, y];
+                    matrix[target, y] = matrix[x, y];
+                    matrix[x, y] = temp;
+                }
             }
         }
     }

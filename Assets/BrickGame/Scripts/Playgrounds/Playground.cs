@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/19/2017 21:16</date>
 
+using System;
 using BrickGame.Scripts.Controllers;
 using BrickGame.Scripts.Controllers.Strategies;
 using BrickGame.Scripts.Models;
@@ -90,8 +91,11 @@ namespace BrickGame.Scripts.Playgrounds
         {
             Rules = Context.GetActor<GameModeManager>().CurrentRules;
             //Add strategy
-            if (Rules.Strategy == ModeStrategies.Bubbles)
-                gameObject.AddComponent<BubbleStrategy>();
+            Type type = null;
+            if (Rules.Strategy == ModeStrategies.Bubbles) type = typeof(BubbleStrategy);
+            else if (Rules.Strategy == ModeStrategies.WatterFall) type = typeof(WattreFallStrategy);
+            else if (Rules.Strategy == ModeStrategies.Slider) type = typeof(SliederStrategy);
+            if(type != null)gameObject.AddComponent(type);
             //
             BroadcastNofitication(GameState.Restore,
                 new SessionDataProvider(Rules.name, SessionName));
