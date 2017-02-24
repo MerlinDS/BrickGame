@@ -37,6 +37,7 @@ namespace BrickGame.Scripts.UI
             _label = GetComponent<Text>();
             Context.AddListener(GameNotification.ColorChanged, Handler);
             _manager = Context.GetActor<ColorPalleteManager>();
+            Handler(string.Empty);
         }
 
         protected override void OnDestroy()
