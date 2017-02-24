@@ -5,6 +5,7 @@
 // <date>02/23/2017 20:28</date>
 
 using BrickGame.Scripts.Figures;
+using BrickGame.Scripts.Models;
 
 namespace BrickGame.Scripts.Playgrounds.Strategies
 {
@@ -23,11 +24,7 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         /// <inheritdoc />
         protected sealed override void Apply(Playground playground, Figure figure)
         {
-
-        }
-
-        /*protected override void Apply(Matrix<bool> matrix, Figure figure)
-        {
+            Matrix<bool> matrix = playground.Matrix;
             for (int y = 0; y < matrix.Height; y++)
             {
                 for (int x = matrix.Width - 1; x > 0; x--)
@@ -38,6 +35,11 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
                     matrix[x, y] = temp;
                 }
             }
-        }*/
+
+            if (matrix.HasIntersection(figure.Matrix, figure.Matrix.x, figure.Matrix.y))
+            {
+                figure.Matrix.x++;
+            }
+        }
     }
 }
