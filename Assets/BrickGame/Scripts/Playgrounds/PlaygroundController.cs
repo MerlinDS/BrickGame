@@ -27,7 +27,6 @@ namespace BrickGame.Scripts.Playgrounds
         private bool _changeFigure;
         private VerticalDirection _direction;
         private List<Brick> _briks;//For effects
-        private Coroutine _coroutine;
         private PlaygroundMatrix _matrix;
         private PlaygroundDrawer _drawer;
         private BricksBlinkingEffectBehaviour _bricksBlinking;
@@ -42,8 +41,6 @@ namespace BrickGame.Scripts.Playgrounds
             _sceneBlinking = GetComponent<SceneBlinkingEffect>();
             _drawer = GetComponentInChildren<PlaygroundDrawer>();
             _direction = Context.GetActor<GameModeManager>().CurrentRules.FallingDirection;
-            if(!Context.HasListener(GameState.Pause, GameStateHandler))
-                Context.AddListener(GameState.Pause, GameStateHandler);
         }
         [UsedImplicitly]
         public void FinishSession()
@@ -62,6 +59,7 @@ namespace BrickGame.Scripts.Playgrounds
             if (rows.Length < 1)
             {
                 //Full lines were not found. Nothing to do.
+                SendMessage(MessageReceiver.UpdateScore, rows.Length);
                 BroadcastMessage(MessageReceiver.ChangeFigure);
                 return;
             }
@@ -76,36 +74,9 @@ namespace BrickGame.Scripts.Playgrounds
             }
             SendMessage(MessageReceiver.UpdateScore, rows.Length);
             //Change figure with delay
-            _coroutine = StartCoroutine(RemoveLines(delay));
+            StartCoroutine(RemoveLines(delay));
         }
         //================================ Private|Protected methods ================================
-        private void OnDestroy()
-        {
-            if(Context.HasListener(GameState.Pause, GameStateHandler))
-                Context.RemoveListener(GameState.Pause, GameStateHandler);
-        }
-
-        private void GameStateHandler(string state)
-        {
-          /*  enabled = !enabled;
-            if (!enabled && _coroutine != null)
-            {
-                _bricksBlinking.OnDestroy();
-                StopCoroutine(_coroutine);
-                _changeFigure = true;
-            }
-            else if (enabled && _changeFigure)
-            {
-                StartCoroutine(RemoveLines(0));
-                _changeFigure = false;
-            }
-            //Update drawer state
-            if (_drawer != null)
-            {
-                if(enabled)_drawer.Resume();
-                else _drawer.Pause();
-            }*/
-        }
 
         private IEnumerator RemoveLines(float delay)
         {

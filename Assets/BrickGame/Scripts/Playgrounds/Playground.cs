@@ -73,10 +73,14 @@ namespace BrickGame.Scripts.Playgrounds
         [UsedImplicitly]
         public void UpdateScore(int count)
         {
-            if(count == 0)return;
-            TotalLines += count;
-            BroadcastNofitication(GameNotification.ScoreUpdated,
-                new ScoreDataProvider( SessionName, count));
+            if (count > 0)
+            {
+                TotalLines += count;
+                BroadcastNofitication(GameNotification.ScoreUpdated,
+                    new ScoreDataProvider( SessionName, count));
+            }//Update figure score
+            BroadcastMessage(MessageReceiver.AccelerateFigure,
+                Rules.GetSpeedByLines(TotalLines));
         }
 
         [UsedImplicitly]
@@ -94,7 +98,7 @@ namespace BrickGame.Scripts.Playgrounds
             Type type = null;
             if (Rules.Strategy == ModeStrategies.Bubbles) type = typeof(BubbleStrategy);
             else if (Rules.Strategy == ModeStrategies.WatterFall) type = typeof(WattreFallStrategy);
-            else if (Rules.Strategy == ModeStrategies.Slider) type = typeof(SliederStrategy);
+            else if (Rules.Strategy == ModeStrategies.Slider) type = typeof(SliderStrategy);
             if(type != null)gameObject.AddComponent(type);
             //
             BroadcastNofitication(GameState.Restore,

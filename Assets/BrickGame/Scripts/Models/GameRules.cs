@@ -92,6 +92,11 @@ namespace BrickGame.Scripts.Models
             if (level > 0) level -= 1;
             return StartingSpeed + level * SpeedIncreaser;
         }
+
+        public float GetSpeedByLines(int lines)
+        {
+            return GetSpeed(GetLevel(lines));
+        }
         //================================ Private|Protected methods ================================
     }
 }

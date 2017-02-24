@@ -19,6 +19,10 @@ namespace BrickGame.Scripts.Figures
     public class Figure : GameBehaviour, MessageReceiver.IFigureReceiver, MessageReceiver.IPlaygroundReceiver
     {
         //================================       Public Setup       =================================
+        /// <summary>
+        /// Current speed of the figure
+        /// </summary>
+        public float Speed { get; private set; }
         [NotNull]
         public FigureMatrix Matrix { get { return _matrix; } }
         //================================    Systems properties    =================================
@@ -35,6 +39,16 @@ namespace BrickGame.Scripts.Figures
         public void UpdateMatix(Matrix<bool> matrix)
         {
             _playground = matrix ?? new PlaygroundMatrix(0, 0);
+        }
+
+        /// <summary>
+        /// Update figure speed
+        /// </summary>
+        /// <param name="speed">new speed of the figure</param>
+        [UsedImplicitly]
+        private void AccelerateFigure(float speed)
+        {
+            Speed = speed;
         }
 
         /// <summary>

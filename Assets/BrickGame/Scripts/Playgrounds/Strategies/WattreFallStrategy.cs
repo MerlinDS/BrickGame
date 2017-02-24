@@ -23,7 +23,11 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
 
         //================================ Private|Protected methods ================================
         /// <inheritdoc />
-        protected override void Apply(Matrix<bool> matrix, Figure figure)
+        protected sealed override void Apply(Playground playground, Figure figure)
+        {
+
+        }
+      /*  protected override void Apply(Matrix<bool> matrix, Figure figure)
         {
             bool[] temp = new bool[matrix.Width];
             int y = matrix.Width;
@@ -47,6 +51,6 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
                 }
             }
 
-        }
+        }*/
     }
 }

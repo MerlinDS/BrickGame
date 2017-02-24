@@ -1,18 +1,17 @@
-﻿// <copyright file="SliederStrategy.cs" company="Near Fancy">
+﻿// <copyright file="SliderStrategy.cs" company="Near Fancy">
 // Copyright (c) 2017 All Rights Reserved
 // </copyright>
 // <author>Andrew Salomatin</author>
 // <date>02/23/2017 20:28</date>
 
 using BrickGame.Scripts.Figures;
-using BrickGame.Scripts.Models;
 
 namespace BrickGame.Scripts.Playgrounds.Strategies
 {
     /// <summary>
-    /// SliederStrategy
+    /// SliderStrategy
     /// </summary>
-    public class SliederStrategy : AbstractStrategy
+    public class SliderStrategy : AbstractStrategy
     {
         //================================       Public Setup       =================================
 
@@ -22,7 +21,12 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
 
         //================================ Private|Protected methods ================================
         /// <inheritdoc />
-        protected override void Apply(Matrix<bool> matrix, Figure figure)
+        protected sealed override void Apply(Playground playground, Figure figure)
+        {
+
+        }
+
+        /*protected override void Apply(Matrix<bool> matrix, Figure figure)
         {
             for (int y = 0; y < matrix.Height; y++)
             {
@@ -34,6 +38,6 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
                     matrix[x, y] = temp;
                 }
             }
-        }
+        }*/
     }
 }

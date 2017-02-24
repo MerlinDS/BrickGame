@@ -5,10 +5,8 @@
 // <date>02/23/2017 19:23</date>
 
 using System;
-using System.Collections;
 using BrickGame.Scripts.Controllers;
 using BrickGame.Scripts.Figures;
-using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -22,18 +20,12 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         //================================       Public Setup       =================================
 
         //================================    Systems properties    =================================
+        private float _timer;
         private float _timeout;
-        private float _cooldown;
-        [NotNull]private Matrix<bool> _matrix = new PlaygroundMatrix(10, 20);
-        [CanBeNull]private Figure _figure;
+
+        private Figure _figure;
+        private Playground _playground;
         //================================      Public methods      =================================
-        /// <inheritdoc />
-        [UsedImplicitly]
-        public void UpdateMatix(Matrix<bool> matrix)
-        {
-            _matrix = matrix ?? new PlaygroundMatrix(10, 20);
-            _figure = GetComponent<Figure>() ?? GetComponentInChildren<Figure>();
-        }
 
         //================================ Private|Protected methods ================================
         private void Awake()
@@ -44,8 +36,10 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
             enabled = false;
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
+            _figure = null;
+            _playground = null;
             Context.RemoveListener(GameState.Start, StateHandler);
             Context.RemoveListener(GameState.End, StateHandler);
             Context.RemoveListener(GameState.Pause, StateHandler);
@@ -57,7 +51,7 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
             {
                 case GameState.Start:
                     _timeout = Context.GetActor<GameModeManager>().CurrentRules.StartegyTimeout;
-                    _cooldown = 0;
+                    _timer = 0;
                     enabled = true;
                     break;
                 case GameState.Pause:
@@ -71,11 +65,29 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
 
         private void LateUpdate()
         {
-            if((_cooldown += Time.deltaTime) < _timeout)return;
-            Apply(_matrix, _figure);
-            _cooldown = 0;
+            if((_timer += Time.deltaTime) < _timeout)return;
+            if (_playground == null)
+                _playground = GetInEnvironment<Playground>();
+            if (_figure == null)
+                _figure = GetInEnvironment<Figure>();
+            Apply(_playground, _figure);
+            _timer = 0;
         }
 
-        protected abstract void Apply([NotNull]Matrix<bool> matrix, [CanBeNull]Figure figure);
+
+        [NotNull]
+        private T GetInEnvironment<T>() where T : Component
+        {
+            T component = GetComponent<T>();
+            if (component == null)
+                component = GetComponentInChildren<T>();
+            if (component == null)
+                component = GetComponentInParent<T>();
+            if(component == null)
+                throw new ArgumentException("Can't find component: " + typeof(T));
+            return component;
+        }
+
+        protected abstract void Apply([NotNull]Playground playground, [NotNull]Figure figure);
     }
 }

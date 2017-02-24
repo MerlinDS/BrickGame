@@ -6,28 +6,29 @@
 
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Playgrounds.Strategies
 {
     /// <summary>
     /// BubbleStrategy
     /// </summary>
-    public class BubbleStrategy : AbstractStrategy
+    public sealed class BubbleStrategy : AbstractStrategy
     {
         //================================       Public Setup       =================================
 
         //================================    Systems properties    =================================
-
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
+
         /// <inheritdoc />
-        protected override void Apply(Matrix<bool> matrix, Figure figure)
+        protected override void Apply(Playground playground, Figure figure)
         {
-            for (int x = 0; x < matrix.Width; x+=2)
-            {
-                if (matrix[x, 0]) matrix[x, 0] = false;
-            }
+            float maxSpeed = playground.Rules.GetSpeedByLines(playground.TotalLines);
+            if(figure.Speed > maxSpeed + playground.Rules.SpeedIncreaser)return;
+            figure.SendMessage(MessageReceiver.AccelerateFigure, figure.Speed + 0.1F,
+                SendMessageOptions.DontRequireReceiver);
         }
     }
 }
