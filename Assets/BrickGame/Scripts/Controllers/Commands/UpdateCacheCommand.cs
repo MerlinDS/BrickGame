@@ -4,11 +4,11 @@
 // <author>Andrew Salomatin</author>
 // <date>02/14/2017 20:17</date>
 
+using System.Text;
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playgrounds;
 using BrickGame.Scripts.Utils;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers.Commands
 {
@@ -81,17 +81,19 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <param name="cacheModel"></param>
         private void SaveMatrices(CacheModel cacheModel)
         {
+            StringBuilder sb = new StringBuilder();
             int i, n = Playgrounds.Length;
             for (i = 0; i < n; i++)
             {
+                sb.Remove(0, sb.Length);
                 Playground pc = Playgrounds[i];
                 if(pc.Rules == null)continue;
                 bool[] matrix = pc.Matrix;
                 FigureMatrix figure = pc.GetComponentInChildren<Figure>().Matrix;
-                string figureCompressed = DataConverter.ToString(figure, figure.x, figure.y);
-                string compressed = DataConverter.ToString(matrix);
-                cacheModel.UpdatePlayground(pc.Rules.name, pc.SessionName,
-                    figureCompressed.Length.ToHex() +  figureCompressed + compressed);
+                sb.Append(DataConverter.ToString(new[] {figure.x, figure.y, figure.Width, figure.Height}));
+                sb.Append(DataConverter.ToString(figure));
+                sb.Append(DataConverter.ToString(matrix));
+                cacheModel.UpdatePlayground(pc.Rules.name, pc.SessionName, sb.ToString());
             }
         }
         /// <summary>

@@ -8,7 +8,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Utils
 {
@@ -18,6 +17,8 @@ namespace BrickGame.Scripts.Utils
     public static class DataConverter
     {
         //================================       Public Setup       =================================
+        private const char Separator = '|';
+
         private const short ChunkSize = 16; //UInt166
 
         private const short BytesLength = ChunkSize / 8;
@@ -27,19 +28,23 @@ namespace BrickGame.Scripts.Utils
 
         //================================      Public methods      =================================
 
-        public static string ToString(bool[] data, int x, int y)
+        public static string ToString(int[] data)
         {
-            return new StringBuilder().Append(x.ToHex()).Append(y.ToHex()).Append(ToString(data)).ToString();
+            var sb = new StringBuilder((data.Length * 2 + 2).ToHex());
+            for (int i = 0; i < data.Length; i++)
+                sb.Append(data[i] < 0 ? 0.ToHex() : data[i].ToHex());
+            return sb.ToString();
         }
 
-        public static void ExtractFigure(ref string data, out bool[] matrix, out int x, out int y)
+        public static string ExtractHeader(string data, out int[] header )
         {
             int length = data.Substring(0, 2).FormHex();
-            x = data.Substring(2, 2).FormHex();
-            y = data.Substring(4, 2).FormHex();
-            matrix = GetMatrix(data.Substring(6, length));
-            data = data.Substring(length);
+            header = new int[4];
+            for(int i = 0; i < header.Length; i++)
+                header[i] = data.Substring(2 + 2 * i, 2).FormHex();
+            return data.Substring(length);
         }
+
         /// <summary>
         /// Convert a playground model to compressed string
         /// </summary>
@@ -70,7 +75,22 @@ namespace BrickGame.Scripts.Utils
             if (bits != null && bits.Length > 0)
                 sb.Append(ToString(bits));
 
-            return sb.ToString();
+            return sb.Append(Separator).ToString();
+        }
+
+        public static bool[][] GetArray(string data)
+        {
+            if(data == null)
+                throw new ArgumentNullException("data");
+            string[] datas = data.Split(Separator);
+            int n = datas.Length;
+            List<bool[]> result = new List<bool[]>();
+            for (int i = 0; i < n; i++)
+            {
+                if(datas[i].Length == 0)continue;
+                result.Add(GetMatrix(datas[i]));
+            }
+            return result.ToArray();
         }
         /// <summary>
         /// Convert compressed string to an array of bools.

@@ -35,6 +35,17 @@ namespace BrickGame.Scripts.Utils
             }
             return _sb.ToString();
         }
+
+        public static string Format<T>(this T[] array, bool asBit) where T : struct
+        {
+            _sb.Remove(0, _sb.Length);
+            for (int x = 0; x < array.Length; x++)
+            {
+                if (!asBit) _sb.Append(array[x]).Append(',');
+                else _sb.Append(array[x].Equals(default(T)) ? 0 : 1);
+            }
+            return _sb.ToString();
+        }
         //================================ Private|Protected methods ================================
     }
 }

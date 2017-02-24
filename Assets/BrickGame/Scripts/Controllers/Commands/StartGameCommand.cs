@@ -35,33 +35,36 @@ namespace BrickGame.Scripts.Controllers.Commands
                 string session = playground.SessionName;
                 ScoreDataProvider scoreDataProvider;
 
-                bool[] restored = null;
-                FigureMatrix figureMatrix = new FigureMatrix();
+                Matrix<bool> fm, pm;
                 //Has or hasn't restored data
                 if (restoreModel.Has(session))
                 {
                     //Restored start
                     RestoreModel.RestoredData data = restoreModel.Pop(session);
-                    restored = data.Matrix;
+                    fm = data.Figure;
+                    pm = data.Playground;
                     scoreDataProvider = new ScoreDataProvider(session, data.Lines,
                         data.Score, data.Level);
-                    figureMatrix = RestoreFigure(data.Figure, data.FigureX, data.FigureY);
                 }
                 else
+                {
+                    //Clean start data
                     scoreDataProvider = new ScoreDataProvider(session, 0, 0, 1);
+                    pm = new PlaygroundMatrix(playground.Rules.Width, playground.Rules.Height);
+                    fm = new FigureMatrix();
+                }
                 Debug.LogFormat("Start new game session: {0}", playground.SessionName);
                 //Send starting messages
-                PlaygroundMatrix matrix = CreateMatrix(playground.Rules, ref restored);
-                playground.SendMessage(MessageReceiver.UpdateMatix, matrix,
+                playground.SendMessage(MessageReceiver.UpdateMatix, pm,
                     SendMessageOptions.DontRequireReceiver);
                 //Send model to childrens
                 int n = playground.transform.childCount;
                 for (int i = 0; i < n; i++)
                 {
                     var child = playground.transform.GetChild(i);
-                    child.SendMessage(MessageReceiver.UpdateMatix, matrix,
+                    child.SendMessage(MessageReceiver.UpdateMatix, pm,
                         SendMessageOptions.DontRequireReceiver);
-                    child.SendMessage(MessageReceiver.UpdateFigure, figureMatrix,
+                    child.SendMessage(MessageReceiver.UpdateFigure, fm,
                         SendMessageOptions.DontRequireReceiver);
                 }
                 //Clean score
@@ -69,67 +72,6 @@ namespace BrickGame.Scripts.Controllers.Commands
             }
         }
         //================================ Private|Protected methods ================================
-
-        /// <summary>
-        /// Create new matrix depended on game rules and restored data
-        /// </summary>
-        /// <param name="rules">Game rules</param>
-        /// <param name="restored">Playground data restored from cache</param>
-        /// <returns>Instance of new Playground matrix</returns>
-        [NotNull]
-        private PlaygroundMatrix CreateMatrix([CanBeNull] GameRules rules, ref bool[] restored)
-        {
-            int width = 0, height = 0;
-            if (rules != null)
-            {
-                width = rules.Width;
-                height = rules.Height;
-            }
-            //Set default values if has no rules, or rules ar broken
-            if (width == 0 || height == 0)
-            {
-                width = 10; //Default
-                height = 20; //Default
-            }
-            //Remove restored data if broken
-            PlaygroundMatrix pm = null;
-            if (restored != null)
-            {
-                int i = width * height;
-                int delta = restored.Length - i;
-                if (delta > 0)
-                {
-                    bool[] data = new bool[i];
-                    for (i = i - 1; i >= delta; i--)
-                        data[i] = restored[i];
-                    pm = new PlaygroundMatrix(data, width, height);
-                }
-                else
-                    pm = new PlaygroundMatrix(restored, width, height);
-            }
-
-            return pm ?? new PlaygroundMatrix(width, height);
-        }
-
-        [NotNull]
-        private static FigureMatrix RestoreFigure(bool[] data, int x, int y)
-        {
-            if (data.Length < 8) return new FigureMatrix();
-            bool[] m = new bool[8];
-            int empty = 0;
-            int delta = data.Length - 8;
-            if (delta > 0)
-            {
-                for (int i = 7; i >= delta; i--)
-                    m[i] = data[i];
-            }
-            for (int i = 0; i < m.Length; i++)
-            {
-                if (!data[i]) empty++;
-                m[i] = data[i];
-            }
-            return empty < 8 ? new FigureMatrix(m, 4, 2, true) {x = x, y = y} : new FigureMatrix();
-        }
 
     }
 }

@@ -19,10 +19,8 @@ namespace BrickGame.Scripts.Models
             public int Score;
             public int Lines;
             public int Level;
-            public int FigureX;
-            public int FigureY;
-            public bool[] Figure;
-            public bool[] Matrix;
+            public Matrix<bool> Figure;
+            public Matrix<bool> Playground;
         }
 
         //================================       Public Setup       =================================

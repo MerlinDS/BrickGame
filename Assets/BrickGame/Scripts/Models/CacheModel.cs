@@ -5,6 +5,8 @@
 // <date>02/14/2017 20:14</date>
 
 using System.Text;
+using BrickGame.Scripts.Utils;
+using JetBrains.Annotations;
 using MiniMoca;
 using UnityEngine;
 
@@ -23,7 +25,6 @@ namespace BrickGame.Scripts.Models
         private const string AudioField = "AudioMuted";
         private const string ColorField = "ColorPaletteIndex";
         private const string ModeIndexField = "ModeIndex";
-
         //================================       Public Setup       =================================
         public bool AudioMuted
         {
@@ -43,8 +44,13 @@ namespace BrickGame.Scripts.Models
             set{ PlayerPrefs.SetInt(ModeIndexField, value);}
         }
         //================================    Systems properties    =================================
-
+        private readonly int _version;
         //================================      Public methods      =================================
+        /// <inheritdoc />
+        public CacheModel()
+        {
+            _version = 0;
+        }
 
         public void DeleteCache(bool save = true)
         {
@@ -131,6 +137,7 @@ namespace BrickGame.Scripts.Models
         /// <param name="data">Playground cache</param>
         public void UpdatePlayground(string mode, string session, string data)
         {
+            data = _version.ToHex() + data;
             PlayerPrefs.SetString(mode + ModePostfix + session + PlaygroundPostfix, data);
         }
 
@@ -140,9 +147,16 @@ namespace BrickGame.Scripts.Models
         /// <param name="mode">Game mode of the playground</param>
         /// <param name="session"></param>
         /// <returns>Playground cache</returns>
+        [NotNull]
         public string GetPlaygroundCache(string mode, string session)
         {
-            return PlayerPrefs.GetString(mode + ModePostfix + session + PlaygroundPostfix);
+            string data = PlayerPrefs.GetString(mode + ModePostfix + session + PlaygroundPostfix);
+            if(data.Length == 0)return string.Empty;
+            if (data.Substring(0, 2).FormHex() == _version) return data.Substring(2);
+            Debug.LogWarning("Cache with old version will be cleand!");
+            //Clean cache of previous version
+            CleanPlayground(mode, session);
+            return string.Empty;
         }
 
         //================================ Private|Protected methods ================================
