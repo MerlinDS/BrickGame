@@ -4,7 +4,10 @@
 // <author>Andrew Salomatin</author>
 // <date>02/23/2017 19:23</date>
 
+using System;
+using System.Collections;
 using BrickGame.Scripts.Controllers;
+using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -22,20 +25,16 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         private float _timeout;
         private float _cooldown;
         [NotNull]private Matrix<bool> _matrix = new PlaygroundMatrix(10, 20);
-        [NotNull]private FigureMatrix _figure = new FigureMatrix();
+        [CanBeNull]private Figure _figure;
         //================================      Public methods      =================================
         /// <inheritdoc />
         [UsedImplicitly]
         public void UpdateMatix(Matrix<bool> matrix)
         {
             _matrix = matrix ?? new PlaygroundMatrix(10, 20);
+            _figure = GetComponent<Figure>() ?? GetComponentInChildren<Figure>();
         }
 
-        [UsedImplicitly]
-        public void UpdateFigure(FigureMatrix matrix)
-        {
-            _figure = matrix ?? new FigureMatrix();
-        }
         //================================ Private|Protected methods ================================
         private void Awake()
         {
@@ -77,6 +76,6 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
             _cooldown = 0;
         }
 
-        protected abstract void Apply(Matrix<bool> matrix, FigureMatrix figure);
+        protected abstract void Apply([NotNull]Matrix<bool> matrix, [CanBeNull]Figure figure);
     }
 }

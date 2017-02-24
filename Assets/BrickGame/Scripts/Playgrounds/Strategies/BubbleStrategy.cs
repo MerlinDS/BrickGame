@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/23/2017 19:34</date>
 
+using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 
 namespace BrickGame.Scripts.Playgrounds.Strategies
@@ -21,7 +22,7 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
 
         //================================ Private|Protected methods ================================
         /// <inheritdoc />
-        protected override void Apply(Matrix<bool> matrix, FigureMatrix figure)
+        protected override void Apply(Matrix<bool> matrix, Figure figure)
         {
             for (int x = 0; x < matrix.Width; x+=2)
             {
