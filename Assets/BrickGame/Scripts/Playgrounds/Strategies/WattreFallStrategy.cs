@@ -25,32 +25,39 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         /// <inheritdoc />
         protected sealed override void Apply(Playground playground, Figure figure)
         {
+            Matrix<bool> matrix = playground.Matrix;
+            bool[] temp = GetRowWithRandoms(matrix.Width);
 
-        }
-      /*  protected override void Apply(Matrix<bool> matrix, Figure figure)
-        {
-            bool[] temp = new bool[matrix.Width];
-            int y = matrix.Width;
-            int x = Random.Range(0, matrix.Width - 1);
-            int setted = 0;
-            while (y-- > 0)
+            //Slide matrix up and set random row to last row
+            for (int y = 0; y < matrix.Height; y++)
             {
-                if (x >= matrix.Width) x = 0;
-                float rand = Random.Range(setted, matrix.Width);
-                temp[x] = rand > matrix.Width * 0.25F;
-                if (!temp[x++]) setted++;
-            }
-            if (setted >= matrix.Width) temp[--x] = true;
-
-            for (y = 0; y < matrix.Height; y++)
-            {
-                for (x = 0; x < matrix.Width; x++)
+                for (int x = 0; x < matrix.Width; x++)
                 {
-                    matrix[x, y-1] = matrix[x, y];
+                    matrix[x, y - 1] = matrix[x, y];
                     matrix[x, y] = temp[x];
                 }
             }
+            if (matrix.HasIntersection(figure.Matrix, figure.Matrix.x, figure.Matrix.y))
+            {
+                figure.Matrix.y--;
+            }
+        }
 
-        }*/
+        private bool[] GetRowWithRandoms(int width)
+        {
+            bool[] row = new bool[width];
+            int y = width;
+            //Random starting cell
+            int x = Random.Range(0, width - 1);
+            int setted = 0;
+            while (y-- > 0)
+            {
+                if (x >= width) x = 0;
+                if (!(row[x++] = Random.Range(setted, width) > width * 0.25F)) setted++;
+            }
+            //Prevent row with all true cells
+            if (setted >= width) row[--x] = true;
+            return row;
+        }
     }
 }
