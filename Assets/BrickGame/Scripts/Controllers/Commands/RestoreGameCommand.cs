@@ -35,7 +35,11 @@ namespace BrickGame.Scripts.Controllers.Commands
             //Restore playground from cache
             try
             {
+                int x, y;
+                bool[] figure;
+                DataConverter.ExtractFigure(ref compressed, out figure, out x, out y);
                 bool[] matrix = DataConverter.GetMatrix(compressed);
+                Debug.LogFormat("Restore figure x = {0} y = {1}: {2}", x, y, figure);
                 //Restore score
                 int score, lines, level;
                 cacheModel.GetScore(Data.Mode, Data.Session, out score, out lines, out level);
@@ -48,7 +52,10 @@ namespace BrickGame.Scripts.Controllers.Commands
                             Level = level,
                             Score = score,
                             Lines = lines,
-                            Matrix = matrix
+                            Matrix = matrix,
+                            Figure = figure,
+                            FigureX = x,
+                            FigureY = y
                         });
             }
             catch (Exception exception)
@@ -65,7 +72,7 @@ namespace BrickGame.Scripts.Controllers.Commands
 
         //================================ Private|Protected methods ================================
 
-        private bool[] CreateTextMatrix()
+        private bool[] CreateTestMatrix()
         {
             bool[] matrix = new bool[200];
             int[] linesArr = {19, 18,17, 15};

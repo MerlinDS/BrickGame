@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Utils
 {
@@ -17,13 +18,28 @@ namespace BrickGame.Scripts.Utils
     public static class DataConverter
     {
         //================================       Public Setup       =================================
-        private const char Separator = '|';
-        private const short ChunkSize = 16;//UInt166
+        private const short ChunkSize = 16; //UInt166
+
         private const short BytesLength = ChunkSize / 8;
+
         private const short HexLength = ChunkSize / 4;
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
+
+        public static string ToString(bool[] data, int x, int y)
+        {
+            return new StringBuilder().Append(x.ToHex()).Append(y.ToHex()).Append(ToString(data)).ToString();
+        }
+
+        public static void ExtractFigure(ref string data, out bool[] matrix, out int x, out int y)
+        {
+            int length = data.Substring(0, 2).FormHex();
+            x = data.Substring(2, 2).FormHex();
+            y = data.Substring(4, 2).FormHex();
+            matrix = GetMatrix(data.Substring(6, length));
+            data = data.Substring(length);
+        }
         /// <summary>
         /// Convert a playground model to compressed string
         /// </summary>
@@ -32,7 +48,7 @@ namespace BrickGame.Scripts.Utils
         /// <exception cref="ArgumentNullException">data can't be null</exception>
         public static string ToString(bool[] data)
         {
-            if(data == null)
+            if (data == null)
                 throw new ArgumentNullException("data");
 
             StringBuilder sb = new StringBuilder();
@@ -54,9 +70,8 @@ namespace BrickGame.Scripts.Utils
             if (bits != null && bits.Length > 0)
                 sb.Append(ToString(bits));
 
-            return sb.Append(Separator).ToString();
+            return sb.ToString();
         }
-
         /// <summary>
         /// Convert compressed string to an array of bools.
         /// </summary>
@@ -74,7 +89,7 @@ namespace BrickGame.Scripts.Utils
         /// <exception cref="ArgumentNullException">data can't be null</exception>
         public static bool[] GetMatrix(string data)
         {
-            if(data == null)
+            if (data == null)
                 throw new ArgumentNullException("data");
             List<bool> result = new List<bool>();
             int i, j, m, n = data.Length / HexLength;
@@ -85,14 +100,15 @@ namespace BrickGame.Scripts.Utils
                 for (j = 0; j < BytesLength; ++j)
                 {
                     string hex = c.Substring(j * 2, 2);
-                    bytes[j] = Convert.ToByte( hex, ChunkSize);
+                    bytes[j] = Convert.ToByte(hex, ChunkSize);
                 }
                 BitArray bits = new BitArray(bytes);
                 m = bits.Length;
-                for (j = 0; j < m; ++j)result.Add(bits[j]);
+                for (j = 0; j < m; ++j) result.Add(bits[j]);
             }
             return result.ToArray();
         }
+
         //================================ Private|Protected methods ================================
         /// <summary>
         /// Convert a bit array to hex string
@@ -103,9 +119,7 @@ namespace BrickGame.Scripts.Utils
         {
             byte[] bytes = new byte[BytesLength];
             bits.CopyTo(bytes, 0);
-            return BitConverter.ToString(bytes).Remove(2, 1);//Removal "-" from result
+            return BitConverter.ToString(bytes).Remove(2, 1); //Removal "-" from result
         }
-
-
     }
 }

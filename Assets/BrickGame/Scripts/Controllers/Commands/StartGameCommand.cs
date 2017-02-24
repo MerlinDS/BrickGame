@@ -36,6 +36,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                 ScoreDataProvider scoreDataProvider;
 
                 bool[] restored = null;
+                FigureMatrix figureMatrix = new FigureMatrix();
                 //Has or hasn't restored data
                 if (restoreModel.Has(session))
                 {
@@ -44,6 +45,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                     restored = data.Matrix;
                     scoreDataProvider = new ScoreDataProvider(session, data.Lines,
                         data.Score, data.Level);
+                    figureMatrix = RestoreFigure(data.Figure, data.FigureX, data.FigureY);
                 }
                 else
                     scoreDataProvider = new ScoreDataProvider(session, 0, 0, 1);
@@ -56,15 +58,16 @@ namespace BrickGame.Scripts.Controllers.Commands
                 int n = playground.transform.childCount;
                 for (int i = 0; i < n; i++)
                 {
-                    playground.transform.GetChild(i)
-                        .SendMessage(MessageReceiver.UpdateMatix, matrix,
-                            SendMessageOptions.DontRequireReceiver);
+                    var child = playground.transform.GetChild(i);
+                    child.SendMessage(MessageReceiver.UpdateMatix, matrix,
+                        SendMessageOptions.DontRequireReceiver);
+                    child.SendMessage(MessageReceiver.UpdateFigure, figureMatrix,
+                        SendMessageOptions.DontRequireReceiver);
                 }
                 //Clean score
                 Context.Notify(GameNotification.ScoreUpdated, scoreDataProvider);
             }
         }
-
         //================================ Private|Protected methods ================================
 
         /// <summary>
@@ -74,7 +77,7 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <param name="restored">Playground data restored from cache</param>
         /// <returns>Instance of new Playground matrix</returns>
         [NotNull]
-        private PlaygroundMatrix CreateMatrix([CanBeNull]GameRules rules, ref bool[] restored)
+        private PlaygroundMatrix CreateMatrix([CanBeNull] GameRules rules, ref bool[] restored)
         {
             int width = 0, height = 0;
             if (rules != null)
@@ -85,8 +88,8 @@ namespace BrickGame.Scripts.Controllers.Commands
             //Set default values if has no rules, or rules ar broken
             if (width == 0 || height == 0)
             {
-                width = 10;//Default
-                height = 20;//Default
+                width = 10; //Default
+                height = 20; //Default
             }
             //Remove restored data if broken
             PlaygroundMatrix pm = null;
@@ -100,11 +103,33 @@ namespace BrickGame.Scripts.Controllers.Commands
                     for (i = i - 1; i >= delta; i--)
                         data[i] = restored[i];
                     pm = new PlaygroundMatrix(data, width, height);
-                }else
+                }
+                else
                     pm = new PlaygroundMatrix(restored, width, height);
             }
 
             return pm ?? new PlaygroundMatrix(width, height);
         }
+
+        [NotNull]
+        private static FigureMatrix RestoreFigure(bool[] data, int x, int y)
+        {
+            if (data.Length < 8) return new FigureMatrix();
+            bool[] m = new bool[8];
+            int empty = 0;
+            int delta = data.Length - 8;
+            if (delta > 0)
+            {
+                for (int i = 7; i >= delta; i--)
+                    m[i] = data[i];
+            }
+            for (int i = 0; i < m.Length; i++)
+            {
+                if (!data[i]) empty++;
+                m[i] = data[i];
+            }
+            return empty < 8 ? new FigureMatrix(m, 4, 2, true) {x = x, y = y} : new FigureMatrix();
+        }
+
     }
 }

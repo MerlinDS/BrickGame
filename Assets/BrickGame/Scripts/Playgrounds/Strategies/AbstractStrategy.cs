@@ -48,7 +48,7 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         {
             if(!OnPasue)return;
             enabled = true;
-            _timer = 0;
+            ScoreHandler(string.Empty);
         }
 
         /// <inheritdoc />

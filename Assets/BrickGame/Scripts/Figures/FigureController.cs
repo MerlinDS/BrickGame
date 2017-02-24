@@ -71,6 +71,7 @@ namespace BrickGame.Scripts.Figures
             Speed = speed;
         }
 
+        [UsedImplicitly]
         private void ChangeFigure()
         {
 //            Debug.Log("ChangeFigure");
@@ -89,10 +90,14 @@ namespace BrickGame.Scripts.Figures
         private void StateHandler(string state = null)
         {
             if(!gameObject.activeInHierarchy)return;
-            Debug.Log("StartHandler");
+//            Debug.Log("StartHandler");
             if (state == GameState.Start)
-                ChangeFigure();
-            else if (state == GameState.Pause)
+            {
+                _position = Step;
+                enabled = true;
+            }
+//                ChangeFigure();
+            if (state == GameState.Pause)
                 enabled = !enabled;
         }
 

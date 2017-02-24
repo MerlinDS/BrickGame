@@ -105,6 +105,7 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public bool CanMoveHorizontal(int xShift)
         {
+            if (_matrix.IsNull) return false;
             int x = _matrix.x + xShift;
             //Check bounds
             if (x < 0 || x + _matrix.Width > _playground.Width) return false;
@@ -122,6 +123,7 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public bool CanMoveVertical(int yShift)
         {
+            if (_matrix.IsNull) return false;
             int y = _matrix.y + yShift;
             //Check bounds: ignore top bounds
             if(_edge == VerticalDirection.Down && y + _matrix.Height > _playground.Height) return false;

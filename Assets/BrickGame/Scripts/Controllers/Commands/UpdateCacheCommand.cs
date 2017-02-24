@@ -4,9 +4,11 @@
 // <author>Andrew Salomatin</author>
 // <date>02/14/2017 20:17</date>
 
+using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playgrounds;
 using BrickGame.Scripts.Utils;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers.Commands
 {
@@ -85,8 +87,11 @@ namespace BrickGame.Scripts.Controllers.Commands
                 Playground pc = Playgrounds[i];
                 if(pc.Rules == null)continue;
                 bool[] matrix = pc.Matrix;
+                FigureMatrix figure = pc.GetComponentInChildren<Figure>().Matrix;
+                string figureCompressed = DataConverter.ToString(figure, figure.x, figure.y);
                 string compressed = DataConverter.ToString(matrix);
-                cacheModel.UpdatePlayground(pc.Rules.name, pc.SessionName, compressed);
+                cacheModel.UpdatePlayground(pc.Rules.name, pc.SessionName,
+                    figureCompressed.Length.ToHex() +  figureCompressed + compressed);
             }
         }
         /// <summary>

@@ -21,6 +21,12 @@ namespace BrickGame.Scripts.Models
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
+        /// <inheritdoc />
+        public FigureMatrix([NotNull] bool[] matrix, int width, int height, bool isStrict = false, bool isReadOnly = true) :
+            base(matrix, width, height, isStrict, isReadOnly)
+        {
+        }
+
         /// <summary>
         /// Constructor for epmty figureMatrix
         /// </summary>
