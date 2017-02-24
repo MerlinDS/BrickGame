@@ -114,9 +114,21 @@ namespace BrickGame.Scripts.Figures
                 _finisher = null;
                 return;
             }
-            //Current figureMatrix can't fall further.
-            if(_finisher == null)//Append figure to playground with delay
-                _finisher = StartCoroutine(Try2Append());
+            /*
+                Current figureMatrix can't fall further.
+                If a figure can't move horizontaly, then try to append figure immidiatly.
+                In other cases start coroutine with delay.
+            */
+
+            if (!_controls.CanMoveHorizontal(1) && !_controls.CanMoveHorizontal(-1))
+            {
+                if(_finisher != null)StopCoroutine(_finisher);
+                SendFinishMessage();
+                return;
+            }
+
+            if(_finisher == null)
+                _finisher = StartCoroutine(Try2Append(Delay));
         }
 
         /// <summary>
@@ -124,9 +136,9 @@ namespace BrickGame.Scripts.Figures
         /// User can move figure horizontally.
         /// </summary>
         /// <returns></returns>
-        private IEnumerator Try2Append()
+        private IEnumerator Try2Append(float delay)
         {
-            yield return new WaitForSeconds(Delay);
+            yield return new WaitForSeconds(delay);
             //Figure was moved horizontaly and can be moved down  further.
             if (_controls.CanMoveVertical(_direction))
             {
@@ -134,12 +146,20 @@ namespace BrickGame.Scripts.Figures
                 _finisher = null;
                 yield break;
             }
+           SendFinishMessage();
+            _finisher = null;
+            yield return null;
+        }
+
+        /// <summary>
+        /// Detect if figure is out of edge and broadcast finishing message.
+        /// </summary>
+        private void SendFinishMessage()
+        {
             enabled = false;
             SendMessageUpwards( _controls.OutOfEdge ?
                     MessageReceiver.FinishSession : MessageReceiver.AppendFigure,
                 SendMessageOptions.DontRequireReceiver);
-            _finisher = null;
-            yield return null;
         }
     }
 }

@@ -121,11 +121,11 @@ namespace BrickGame.Scripts.Controllers
                     _deltaX = 0;
                     break;
                 case TouchPhase.Began:
-                    /*if (touch.position.y > _topBorder)
+                    if (touch.position.y > _topBorder)
                     {
                         _input.Reset();
                         return;
-                    }*/
+                    }
                     _began = touch.position;
                     break;
                 case TouchPhase.Moved:
