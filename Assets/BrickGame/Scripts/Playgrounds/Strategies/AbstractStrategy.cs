@@ -15,9 +15,11 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
     /// <summary>
     /// AbstractStrategy
     /// </summary>
-    public abstract class AbstractStrategy : GameBehaviour
+    public abstract class AbstractStrategy : GameBehaviour, IStrategy
     {
         //================================       Public Setup       =================================
+        /// <inheritdoc />
+        public bool OnPasue { get { return !enabled; } }
 
         //================================    Systems properties    =================================
         private float _timer;
@@ -26,6 +28,20 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         private Figure _figure;
         private Playground _playground;
         //================================      Public methods      =================================
+        /// <inheritdoc />
+        public void Pause()
+        {
+            if(OnPasue)return;
+            enabled = false;
+        }
+
+        /// <inheritdoc />
+        public void Resume()
+        {
+            if(!OnPasue)return;
+            enabled = true;
+            _timer = 0;
+        }
 
         //================================ Private|Protected methods ================================
         private void Awake()
@@ -51,14 +67,14 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
             {
                 case GameState.Start:
                     _timeout = Context.GetActor<GameModeManager>().CurrentRules.StartegyTimeout;
-                    _timer = 0;
-                    enabled = true;
+                    Resume();
                     break;
                 case GameState.Pause:
-                    enabled = !enabled;
+                    if(OnPasue)Resume();
+                    else Pause();
                     break;
                 case GameState.End:
-                    enabled = false;
+                    Pause();
                     break;
             }
         }

@@ -52,7 +52,6 @@ namespace BrickGame.Scripts.Playgrounds
         [NotNull]public Matrix<bool> Matrix{get{return _matrix;}}
         //================================    Systems properties    =================================
         [NotNull]private Matrix<bool> _matrix = new PlaygroundMatrix(10, 20);
-
         //================================      Public methods      =================================
         /// <inheritdoc />
         public void UpdateMatix(Matrix<bool> matrix)
