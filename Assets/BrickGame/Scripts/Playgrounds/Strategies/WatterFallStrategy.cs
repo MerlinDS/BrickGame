@@ -1,4 +1,4 @@
-﻿// <copyright file="WattreFallStrategy.cs" company="Near Fancy">
+﻿// <copyright file="WatterFallStrategy.cs" company="Near Fancy">
 // Copyright (c) 2017 All Rights Reserved
 // </copyright>
 // <author>Andrew Salomatin</author>
@@ -11,9 +11,9 @@ using UnityEngine;
 namespace BrickGame.Scripts.Playgrounds.Strategies
 {
     /// <summary>
-    /// WattreFallStrategy
+    /// WatterFallStrategy
     /// </summary>
-    public class WattreFallStrategy : AbstractStrategy
+    public class WatterFallStrategy : AbstractStrategy
     {
         //================================       Public Setup       =================================
 

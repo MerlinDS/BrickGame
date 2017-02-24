@@ -13,6 +13,17 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         //================================       Getters|Setters       =================================
         bool OnPasue { get; }
         //================================			 Methods		   =================================
+        /// <summary>
+        /// Initialize strategy
+        /// </summary>
+        /// <param name="setup"></param>
+        void Initialize(StrategySetup setup);
+
+        /// <summary>
+        /// Update speed of strategy updating
+        /// <param name="factor"></param>
+        /// </summary>
+        void UpdateSpeed(int factor = 0);
         void Pause();
         void Resume();
     }

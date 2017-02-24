@@ -32,7 +32,7 @@ namespace BrickGame.Scripts.Playgrounds
         private PlaygroundDrawer _drawer;
         private BricksBlinkingEffectBehaviour _bricksBlinking;
         private SceneBlinkingEffect _sceneBlinking;
-        private IStrategy _strategy;
+        private IStrategy[] _strategies;
         //================================      Public methods      =================================
         /// <inheritdoc />
         public void UpdateMatix(Matrix<bool> matrix)
@@ -42,7 +42,8 @@ namespace BrickGame.Scripts.Playgrounds
             _bricksBlinking = GetComponent<BricksBlinkingEffectBehaviour>();
             _sceneBlinking = GetComponent<SceneBlinkingEffect>();
             _drawer = GetComponentInChildren<PlaygroundDrawer>();
-            _strategy = GetComponent<IStrategy>();
+            _strategies = GetComponents<IStrategy>();
+            if(_strategies == null)_strategies = new IStrategy[0];
             _direction = Context.GetActor<GameModeManager>().CurrentRules.FallingDirection;
         }
         [UsedImplicitly]
@@ -75,8 +76,8 @@ namespace BrickGame.Scripts.Playgrounds
                 foreach (int y in rows) _drawer.GetRow(y, ref _briks);
                 delay = _bricksBlinking.Execute(_briks);
             }
-            if(_strategy != null)_strategy.Pause();
             SendMessage(MessageReceiver.UpdateScore, rows.Length);
+            foreach (IStrategy strategy in _strategies)strategy.Pause();
             //Change figure with delay
             StartCoroutine(RemoveLines(delay));
         }
@@ -87,7 +88,7 @@ namespace BrickGame.Scripts.Playgrounds
             if(delay > 0)yield return new WaitForSeconds(delay);
             BroadcastMessage(MessageReceiver.ChangeFigure);
             if(_drawer != null)_drawer.Resume();
-            if(_strategy != null)_strategy.Resume();
+            foreach (IStrategy strategy in _strategies)strategy.Resume();
             yield return null;
         }
     }

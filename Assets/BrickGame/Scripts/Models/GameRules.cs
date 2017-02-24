@@ -5,7 +5,7 @@
 // <date>02/09/2017 20:00</date>
 
 using System;
-using BrickGame.Scripts.Controllers.Strategies;
+using BrickGame.Scripts.Playgrounds.Strategies;
 using BrickGame.Scripts.Utils;
 using UnityEngine;
 
@@ -32,14 +32,13 @@ namespace BrickGame.Scripts.Models
 
         [Header("Game rules")]
 
-        [Tooltip("Select strategy for the mode.")]
-        public ModeStrategies Strategy;
-        [Tooltip("Set strategy timeout")]
-        public float StartegyTimeout;
-
         [Tooltip("Level divider")]
         [Range(1, 100)]
         public int LevelDivider;
+
+        [Tooltip("Game mode strategies")]
+        public StrategySetup[] Strategies;
+
         [Tooltip("Score by deleted lines")]
         public int[] Score;
 

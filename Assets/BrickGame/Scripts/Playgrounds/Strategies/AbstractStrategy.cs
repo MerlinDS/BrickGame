@@ -5,8 +5,8 @@
 // <date>02/23/2017 19:23</date>
 
 using System;
-using BrickGame.Scripts.Controllers;
 using BrickGame.Scripts.Figures;
+using BrickGame.Scripts.Models;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -17,17 +17,25 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
     /// </summary>
     public abstract class AbstractStrategy : GameBehaviour, IStrategy
     {
+        private const float Step = 30.0F;
         //================================       Public Setup       =================================
         /// <inheritdoc />
         public bool OnPasue { get { return !enabled; } }
-
         //================================    Systems properties    =================================
         private float _timer;
-        private float _timeout;
+        private float _speed;
 
+        private StrategySetup _setup;
         private Figure _figure;
         private Playground _playground;
+        private ScoreModel _model;
         //================================      Public methods      =================================
+        public void Initialize(StrategySetup setup)
+        {
+            _setup = setup;
+            UpdateSpeed();
+            Pause();
+        }
         /// <inheritdoc />
         public void Pause()
         {
@@ -43,35 +51,53 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
             _timer = 0;
         }
 
+        /// <inheritdoc />
+        public void UpdateSpeed(int factor = 1)
+        {
+            _speed = _setup.Speed + _setup.SpeedIncrease * (factor - 1);
+            _timer = 0;
+        }
+
         //================================ Private|Protected methods ================================
         private void Awake()
         {
+            _model = Context.GetActor<ScoreModel>();
             Context.AddListener(GameState.Start, StateHandler);
             Context.AddListener(GameState.End, StateHandler);
             Context.AddListener(GameState.Pause, StateHandler);
+            Context.AddListener(GameNotification.ScoreUpdated, ScoreHandler);
             enabled = false;
         }
 
-        protected virtual void OnDestroy()
+
+        private void OnDestroy()
         {
+            _model = null;
             _figure = null;
             _playground = null;
             Context.RemoveListener(GameState.Start, StateHandler);
             Context.RemoveListener(GameState.End, StateHandler);
             Context.RemoveListener(GameState.Pause, StateHandler);
+            Context.RemoveListener(GameNotification.ScoreUpdated, ScoreHandler);
+        }
+
+        private void ScoreHandler(string s)
+        {
+            if(_playground == null)return;
+            var factor = _model[ScoreModel.FieldName.Level, _playground.SessionName];
+            UpdateSpeed(factor);
         }
 
         private void StateHandler(string s)
         {
             switch (s)
             {
-                case GameState.Start:
-                    _timeout = Context.GetActor<GameModeManager>().CurrentRules.StartegyTimeout;
-                    Resume();
-                    break;
                 case GameState.Pause:
-                    if(OnPasue)Resume();
+                    if (OnPasue) Resume();
                     else Pause();
+                    break;
+                case GameState.Start:
+                    Resume();
                     break;
                 case GameState.End:
                     Pause();
@@ -81,7 +107,9 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
 
         private void LateUpdate()
         {
-            if((_timer += Time.deltaTime) < _timeout)return;
+            _timer = Mathf.MoveTowards(_timer, Step, Time.deltaTime * _speed);
+            if (_timer < Step) return;
+
             if (_playground == null)
                 _playground = GetInEnvironment<Playground>();
             if (_figure == null)

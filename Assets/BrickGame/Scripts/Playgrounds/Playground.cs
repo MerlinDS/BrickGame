@@ -6,7 +6,6 @@
 
 using System;
 using BrickGame.Scripts.Controllers;
-using BrickGame.Scripts.Controllers.Strategies;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playgrounds.Strategies;
 using JetBrains.Annotations;
@@ -93,15 +92,32 @@ namespace BrickGame.Scripts.Playgrounds
         private void Start()
         {
             Rules = Context.GetActor<GameModeManager>().CurrentRules;
-            //Add strategy
-            Type type = null;
-            if (Rules.Strategy == ModeStrategies.Bubbles) type = typeof(BubbleStrategy);
-            else if (Rules.Strategy == ModeStrategies.WatterFall) type = typeof(WattreFallStrategy);
-            else if (Rules.Strategy == ModeStrategies.Slider) type = typeof(SliderStrategy);
-            if(type != null)gameObject.AddComponent(type);
-            //
+            foreach (StrategySetup setup in Rules.Strategies)
+                AddStrategy(setup);
             BroadcastNofitication(GameState.Restore,
                 new SessionDataProvider(Rules.name, SessionName));
+        }
+
+        private void AddStrategy(StrategySetup setup)
+        {
+            Debug.LogFormat("Add strategy {0} to {1}", setup.Mode, SessionName );
+            Type type;
+            switch (setup.Mode)
+            {
+                case StrategySetup.SMode.Bubbles:
+                    type = typeof(BubbleStrategy);
+                    break;
+                case StrategySetup.SMode.WatterFall:
+                    type = typeof(WatterFallStrategy);
+                    break;
+                case StrategySetup.SMode.Slider:
+                    type = typeof(SliderStrategy);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            IStrategy strategy = (IStrategy) gameObject.AddComponent(type);
+            strategy.Initialize(setup);
         }
     }
 }
