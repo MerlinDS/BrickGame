@@ -7,9 +7,7 @@
 using Assets.BrickGame.Scripts.Utils.Colors;
 using BrickGame.Scripts.Effects;
 using BrickGame.Scripts.Models;
-using BrickGame.Scripts.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BrickGame.Scripts.Controllers
 {
@@ -42,8 +40,6 @@ namespace BrickGame.Scripts.Controllers
         [Tooltip("List of availabel palettes")][SerializeField]
         private ColorPalette[] _palettes;
         //================================    Systems properties    =================================
-        private Color _foreground;
-        private Color _main;
 
         public int ColorPaletteIndex { get { return _index; } }
 
@@ -55,14 +51,6 @@ namespace BrickGame.Scripts.Controllers
         public void UpdateColors(bool force = false)
         {
             UpdateCameras();
-            if (!_foreground.Equals(Foreground) || force)
-            {
-                UpdateTextColor(_foreground = Foreground);
-                UpdateImages(_foreground);
-            }
-            if(!_main.Equals(Main) || force)
-                UpdateShadows(_main = Main);
-            UpdateUIBricks();
         }
 
         /// <summary>
@@ -73,7 +61,6 @@ namespace BrickGame.Scripts.Controllers
             Background = new Color(0.611F, 0.698F, 0.65F, 1F);
             Foreground = new Color(0.17F, 0.18F, 0.17F, 1F);
             Main = new Color(0.46F, 0.5F, 0.48F, 1F);
-            _main = _foreground = Color.black;
             UpdateColors();
         }
 
@@ -116,45 +103,6 @@ namespace BrickGame.Scripts.Controllers
                 effectBehaviour.Color0 = Foreground;
                 effectBehaviour.Color2 = Background;
                 effectBehaviour.Color1 = Main;
-            }
-        }
-
-        private void UpdateTextColor(Color color)
-        {
-            var textFields = FindObjectsOfType<Text>();
-            foreach (Text textField in textFields)
-                textField.color = color;
-        }
-
-        private void UpdateImages(Color color)
-        {
-            var changable = GameObject.FindGameObjectsWithTag(SRTags.ColorChangeble);
-            foreach (GameObject obj in changable)
-            {
-                if(obj.GetComponent<Image>() == null)continue;
-                obj.GetComponent<Image>().color = color;
-            }
-        }
-
-        private void UpdateShadows(Color color)
-        {
-            var shadows = FindObjectsOfType<Shadow>();
-            foreach (Shadow shadow in shadows)
-            {
-                if(shadow.CompareTag(SRTags.FixedColor))continue;
-                shadow.effectColor = color;
-            }
-        }
-
-        // ReSharper disable once InconsistentNaming
-        private void UpdateUIBricks()
-        {
-            UIBrick[] bricks = FindObjectsOfType<UIBrick>();
-            foreach (UIBrick brick in bricks)
-            {
-                brick.ActiveColor = Foreground;
-                brick.PassiveColor = Main;
-                brick.Refresh();
             }
         }
 
