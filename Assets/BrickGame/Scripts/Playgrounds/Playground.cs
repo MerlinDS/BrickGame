@@ -94,7 +94,11 @@ namespace BrickGame.Scripts.Playgrounds
             Rules = Context.GetActor<GameModeManager>().CurrentRules;
             foreach (StrategySetup setup in Rules.Strategies)
                 AddStrategy(setup);
+            //Try to restore game data from the cache
             BroadcastNofitication(GameState.Restore,
+                new SessionDataProvider(Rules.name, SessionName));
+            //Start new game
+            BroadcastNofitication(GameState.Start,
                 new SessionDataProvider(Rules.name, SessionName));
         }
 

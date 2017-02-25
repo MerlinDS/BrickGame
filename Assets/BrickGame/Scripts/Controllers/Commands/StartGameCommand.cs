@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/15/2017 13:07</date>
 
+using System.Linq;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playgrounds;
 using JetBrains.Annotations;
@@ -13,9 +14,9 @@ using UnityEngine;
 namespace BrickGame.Scripts.Controllers.Commands
 {
     /// <summary>
-    /// StartGameCommand - execute starting of the game mode.
+    /// StartGameCommand - execute starting of the game on specified playground.
     /// </summary>
-    public class StartGameCommand : GameCommand
+    public class StartGameCommand : GameCommand<SessionDataProvider>
     {
         //================================       Public Setup       =================================
 
@@ -26,8 +27,8 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <inheritdoc />
         public override void Prepare(string notification, DataProvider data)
         {
-            _restoreModel = Context.GetActor<RestoreModel>();
             base.Prepare(notification, data);
+            _restoreModel = Context.GetActor<RestoreModel>();
         }
 
         /// <inheritdoc />
@@ -40,20 +41,16 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <inheritdoc />
         public override void Execute()
         {
-            if (Playgrounds == null || Playgrounds.Length == 0)
+            Playground playground = Playgrounds.FirstOrDefault(p => p.SessionName == Data.Session);
+            if (playground == null)
             {
                 Debug.LogError("Playground was not found!");
                 return;
             }
 
-            //In common cases will be one playground on the stage
-            foreach (var playground in Playgrounds)
-            {
-                Matrix<bool> fm, pm;
-                CollectData(playground, out fm, out pm);
-                StartGame(playground, pm, fm);
-
-            }
+            Matrix<bool> fm, pm;
+            CollectData(playground, out pm, out fm);
+            StartGame(playground, pm, fm);
         }
 
         //================================ Private|Protected methods ================================
@@ -65,7 +62,6 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <param name="fm">Figure matrix</param>
         private void CollectData([NotNull] Playground playground, out Matrix<bool> pm, out Matrix<bool> fm)
         {
-            ScoreDataProvider sdp;
             var session = playground.SessionName;
             //Has or hasn't restored data
             if (_restoreModel.Has(session))
@@ -74,15 +70,15 @@ namespace BrickGame.Scripts.Controllers.Commands
                 var data = _restoreModel.Pop(session);
                 fm = data.Figure;
                 pm = data.Playground;
-                sdp = new ScoreDataProvider(session, data.Lines, data.Score, data.Level);
+                Context.Notify(GameNotification.ScoreUpdated,
+                    new ScoreDataProvider(session, data.Lines, data.Score, data.Level));
                 return;
             }
             //Create playground data for clean start
-            sdp = new ScoreDataProvider(session, 0, 0, 1);
             pm = new PlaygroundMatrix(playground.Rules.Width, playground.Rules.Height);
             fm = new FigureMatrix();
             //Update score command
-            Context.Notify(GameNotification.ScoreUpdated, sdp);
+            Context.Notify(GameNotification.ScoreUpdated, new ScoreDataProvider(session, 0, 0, 1));
         }
 
         /// <summary>
