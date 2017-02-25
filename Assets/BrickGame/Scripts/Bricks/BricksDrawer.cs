@@ -14,6 +14,7 @@ namespace BrickGame.Scripts.Bricks
     /// </summary>
     public class BricksDrawer : GameBehaviour
     {
+        private static readonly Vector3 Zero = new Vector3(0, 0, 0);
         //================================       Public Setup       =================================
         [SerializeField] [Tooltip("Prefab of the brick")]
         // ReSharper disable once InconsistentNaming
@@ -106,6 +107,7 @@ namespace BrickGame.Scripts.Bricks
                     instance.name = "Brick(" + x + ":" + y + ")";
                     var brick = instance.GetComponent<Brick>();
                     instance.transform.SetParent(_content, true);
+                    instance.transform.localPosition = Zero;
                     instance.transform.localScale = scale;
                     brick.Active = false;
                     brick.X = x;
