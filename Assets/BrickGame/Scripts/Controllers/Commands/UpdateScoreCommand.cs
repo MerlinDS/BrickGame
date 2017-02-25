@@ -27,25 +27,32 @@ namespace BrickGame.Scripts.Controllers.Commands
         {
             if (Data == null) return;
             Playground playground = Playgrounds.FirstOrDefault(p => p.SessionName == Data.Session);
-            if(playground == null)return;
+            if (playground == null)
+            {
+                Debug.LogErrorFormat("Playground with session {0} was not found", Data.Session);
+                return;
+            }
+
             GameRules rules = playground.Rules;
             if (rules == null)
             {
                 Debug.LogWarning("Playground has no rules!");
                 return;
             }
+
             ScoreModel model = Context.GetActor<ScoreModel>();
-            //Replace score with parameters
+            //Replace score with new progress
             if (Data.Replacement)
             {
-                model.UpdateSocre(Data.Session, Data.Score, Data.Level, Data.Count);
+                model.UpdateSocre(Data.Session, Data.Progress);
                 playground.BroadcastMessage(MessageReceiver.AccelerateFigure,
-                    rules.GetSpeed(Data.Level));
-                playground.TotalLines = Data.Count;
+                    rules.GetSpeed(Data.Progress.Level));
+                playground.TotalLines = Data.Progress.Lines;
                 return;
             }
             //Calculate score
-            int score = rules.CalculateScore(Data.Count) + model[ScoreModel.FieldName.Score, Data.Session];
+            int score = rules.CalculateScore(Data.Progress.Lines)
+                        + model[ScoreModel.FieldName.Score, Data.Session];
             int level = rules.GetLevel(playground.TotalLines);
             model.UpdateSocre(Data.Session, score, level, playground.TotalLines);
         }

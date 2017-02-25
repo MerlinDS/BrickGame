@@ -70,15 +70,14 @@ namespace BrickGame.Scripts.Controllers.Commands
                 var data = _restoreModel.Pop(session);
                 fm = data.Figure;
                 pm = data.Playground;
-                Context.Notify(GameNotification.ScoreUpdated,
-                    new ScoreDataProvider(session, data.Lines, data.Score, data.Level));
+                Context.Notify(GameNotification.ScoreUpdated, new ScoreDataProvider(session, data.Progress));
                 return;
             }
             //Create playground data for clean start
-            pm = new PlaygroundMatrix(playground.Rules.Width, playground.Rules.Height);
             fm = new FigureMatrix();
+            pm = new PlaygroundMatrix(playground.Rules.Width, playground.Rules.Height);
             //Update score command
-            Context.Notify(GameNotification.ScoreUpdated, new ScoreDataProvider(session, 0, 0, 1));
+            Context.Notify(GameNotification.ScoreUpdated, new ScoreDataProvider(session));
         }
 
         /// <summary>
@@ -104,6 +103,5 @@ namespace BrickGame.Scripts.Controllers.Commands
                     SendMessageOptions.DontRequireReceiver);
             }
         }
-
     }
 }

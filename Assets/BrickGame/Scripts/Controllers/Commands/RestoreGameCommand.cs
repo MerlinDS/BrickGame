@@ -31,12 +31,12 @@ namespace BrickGame.Scripts.Controllers.Commands
             //Restore playground from the cache
             try
             {
-                if(compressed.Length == 0)return;
+                if (compressed.Length == 0) return;
                 Debug.LogFormat("{0} has compressed string {1}", Data.Mode, compressed);
                 int[] header;
                 compressed = DataConverter.ExtractHeader(compressed, out header);
                 bool[][] matrices = DataConverter.GetArray(compressed);
-                if (matrices.Length < 2)return;
+                if (matrices.Length < 2) return;
                 var figure = RestoreFigure(matrices[0], header);
                 var playground = RestorePlayground(matrices[1], 10, 20);
                 //Restore score data
@@ -48,11 +48,14 @@ namespace BrickGame.Scripts.Controllers.Commands
                     .Push(
                         Data.Session, new RestoreModel.RestoredData
                         {
-                            Level = level,
-                            Score = score,
-                            Lines = lines,
                             Playground = playground,
-                            Figure = figure
+                            Figure = figure,
+                            Progress = new GameProgress
+                            {
+                                Level = level,
+                                Score = score,
+                                Lines = lines
+                            }
                         });
             }
             catch (Exception exception)
@@ -80,7 +83,8 @@ namespace BrickGame.Scripts.Controllers.Commands
             int len = rect[2] * rect[3];
             bool[] m = new bool[len];
             int i = 0;
-            do{
+            do
+            {
                 m[i] = data[i];
             } while (++i < len);
             return new FigureMatrix(m, rect[2], rect[3]) {x = rect[0], y = rect[1]};
@@ -96,7 +100,7 @@ namespace BrickGame.Scripts.Controllers.Commands
         [NotNull]
         private Matrix<bool> RestorePlayground([CanBeNull] bool[] data, int width, int height)
         {
-            if(data == null || data.Length == 0)
+            if (data == null || data.Length == 0)
                 return new PlaygroundMatrix(width, height);
 
             int len = width * height;
@@ -104,7 +108,7 @@ namespace BrickGame.Scripts.Controllers.Commands
             if (data.Length - len > 0)
             {
                 matrix = new bool[len];
-                for(int i = 0; i < len; i++)
+                for (int i = 0; i < len; i++)
                     matrix[i] = data[i];
             }
             else

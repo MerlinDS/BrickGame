@@ -11,7 +11,7 @@ using UnityEngine;
 namespace BrickGame.Scripts.Models
 {
     /// <summary>
-    /// ScoreModel - model of a game score
+    /// ScoreModel - model of a game progress
     /// </summary>
     public class ScoreModel : IMocaActor
     {
@@ -25,21 +25,6 @@ namespace BrickGame.Scripts.Models
             Level
         }
 
-        private struct ScoreHolder
-        {
-            public readonly int Level;
-            public readonly int Lines;
-            public readonly int Score;
-
-            /// <inheritdoc />
-            public ScoreHolder(int level, int lines, int score)
-            {
-                Level = level;
-                Lines = lines;
-                Score = score;
-            }
-        }
-
         //================================       Public Setup       =================================
         /// <summary>
         /// Get galobal (sum of values) value by name of the filed in model
@@ -50,7 +35,7 @@ namespace BrickGame.Scripts.Models
             get
             {
                 int value = 0;
-                foreach (KeyValuePair<string,ScoreHolder> valuePair in _scores)
+                foreach (KeyValuePair<string, GameProgress> valuePair in _scores)
                     value += this[name, valuePair.Key];
                 return value;
             }
@@ -82,19 +67,24 @@ namespace BrickGame.Scripts.Models
         }
 
         //================================    Systems properties    =================================
-        private readonly Dictionary<string, ScoreHolder> _scores;
+        private readonly Dictionary<string, GameProgress> _scores;
         //================================      Public methods      =================================
 
         /// <inheritdoc />
         public ScoreModel()
         {
-            _scores = new Dictionary<string, ScoreHolder>();
+            _scores = new Dictionary<string, GameProgress>();
         }
 
         public void UpdateSocre(string id, int score, int level, int lines)
         {
-            if (level <= 0) level = 1;
-            ScoreHolder holder = new ScoreHolder(level, lines, score);
+            UpdateSocre(id, new GameProgress {Level = level <= 0 ? 1 : level, Lines = lines, Score = score});
+        }
+
+        public void UpdateSocre(string id, GameProgress progress)
+        {
+            if (progress.Level <= 0) progress.Level = 1;
+            GameProgress holder = progress;
             if (!_scores.ContainsKey(id))
             {
                 _scores.Add(id, holder);
