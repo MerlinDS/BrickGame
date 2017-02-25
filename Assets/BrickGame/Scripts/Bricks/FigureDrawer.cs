@@ -32,8 +32,8 @@ namespace BrickGame.Scripts.Bricks
             if(!Validate())return;
             _rectTransform = _content.GetComponent<RectTransform>();
             _offset = _rectTransform.rect.size * 0.5F;
-            _offset -= _brickPrefab.Size * 0.5F;
-            _offset.x *= -1;
+            _offset.x = _brickPrefab.Size.x * 0.5F - _offset.x;
+            _offset.y -= _brickPrefab.Size.y;
             _bricks = RestoreBricks(Width, Height);
         }
 

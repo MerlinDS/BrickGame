@@ -136,7 +136,7 @@ namespace BrickGame.Scripts.Controllers
                     float sensifity = Sensifity;
                     if (Math.Abs(delta.y) >= _slop * sensifity)
                     {
-                        if (++_breaker > 2)
+                        if (++_breaker > 4)
                         {
                             MoveDown(1);
                             _breaker = 0;
