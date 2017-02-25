@@ -3,6 +3,7 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+        _PaletteTex ("Texture", 2D) = "white" {}
 	}
 	SubShader
 	{
@@ -38,17 +39,16 @@
 			}
 
             float _Intensivity;
-            half4x4 _ColorMatrix;
 			sampler2D _MainTex;
+            sampler2D _PaletteTex;
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-                fixed x = tex2D(_MainTex, i.uv).x;
-                x = ( 1 - x ) * 3;//Ivertin color and get index of color in matrix
-                fixed t = _Intensivity * i.uv.y; // get blackout intensivity
-                float4 bl = _ColorMatrix[0]; // blackout color
-                float4 col = _ColorMatrix[x]; // main color
-                return (1 - t) * col + t * bl;//lerp(col, bl, t);
+                float p = float2(0, 0);
+                fixed4 bl = tex2D(_PaletteTex, p);
+                p.x = 1 - tex2D(_MainTex, i.uv).r;
+                float4 col = tex2D(_PaletteTex, p);
+                return  lerp(col, bl, _Intensivity * i.uv.y);
 			}
 			ENDCG
 		}

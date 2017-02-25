@@ -16,13 +16,12 @@ namespace BrickGame.Scripts.Effects
     public class PaletteSwappingEffectBehaviour: GameBehaviour
     {
         //================================       Public Setup       =================================
-
         public Color Color0 {
             get { return _c0; }
             set
             {
                 if(_c0.Equals(value))return;
-                _matrixUp2Data = false;
+                _texUp2Data = false;
                 _c0 = value;
             }
         }
@@ -32,7 +31,7 @@ namespace BrickGame.Scripts.Effects
             set
             {
                 if(_c1.Equals(value))return;
-                _matrixUp2Data = false;
+                _texUp2Data = false;
                 _c1 = value;
             }
         }
@@ -42,7 +41,7 @@ namespace BrickGame.Scripts.Effects
             set
             {
                 if(_c2.Equals(value))return;
-                _matrixUp2Data = false;
+                _texUp2Data = false;
                 _c2 = value;
             }
         }
@@ -55,12 +54,12 @@ namespace BrickGame.Scripts.Effects
         //================================      Public methods      =================================
         const string ShaderName = "Hidden/PaleteSwapping";
         //Shader fields
-        // ReSharper disable once InconsistentNaming
+        // ReSharper disable InconsistentNaming
         const string _Intensivity = "_Intensivity";
-        // ReSharper disable once InconsistentNaming
-        const string _ColorMatrix = "_ColorMatrix";
+        const string _PaletteTex = "_PaletteTex";
+        // ReSharper restore InconsistentNaming
 
-        private bool _matrixUp2Data;
+        private bool _texUp2Data;
 
         [SerializeField]
         private Color _c0;
@@ -69,42 +68,52 @@ namespace BrickGame.Scripts.Effects
         [SerializeField]
         private Color _c2;
 
-        private Matrix4x4 _matrix;
+        private Texture2D _texture;
         private Material _mat;
         //================================ Private|Protected methods ================================
         private void OnEnable()
         {
             if (_mat == null)
             {
+                //Create texture for palette drawing
+                _texture = new Texture2D(3, 1, TextureFormat.RGB24, false)
+                {
+                    wrapMode = TextureWrapMode.Clamp,
+                    filterMode = FilterMode.Point,
+                    anisoLevel = 0
+                };
                 Shader shader = Shader.Find(ShaderName);
                 _mat = new Material(shader);
             }
-            _matrixUp2Data = false;
+            _texUp2Data = false;
         }
 
         private void OnDisable()
         {
             if (_mat != null)
+            {
+                DestroyImmediate(_texture);
                 DestroyImmediate(_mat);
+            }
         }
 
         private void OnRenderImage(RenderTexture src, RenderTexture dst)
         {
-            if (!_matrixUp2Data)
+            if (!_texUp2Data)
             {
-                //Refresh color matrix if matrix is not up to date
-                _matrix = new Matrix4x4();
-                _matrix.SetRow(0, new Vector4(_c0.r, _c0.g, _c0.b, _c0.a));
-                _matrix.SetRow(1, new Vector4(_c1.r, _c1.g, _c1.b, _c1.a));
-                _matrix.SetRow(2, new Vector4(_c2.r, _c2.g, _c2.b, _c2.a));
-                _matrix.SetRow(3, new Vector4(_c2.r, _c2.g, _c2.b, _c2.a));
-                _matrixUp2Data = true;
+                //Refresh color palette befor sending to shader
+                _texture.SetPixel(0, 0, _c0);
+                _texture.SetPixel(1, 0, _c1);
+                _texture.SetPixel(2, 0, _c2);
+                _texture.Apply(false);
+                _texUp2Data = true;
             }
             //Set values to shader
             _mat.SetFloat(_Intensivity, Intensivity);
-            _mat.SetMatrix(_ColorMatrix, _matrix);
             //Render effect
+            _mat.SetTexture(_PaletteTex, _texture);
             Graphics.Blit(src, dst, _mat);
+
         }
     }
 }

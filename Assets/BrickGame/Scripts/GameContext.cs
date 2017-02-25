@@ -42,8 +42,6 @@ namespace BrickGame.Scripts
             CommandMap.MapCommand<UpdateCacheCommand>(GameState.End);
             CommandMap.MapCommand<UpdateCacheCommand>(GameState.Pause);
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);
-            //Limit target fps to 30
-            Application.targetFrameRate = 30;
         }
     }
 }

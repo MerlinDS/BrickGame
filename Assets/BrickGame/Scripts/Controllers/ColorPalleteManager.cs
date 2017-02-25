@@ -70,9 +70,9 @@ namespace BrickGame.Scripts.Controllers
         /// </summary>
         public void Reset()
         {
-            Background = new Color(0.611F, 0.698F, 0.65F);
-            Foreground = new Color(0.17F, 0.18F, 0.17F);
-            Main = new Color(0.46F, 0.5F, 0.48F);
+            Background = new Color(0.611F, 0.698F, 0.65F, 1F);
+            Foreground = new Color(0.17F, 0.18F, 0.17F, 1F);
+            Main = new Color(0.46F, 0.5F, 0.48F, 1F);
             _main = _foreground = Color.black;
             UpdateColors();
         }

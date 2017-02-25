@@ -49,7 +49,7 @@ namespace BrickGame.Scripts.Models
         /// <inheritdoc />
         public CacheModel()
         {
-            _version = 0;
+            _version = 1;
         }
 
         public void DeleteCache(bool save = true)
