@@ -97,6 +97,7 @@ namespace BrickGame.Scripts.Figures
                 _matrix.Rotate(!clockwise);
                 return;
             }
+            Context.Notify(AudioNotification.Click);
             //set new position to the matrix
             _matrix.x = x;
             _matrix.y = y;
@@ -116,8 +117,9 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public void MoveHorizontal(int xShift)
         {
-            if (xShift != 0 && CanMoveHorizontal(xShift))
-                _matrix.x += xShift;
+            if (xShift == 0 || !CanMoveHorizontal(xShift)) return;
+            _matrix.x += xShift;
+            Context.Notify(AudioNotification.Move);
         }
 
         /// <inheritdoc />
@@ -135,8 +137,9 @@ namespace BrickGame.Scripts.Figures
         /// <inheritdoc />
         public void MoveVertical(int yShift)
         {
-            if (yShift != 0 && CanMoveVertical(yShift))
-                _matrix.y += yShift;
+            if (yShift == 0 || !CanMoveVertical(yShift)) return;
+            _matrix.y += yShift;
+            Context.Notify(AudioNotification.Move);
         }
 
         //================================ Private|Protected methods ================================

@@ -15,5 +15,7 @@ Demo project - the old style Tetris game for Android.
 
 * [Palette swapping shader](https://github.com/MerlinDS/BrickGame/blob/development/Assets/BrickGame/Shaders/PaletteSwapping.shader) - changing color palette on the fly.
 
+### Sources
 
 
+* Audio (Background theme) - HHavok-intro by http://ericskiff.com/music/

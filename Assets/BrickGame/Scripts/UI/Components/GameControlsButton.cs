@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/13/2017 11:50</date>
 
+using BrickGame.Scripts.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,7 +33,7 @@ namespace BrickGame.Scripts.UI.Components
         /// </summary>
         protected virtual void Awake()
         {
-            GetComponent<Button>().onClick.AddListener(OnClickHandler);
+            GetComponent<Button>().onClick.AddListener(OnClick);
         }
 
         /// <summary>
@@ -40,7 +41,13 @@ namespace BrickGame.Scripts.UI.Components
         /// </summary>
         protected virtual void OnDestroy()
         {
-            GetComponent<Button>().onClick.RemoveListener(OnClickHandler);
+            GetComponent<Button>().onClick.RemoveListener(OnClick);
+        }
+
+        private void OnClick()
+        {
+            Context.Notify(AudioNotification.Click);
+            OnClickHandler();
         }
     }
 }

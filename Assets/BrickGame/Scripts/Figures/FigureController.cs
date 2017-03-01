@@ -162,6 +162,7 @@ namespace BrickGame.Scripts.Figures
         private void SendFinishMessage()
         {
             enabled = false;
+            Context.Notify(AudioNotification.Stop);
             SendMessageUpwards( _controls.OutOfEdge ?
                     MessageReceiver.FinishSession : MessageReceiver.AppendFigure,
                 SendMessageOptions.DontRequireReceiver);

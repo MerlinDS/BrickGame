@@ -4,9 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>02/14/2017 18:52</date>
 
-using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
-using BrickGame.Scripts.Playgrounds;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers
@@ -21,7 +19,8 @@ namespace BrickGame.Scripts.Controllers
         [Tooltip("Lose sound")] public AudioClip Lose;
 
         [Tooltip("Delete lines sound")] public AudioClip Delete;
-        [Tooltip("Turn figureMatrix sound")] public AudioClip Turn;
+        [Tooltip("Rotate figure sound")] public AudioClip Turn;
+        [Tooltip("Stop figure sound")] public AudioClip Stop;
 
         /// <inheritdoc />
         public bool Muted
@@ -31,6 +30,7 @@ namespace BrickGame.Scripts.Controllers
 
         //================================    Systems properties    =================================
         private AudioSource _mainSource;
+        private AudioSource _bgSource;
 
         private float _delay;
 
@@ -44,8 +44,14 @@ namespace BrickGame.Scripts.Controllers
             {
                 _mainSource.Stop();
                 _mainSource.clip = null;
+                _bgSource.Pause();
+            }
+            else
+            {
+                _bgSource.Play();
             }
             _mainSource.mute = !_mainSource.mute;
+            _bgSource.mute = _mainSource.mute;
         }
 
         /// <summary>
@@ -59,11 +65,20 @@ namespace BrickGame.Scripts.Controllers
         //================================ Private|Protected methods ================================
         private void Awake()
         {
-            _mainSource = GetComponent<AudioSource>();
+            var audioSources = GetComponents<AudioSource>();
+            foreach (AudioSource source in audioSources)
+            {
+                if (source.loop)
+                    _bgSource = source;
+                else
+                    _mainSource = source;
+            }
             Context.AddListener(GameNotification.ScoreUpdated, GameNotificationHandler);
             Context.AddListener(GameState.End, GameNotificationHandler);
-            Context.AddListener(FigureNotification.Turned, GameNotificationHandler);
-            Context.AddListener(FigureNotification.Moved, GameNotificationHandler);
+            Context.AddListener(AudioNotification.Stop, GameNotificationHandler);
+            Context.AddListener(AudioNotification.Loos, GameNotificationHandler);
+            Context.AddListener(AudioNotification.Click, GameNotificationHandler);
+            Context.AddListener(AudioNotification.Move, GameNotificationHandler);
             Context.AddListener(GameNotification.MuteSound, GameNotificationHandler);
         }
 
@@ -71,8 +86,10 @@ namespace BrickGame.Scripts.Controllers
         {
             Context.RemoveListener(GameNotification.ScoreUpdated, GameNotificationHandler);
             Context.RemoveListener(GameState.End, GameNotificationHandler);
-            Context.RemoveListener(FigureNotification.Turned, GameNotificationHandler);
-            Context.RemoveListener(FigureNotification.Moved, GameNotificationHandler);
+            Context.RemoveListener(AudioNotification.Stop, GameNotificationHandler);
+            Context.RemoveListener(AudioNotification.Loos, GameNotificationHandler);
+            Context.RemoveListener(AudioNotification.Click, GameNotificationHandler);
+            Context.RemoveListener(AudioNotification.Move, GameNotificationHandler);
             Context.RemoveListener(GameNotification.MuteSound, GameNotificationHandler);
         }
 
@@ -93,13 +110,17 @@ namespace BrickGame.Scripts.Controllers
                     PlaySfx(Delete);
                     break;
                 case GameState.End:
+                case AudioNotification.Loos:
                     PlaySfx(Lose);
                     break;
-                case FigureNotification.Turned:
-                case FigureNotification.Moved:
+                case AudioNotification.Stop:
+                    PlaySfx(Stop);
+                    break;
+                case AudioNotification.Move:
+                case AudioNotification.Click:
                     //avoiding doubling of a sound
                     if (_mainSource.clip == Turn && Time.time - _delay < 0.1F) return;
-                    PlaySfx(Turn, notification == FigureNotification.Moved ? 1.1F : 0.9F);
+                    PlaySfx(Turn);//, notification == AudioNotification.Move ? 1.1F : 0.9F);
                     _delay = Time.time;
                     break;
             }
