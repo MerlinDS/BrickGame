@@ -56,7 +56,7 @@ namespace BrickGame.Scripts.Effects
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
-        const string ShaderName = "Hidden/PaleteSwapping";
+        const string ShaderName = "Hidden/PaletteSwapping";
         //Shader fields
         // ReSharper disable InconsistentNaming
         const string _Intensivity = "_Intensivity";
@@ -84,18 +84,18 @@ namespace BrickGame.Scripts.Effects
         {
             if (_mat == null)
             {
+                Shader shader = Shader.Find(ShaderName);
+                _mat = new Material(shader);
                 //Create texture for palette drawing
                 _textures = new[]
                 {
                     SetPixels(CreateTexture(3, 1), ref _c0, ref _c1, ref _c2),
                     SetPixels(CreateTexture(3, 1), ref _c0, ref _c1, ref _c2)
                 };
-                Shader shader = Shader.Find(ShaderName);
                 _firstTexutre = 0;
                 _secondTexutre = 1;
                 _mixing = 1;
                 _texUp2Data = true;
-                _mat = new Material(shader);
             }
             _texUp2Data = false;
         }
@@ -140,6 +140,7 @@ namespace BrickGame.Scripts.Effects
             //Set values to shader
             _mat.SetFloat(_Mixing, _mixing);
             _mat.SetFloat(_Intensivity, Intensivity);
+            _mat.SetColor("_Color", _c0);
             //Render effect
             _mat.SetTexture(_PaletteTex, _textures[_firstTexutre]);
             _mat.SetTexture(_Palette2Tex, _textures[_secondTexutre]);

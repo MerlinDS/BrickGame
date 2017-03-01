@@ -1,10 +1,11 @@
-﻿Shader "Hidden/PaleteSwapping"
+﻿Shader "Hidden/PaletteSwapping"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
         _PaletteTex ("Texture of a first color palette", 2D) = "white" {}
         _Palette2Tex ("Texture of a second color palette", 2D) = "white" {}
+        _Color("Blackout color", Color) = (0, 0, 0, 1.0)
 	}
 	SubShader
 	{
@@ -41,6 +42,7 @@
 
             float _Mixing;
             float _Intensivity;
+            fixed4 _Color;
 			sampler2D _MainTex;
             sampler2D _PaletteTex;
             sampler2D _Palette2Tex;
@@ -50,13 +52,7 @@
                 float x = 1 - tex2D(_MainTex, i.uv).r;
                 fixed4 p0 = tex2D(_PaletteTex, x);
                 fixed4 p1 = tex2D(_Palette2Tex, x);
-                return lerp(p0, p1, _Mixing);
-                /*
-                float p = float2(0, 0);
-                fixed4 bl = tex2D(_PaletteTex, p);
-                p.x = 1 - tex2D(_MainTex, i.uv).r;
-                float4 col = tex2D(_PaletteTex, p);
-                return  lerp(col, bl, _Intensivity * i.uv.y);*/
+                return lerp(p0, p1, _Mixing) * ( 1 - _Intensivity * i.uv.y);
 			}
 			ENDCG
 		}
