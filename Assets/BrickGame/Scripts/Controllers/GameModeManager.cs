@@ -24,13 +24,16 @@ namespace BrickGame.Scripts.Controllers
         }
 
         public GameRules CurrentRules { get; private set; }
+
+        public int PreviousIndex { get; set; }
+
         //================================    Systems properties    =================================
         [SerializeField] [ShowOnly] private int _index;
 
-        [Tooltip("List of game rules")]
-        [SerializeField]
-        private GameRules[] _ruleses;
+        [Tooltip("List of game rules")] [SerializeField] private GameRules[] _ruleses;
+
         private CacheModel _cacheModel;
+
         //================================      Public methods      =================================
         public void ChangeMode(int index)
         {
@@ -44,6 +47,7 @@ namespace BrickGame.Scripts.Controllers
                 Debug.LogError("Index coudn't be less than 0 and bigger then ruleses count.");
                 return;
             }
+            PreviousIndex = _index;
             _index = index;
             _cacheModel.ModeIndex = index;
             CurrentRules = _ruleses[index];
