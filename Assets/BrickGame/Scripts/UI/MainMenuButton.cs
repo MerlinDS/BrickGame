@@ -27,11 +27,11 @@ namespace BrickGame.Scripts.UI
         {
             if (Scene != null)
             {
-                Context.GetActor<GameModesController>().StartMode(Scene.name);
+                Context.GetActor<SceneController>().StartMode(Scene.name);
                 return;
             }
             Debug.LogWarning("Scene was not set yet! Default will be started");
-            Context.GetActor<GameModesController>().StartMode(SRScenes.ClassicGameScene.name);
+            Context.GetActor<SceneController>().StartMode(SRScenes.ClassicGameScene.name);
         }
 
         //================================ Private|Protected methods ================================

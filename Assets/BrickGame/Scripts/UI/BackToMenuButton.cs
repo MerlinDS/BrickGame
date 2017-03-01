@@ -26,7 +26,7 @@ namespace BrickGame.Scripts.UI
         /// </summary>
         protected override void OnClickHandler()
         {
-            Context.GetActor<GameModesController>().Exit2Menu();
+            Context.GetActor<SceneController>().Exit2Menu();
         }
     }
 }
