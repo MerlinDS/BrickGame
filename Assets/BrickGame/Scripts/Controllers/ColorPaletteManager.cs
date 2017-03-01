@@ -50,7 +50,21 @@ namespace BrickGame.Scripts.Controllers
         /// <param name="force"></param>
         public void UpdateColors(bool force = false)
         {
-            UpdateCameras(force);
+            foreach (Camera c in Camera.allCameras)
+            {
+                PaletteSwappingEffectBehaviour effectBehaviour = c.GetComponent
+                    <PaletteSwappingEffectBehaviour>();
+                if (effectBehaviour == null)
+                {
+                    //Change directly on camera
+                    c.backgroundColor = Background;
+                    continue;
+                }
+                effectBehaviour.Color0 = Foreground;
+                effectBehaviour.Color2 = Background;
+                effectBehaviour.Color1 = Main;
+                effectBehaviour.Force = force;
+            }
         }
 
         /// <summary>
@@ -69,7 +83,7 @@ namespace BrickGame.Scripts.Controllers
             ChangePalette(_index+1);
         }
 
-        public void ChangePalette(int index)
+        public void ChangePalette(int index, bool force = false)
         {
             if(index == _index)return;
             //cycling index in palette array
@@ -77,7 +91,7 @@ namespace BrickGame.Scripts.Controllers
             else if (index < 0) index = _palettes.Length - 1;
             //UpdateColors colors from palette
             _palettes[index].UpdateColors(ref Background, ref Foreground, ref Main);
-            UpdateColors();
+            UpdateColors(force);
             _index = index;
             BroadcastNofitication(GameNotification.ColorChanged);
 
@@ -85,27 +99,7 @@ namespace BrickGame.Scripts.Controllers
         //================================ Private|Protected methods ================================
         private void Start()
         {
-            ChangePalette(Context.GetActor<CacheModel>().ColorPaletteIndex);
+            ChangePalette(Context.GetActor<CacheModel>().ColorPaletteIndex, true);
         }
-
-        private void UpdateCameras(bool force)
-        {
-            foreach (Camera c in Camera.allCameras)
-            {
-                PaletteSwappingEffectBehaviour effectBehaviour = c.GetComponent
-                    <PaletteSwappingEffectBehaviour>();
-                if (effectBehaviour == null)
-                {
-                    //Change directly on camera
-                    c.backgroundColor = Background;
-                    continue;
-                }
-                effectBehaviour.Color0 = Foreground;
-                effectBehaviour.Color2 = Background;
-                effectBehaviour.Color1 = Main;
-                effectBehaviour.Force = force;
-            }
-        }
-
     }
 }
