@@ -8,6 +8,7 @@ using System;
 using BrickGame.Scripts.Controllers;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Playgrounds.Strategies;
+using BrickGame.Scripts.Services.Monitization;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -85,6 +86,7 @@ namespace BrickGame.Scripts.Playgrounds
         public void FinishSession()
         {
             _matrix = new PlaygroundMatrix(0, 0);
+            Context.Notify(AdvNotification.ShowVideo);
             BroadcastNofitication(GameState.End);
         }
         //================================ Private|Protected methods ================================

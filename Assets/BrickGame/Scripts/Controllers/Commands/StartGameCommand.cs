@@ -41,7 +41,12 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <inheritdoc />
         public override void Execute()
         {
-            Playground playground = Playgrounds.FirstOrDefault(p => p.SessionName == Data.Session);
+            Playground playground = null;
+            if (Data != null)
+                playground = Playgrounds.FirstOrDefault(p => p.SessionName == Data.Session);
+            else if(Playgrounds.Length > 0)
+                playground = Playgrounds[0];
+
             if (playground == null)
             {
                 Debug.LogError("Playground was not found!");
