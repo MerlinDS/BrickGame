@@ -6,14 +6,13 @@
 
 using BrickGame.Scripts.Controllers;
 using UnityEditor;
-using UnityEngine;
 
 namespace BrickGame.Editor
 {
     /// <summary>
     /// ColorPalleteManagerInspector
     /// </summary>
-    [CustomEditor(typeof(ColorPalleteManager))]
+    [CustomEditor(typeof(ColorPaletteManager))]
     public class ColorPalleteManagerInspector : UnityEditor.Editor
     {
         //================================       Public Setup       =================================
@@ -40,7 +39,7 @@ namespace BrickGame.Editor
             serializedObject.ApplyModifiedProperties();
             if (changes)
             {
-                ColorPalleteManager manager = (ColorPalleteManager) serializedObject.targetObject;
+                ColorPaletteManager manager = (ColorPaletteManager) serializedObject.targetObject;
                 manager.UpdateColors();
             }
         }
@@ -60,7 +59,7 @@ namespace BrickGame.Editor
             int index = EditorGUILayout.Popup("Current palette", _index.intValue, options);
             if (index != _index.intValue)
             {
-                ColorPalleteManager manager = (ColorPalleteManager) serializedObject.targetObject;
+                ColorPaletteManager manager = (ColorPaletteManager) serializedObject.targetObject;
                 manager.ChangePalette(index);
             }
         }

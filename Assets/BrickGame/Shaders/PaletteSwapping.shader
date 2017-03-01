@@ -3,7 +3,8 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-        _PaletteTex ("Texture", 2D) = "white" {}
+        _PaletteTex ("Texture of a first color palette", 2D) = "white" {}
+        _Palette2Tex ("Texture of a second color palette", 2D) = "white" {}
 	}
 	SubShader
 	{
@@ -38,17 +39,24 @@
 				return o;
 			}
 
+            float _Mixing;
             float _Intensivity;
 			sampler2D _MainTex;
             sampler2D _PaletteTex;
+            sampler2D _Palette2Tex;
 
 			fixed4 frag (v2f i) : SV_Target
 			{
+                float x = 1 - tex2D(_MainTex, i.uv).r;
+                fixed4 p0 = tex2D(_PaletteTex, x);
+                fixed4 p1 = tex2D(_Palette2Tex, x);
+                return lerp(p0, p1, _Mixing);
+                /*
                 float p = float2(0, 0);
                 fixed4 bl = tex2D(_PaletteTex, p);
                 p.x = 1 - tex2D(_MainTex, i.uv).r;
                 float4 col = tex2D(_PaletteTex, p);
-                return  lerp(col, bl, _Intensivity * i.uv.y);
+                return  lerp(col, bl, _Intensivity * i.uv.y);*/
 			}
 			ENDCG
 		}

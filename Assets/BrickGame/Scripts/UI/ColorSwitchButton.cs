@@ -22,7 +22,7 @@ namespace BrickGame.Scripts.UI
         public string Prefix = "COLOR: ";
         //================================    Systems properties    =================================
         private Text _label;
-        private ColorPalleteManager _manager;
+        private ColorPaletteManager _manager;
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
@@ -36,7 +36,7 @@ namespace BrickGame.Scripts.UI
         {
             _label = GetComponent<Text>();
             Context.AddListener(GameNotification.ColorChanged, Handler);
-            _manager = Context.GetActor<ColorPalleteManager>();
+            _manager = Context.GetActor<ColorPaletteManager>();
             Handler(string.Empty);
         }
 

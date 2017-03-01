@@ -46,9 +46,13 @@ namespace BrickGame.Scripts.Effects
             }
         }
 
+        public bool Force;
         [Header("Blackout setup")]
         [Range(0, 1)]
         public float Intensivity = 1F;
+        [Header("Speed of colors mixing")]
+        [Range(0, 4)]
+        public float MixingSpeed = 1F;
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
@@ -57,6 +61,8 @@ namespace BrickGame.Scripts.Effects
         // ReSharper disable InconsistentNaming
         const string _Intensivity = "_Intensivity";
         const string _PaletteTex = "_PaletteTex";
+        const string _Palette2Tex = "_Palette2Tex";
+        const string _Mixing = "_Mixing";
         // ReSharper restore InconsistentNaming
 
         private bool _texUp2Data;
@@ -68,7 +74,10 @@ namespace BrickGame.Scripts.Effects
         [SerializeField]
         private Color _c2;
 
-        private Texture2D _texture;
+        private int _firstTexutre;
+        private int _secondTexutre;
+        private float _mixing;
+        private Texture2D[] _textures;
         private Material _mat;
         //================================ Private|Protected methods ================================
         private void OnEnable()
@@ -76,13 +85,16 @@ namespace BrickGame.Scripts.Effects
             if (_mat == null)
             {
                 //Create texture for palette drawing
-                _texture = new Texture2D(3, 1, TextureFormat.RGB24, false)
+                _textures = new[]
                 {
-                    wrapMode = TextureWrapMode.Clamp,
-                    filterMode = FilterMode.Point,
-                    anisoLevel = 0
+                    SetPixels(CreateTexture(3, 1), ref _c0, ref _c1, ref _c2),
+                    SetPixels(CreateTexture(3, 1), ref _c0, ref _c1, ref _c2)
                 };
                 Shader shader = Shader.Find(ShaderName);
+                _firstTexutre = 0;
+                _secondTexutre = 1;
+                _mixing = 1;
+                _texUp2Data = true;
                 _mat = new Material(shader);
             }
             _texUp2Data = false;
@@ -92,28 +104,66 @@ namespace BrickGame.Scripts.Effects
         {
             if (_mat != null)
             {
-                DestroyImmediate(_texture);
+                foreach (Texture2D texture in _textures)
+                    DestroyImmediate(texture);
                 DestroyImmediate(_mat);
             }
         }
 
+        private void Update()
+        {
+            if (_texUp2Data)
+            {
+                if(_mixing >= 1.0)return;
+                _mixing = Mathf.MoveTowards(_mixing, 1, Time.deltaTime * MixingSpeed);
+                return;
+            }
+            //Refresh color palette befor sending to shader
+            if (!Force)
+            {
+                //swap textures
+                var temp = _firstTexutre;
+                _firstTexutre = _secondTexutre;
+                _secondTexutre = temp;
+                _mixing = 0;
+            }
+            else
+                _mixing = 1;
+            //update textures
+            SetPixels(_textures[_secondTexutre], ref _c0, ref _c1, ref _c2);
+            _texUp2Data = true;
+            Force = false;
+        }
+
         private void OnRenderImage(RenderTexture src, RenderTexture dst)
         {
-            if (!_texUp2Data)
-            {
-                //Refresh color palette befor sending to shader
-                _texture.SetPixel(0, 0, _c0);
-                _texture.SetPixel(1, 0, _c1);
-                _texture.SetPixel(2, 0, _c2);
-                _texture.Apply(false);
-                _texUp2Data = true;
-            }
             //Set values to shader
+            _mat.SetFloat(_Mixing, _mixing);
             _mat.SetFloat(_Intensivity, Intensivity);
             //Render effect
-            _mat.SetTexture(_PaletteTex, _texture);
+            _mat.SetTexture(_PaletteTex, _textures[_firstTexutre]);
+            _mat.SetTexture(_Palette2Tex, _textures[_secondTexutre]);
             Graphics.Blit(src, dst, _mat);
+        }
 
+        private Texture2D SetPixels(Texture2D texture, ref Color c0, ref Color c1, ref Color c2)
+        {
+            texture.SetPixel(0, 0, c0);
+            texture.SetPixel(1, 0, c1);
+            texture.SetPixel(2, 0, c2);
+            texture.Apply(false);
+            return texture;
+        }
+
+        private Texture2D CreateTexture(int w, int h)
+        {
+            var texture = new Texture2D(w, h, TextureFormat.RGB24, false)
+            {
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Point,
+                anisoLevel = 0
+            };
+            return texture;
         }
     }
 }

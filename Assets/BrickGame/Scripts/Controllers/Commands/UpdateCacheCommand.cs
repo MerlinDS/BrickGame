@@ -34,8 +34,8 @@ namespace BrickGame.Scripts.Controllers.Commands
             CacheModel cacheModel = Context.GetActor<CacheModel>();
             if (Notification == GameNotification.ColorChanged)
             {
-                ColorPalleteManager colorPalleteManager = Context.GetActor<ColorPalleteManager>();
-                cacheModel.ColorPaletteIndex = colorPalleteManager.ColorPaletteIndex;
+                ColorPaletteManager colorPaletteManager = Context.GetActor<ColorPaletteManager>();
+                cacheModel.ColorPaletteIndex = colorPaletteManager.ColorPaletteIndex;
                 return;
             }
             if (Notification == GameNotification.MuteSound)

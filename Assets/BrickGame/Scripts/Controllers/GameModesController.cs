@@ -89,22 +89,7 @@ namespace BrickGame.Scripts.Controllers
             Debug.LogFormat("Scene {0} loaded", scene.name);
             CurrentScene = scene.name;
             Context.GetActor<UserControlsManager>().RefreshControllers();
-            Context.GetActor<ColorPalleteManager>().UpdateColors(true);
-            //Assign main camera to canvases
-            GameObject camObj = GameObject.FindGameObjectWithTag(SRTags.MainCamera);
-            if (camObj == null)
-            {
-                Debug.LogWarning("Main camera was not found!");
-                return;
-            }
-            Camera cam = camObj.GetComponent<Camera>();
-            Canvas[] objs = FindObjectsOfType<Canvas>();
-            foreach (Canvas canvas in objs)
-            {
-                if(canvas.renderMode == RenderMode.ScreenSpaceOverlay)continue;
-                Debug.Log(canvas);
-                canvas.worldCamera = cam;
-            }
+            Context.GetActor<ColorPaletteManager>().UpdateColors(true);
         }
 
     }
