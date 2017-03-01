@@ -56,13 +56,14 @@ namespace BrickGame.Scripts.Effects
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================
-        const string ShaderName = "Hidden/PaletteSwapping";
+        const string ShaderName = "BrickGame/PaletteSwapping";
         //Shader fields
         // ReSharper disable InconsistentNaming
         const string _Intensivity = "_Intensivity";
         const string _PaletteTex = "_PaletteTex";
         const string _Palette2Tex = "_Palette2Tex";
         const string _Mixing = "_Mixing";
+        const string _Color = "_Color";
         // ReSharper restore InconsistentNaming
 
         private bool _texUp2Data;
@@ -140,7 +141,7 @@ namespace BrickGame.Scripts.Effects
             //Set values to shader
             _mat.SetFloat(_Mixing, _mixing);
             _mat.SetFloat(_Intensivity, Intensivity);
-            _mat.SetColor("_Color", _c0);
+            _mat.SetColor(_Color, _c0);
             //Render effect
             _mat.SetTexture(_PaletteTex, _textures[_firstTexutre]);
             _mat.SetTexture(_Palette2Tex, _textures[_secondTexutre]);

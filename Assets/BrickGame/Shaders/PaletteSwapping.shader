@@ -1,4 +1,4 @@
-﻿Shader "Hidden/PaletteSwapping"
+﻿Shader "BrickGame/PaletteSwapping"
 {
 	Properties
 	{
@@ -49,7 +49,7 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-                float x = 1 - tex2D(_MainTex, i.uv).r;
+                half2 x = 1 - tex2D(_MainTex, i.uv);
                 fixed4 p0 = tex2D(_PaletteTex, x);
                 fixed4 p1 = tex2D(_Palette2Tex, x);
                 return lerp(p0, p1, _Mixing) * ( 1 - _Intensivity * i.uv.y);
