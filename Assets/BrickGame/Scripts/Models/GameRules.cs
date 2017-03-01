@@ -19,7 +19,7 @@ namespace BrickGame.Scripts.Models
         //================================       Public Setup       =================================
         [Header("View setup")]
         [Tooltip("Width of the playground in cells")]
-        public int Width;
+        public int Width = 10;
 
         [Tooltip("Hight of the playground in cells")]
         public int Height;
@@ -76,7 +76,8 @@ namespace BrickGame.Scripts.Models
         /// <exception cref="ArgumentException">Out of the rules score index</exception>
         public int CalculateScore(int lines)
         {
-            if (lines > Score.Length)
+            if (lines == 0) return 0;
+            if (lines >= Score.Length)
                 throw new ArgumentException("Out of the rules score index");
             return Score[lines - 1];
         }
