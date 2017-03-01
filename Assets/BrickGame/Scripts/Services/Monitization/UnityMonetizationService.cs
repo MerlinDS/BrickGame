@@ -4,7 +4,6 @@
 // <author>Andrew Salomatin</author>
 // <date>03/01/2017 12:48</date>
 
-using UnityEditor.Advertisements;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
@@ -30,7 +29,7 @@ namespace BrickGame.Scripts.Services.Monitization
         /// <inheritdoc />
         protected override void Initialize(bool isRewarded, out bool isAvailable)
         {
-            isAvailable = Advertisement.isSupported && AdvertisementSettings.IsPlatformEnabled(Application.platform);
+            isAvailable = Advertisement.isSupported;
             _zoneId = isRewarded ? RevardedVideo : SimpleVideo;
         }
 
