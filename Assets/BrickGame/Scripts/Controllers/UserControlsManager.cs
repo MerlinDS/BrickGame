@@ -60,7 +60,7 @@ namespace BrickGame.Scripts.Controllers
         {
             _began = new Vector2();
             _controls = new List<IFigureControls>();
-            _input = Context.GetActor<IInputAdapter>();
+            _input = Context.GetActor<InputManager>().GetInputAdapter();
             Context.AddListener(GameState.Start, GameNotificationHandler);
             Context.AddListener(GameState.Pause, GameNotificationHandler);
             Context.AddListener(FigureNotification.Changed, GameNotificationHandler);

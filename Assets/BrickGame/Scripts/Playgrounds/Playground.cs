@@ -102,6 +102,7 @@ namespace BrickGame.Scripts.Playgrounds
             //Start new game
             BroadcastNofitication(GameState.Start,
                 new SessionDataProvider(Rules.name, SessionName));
+            //BroadcastNofitication(GameState.Pause);
         }
 
         private void AddStrategy(StrategySetup setup)

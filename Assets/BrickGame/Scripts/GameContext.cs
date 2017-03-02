@@ -8,7 +8,6 @@ using BrickGame.Scripts.Controllers.Commands;
 using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Utils.Input;
 using MiniMoca;
-using UnityEngine;
 
 namespace BrickGame.Scripts
 {
@@ -22,12 +21,7 @@ namespace BrickGame.Scripts
         /// <inheritdoc />
         protected internal override void Initialize()
         {
-            //Add user input adapter as an actor to context
-            IInputAdapter adapter = Input.touchSupported
-                ?  (IInputAdapter) new TouchInputAdapter()
-                : new MouseInputAdapter();
-            Debug.Log("Input adapter was intialized: " + adapter);
-            MapInstance(adapter, typeof(IInputAdapter));
+            MapInstance(new InputManager());
             //Add score model to context
             MapInstance<CacheModel>();
             MapInstance<RestoreModel>();

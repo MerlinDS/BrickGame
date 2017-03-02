@@ -4,7 +4,6 @@
 // <author>Andrew Salomatin</author>
 // <date>02/13/2017 13:46</date>
 
-using MiniMoca;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Utils.Input
@@ -36,7 +35,7 @@ namespace BrickGame.Scripts.Utils.Input
     /// IInputAdapter - Adapting user inputs for ingame systems usage.
     /// Provide safe and muliti-platform input for the game.
     /// </summary>
-    public interface IInputAdapter : IMocaActor
+    public interface IInputAdapter
     {
         //================================       Getters|Setters       =================================
 
@@ -62,5 +61,7 @@ namespace BrickGame.Scripts.Utils.Input
         /// Reset input form current touch.
         /// </summary>
         void Reset();
+
+
     }
 }
