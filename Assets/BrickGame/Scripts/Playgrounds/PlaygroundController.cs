@@ -32,6 +32,7 @@ namespace BrickGame.Scripts.Playgrounds
         private PlaygroundDrawer _drawer;
         private BricksBlinkingEffectBehaviour _bricksBlinking;
         private SceneBlinkingEffect _sceneBlinking;
+        private ShakeScreenEffect _screenShake;
         private IStrategy[] _strategies;
         //================================      Public methods      =================================
         /// <inheritdoc />
@@ -39,6 +40,11 @@ namespace BrickGame.Scripts.Playgrounds
         {
             _matrix = (PlaygroundMatrix)matrix ?? new PlaygroundMatrix(0, 0);
             _briks = new List<Brick>();
+            foreach (Camera cam in Camera.allCameras)
+            {
+                _screenShake = cam.GetComponent<ShakeScreenEffect>();
+                if(_screenShake != null)break;
+            }
             _bricksBlinking = GetComponent<BricksBlinkingEffectBehaviour>();
             _sceneBlinking = GetComponent<SceneBlinkingEffect>();
             _drawer = GetComponentInChildren<PlaygroundDrawer>();
@@ -51,6 +57,8 @@ namespace BrickGame.Scripts.Playgrounds
         {
             if(_sceneBlinking != null)
                 _sceneBlinking.Execute();
+            if(_screenShake)
+                _screenShake.Execute(0.03F);
         }
         /// <summary>
         ///

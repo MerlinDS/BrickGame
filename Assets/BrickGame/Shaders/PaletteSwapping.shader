@@ -55,6 +55,11 @@
                 return uv;
             }
 
+            /*float rand(float2 seed)
+            {
+                //return frac(sin(dot(seed ,float2(12.9898,78.233))) * 43758.5453) * 0.5 - 1;
+            }*/
+
 			fixed4 frag (v2f i) : SV_Target
 			{
                 i.uv = fishEye(i.uv, _Intensivity);

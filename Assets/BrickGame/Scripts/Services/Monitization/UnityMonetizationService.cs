@@ -5,8 +5,9 @@
 // <date>03/01/2017 12:48</date>
 
 using UnityEngine;
+#if UNITY_ADS
 using UnityEngine.Advertisements;
-
+#endif
 namespace BrickGame.Scripts.Services.Monitization
 {
     /// <summary>
@@ -29,10 +30,15 @@ namespace BrickGame.Scripts.Services.Monitization
         /// <inheritdoc />
         protected override void Initialize(bool isRewarded, out bool isAvailable)
         {
+#if UNITY_ADS
             isAvailable = Advertisement.isSupported;
             _zoneId = isRewarded ? RevardedVideo : SimpleVideo;
+#else
+            isAvailable = false;
+#endif
         }
 
+#if UNITY_ADS
         /// <inheritdoc />
         protected override void TryToShowVideo()
         {
@@ -62,5 +68,12 @@ namespace BrickGame.Scripts.Services.Monitization
             IsShowing = false;
             FinishShow();
         }
+#else
+
+        protected override void TryToShowVideo()
+        {
+            FinishShow();
+        }
+#endif
     }
 }
