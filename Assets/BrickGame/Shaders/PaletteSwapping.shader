@@ -47,12 +47,24 @@
             sampler2D _PaletteTex;
             sampler2D _Palette2Tex;
 
+            float2 fishEye(float2 uv, float i)
+            {
+                uv -= float2(0.5,0.5);
+                uv = uv * 1.2 * (0.833 + i * pow(uv.x, 2) * pow(uv.y, 2));
+                uv += float2(0.5,0.5);
+                return uv;
+            }
+
 			fixed4 frag (v2f i) : SV_Target
 			{
+                i.uv = fishEye(i.uv, 0.3);
                 half2 x = 1 - tex2D(_MainTex, i.uv);
                 fixed4 p0 = tex2D(_PaletteTex, x);
                 fixed4 p1 = tex2D(_Palette2Tex, x);
-                return lerp(p0, p1, _Mixing) * ( 1 - _Intensivity * i.uv.y);
+                p0 = lerp(p0, p1, _Mixing);
+			    p0 *= (1 - 1.1 * pow(i.uv.y - 0.5, 2)) * (1 - 1.1 * pow(i.uv.x - 0.5, 2));
+                p0 *= (52 + (i.uv.y * 10 + _Time.x * 4) % 1) / (53);
+                return p0;
 			}
 			ENDCG
 		}
