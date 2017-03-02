@@ -5,6 +5,7 @@
 // <date>03/02/2017 21:54</date>
 
 using System.Collections.Generic;
+using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Utils.Input;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,17 +27,24 @@ namespace BrickGame.Scripts.UI.Components
         private IInputAdapter _input;
 
         private Animator _animator;
+        private ScoreModel _scoreModel;
 
         private bool _tapped;
 
         private bool _onPause;
+        private bool _startNext;
         //================================      Public methods      =================================
         public void ShowNext()
         {
             _tapped = false;
             if (_queue.Count == 0)
             {
-                if(_onPause)BroadcastNofitication(GameState.Pause);
+                if (_startNext)
+                {
+                    _startNext = false;
+                    BroadcastNofitication(GameState.Start);
+                }
+                else if(_onPause)BroadcastNofitication(GameState.Pause);
                 gameObject.SetActive(false);
                 return;
             }
@@ -48,8 +56,9 @@ namespace BrickGame.Scripts.UI.Components
         private void Awake()
         {
             _queue = new Queue<string>();
-            _input = Context.GetActor<InputManager>().GetInputAdapter();
             _animator = GetComponent<Animator>();
+            _scoreModel = Context.GetActor<ScoreModel>();
+            _input = Context.GetActor<InputManager>().GetInputAdapter();
             Context.AddListener(GameState.Pause, Handler);
             Context.AddListener(GameState.End, Handler);
             gameObject.SetActive(false);
@@ -81,7 +90,8 @@ namespace BrickGame.Scripts.UI.Components
                     _onPause = !_onPause;
                     break;
                 case GameState.End:
-                    _queue.Enqueue("You score:\n1000000000");
+                    _queue.Enqueue("You score:\n" + _scoreModel[ScoreModel.FieldName.Score]);
+                    _startNext = true;
                     break;
             }
             if (gameObject.activeInHierarchy)return;
