@@ -57,7 +57,7 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-                i.uv = fishEye(i.uv, 0.3);
+                i.uv = fishEye(i.uv, _Intensivity);
                 half2 x = 1 - tex2D(_MainTex, i.uv);
                 fixed4 p0 = tex2D(_PaletteTex, x);
                 fixed4 p1 = tex2D(_Palette2Tex, x);

@@ -47,8 +47,8 @@ namespace BrickGame.Scripts.Effects
         }
 
         public bool Force;
-        [Header("Blackout setup")]
-        [Range(0, 1)]
+        [Header("Fish eye setup")]
+        [Range(-1, 1)]
         public float Intensivity = 1F;
         [Header("Speed of colors mixing")]
         [Range(0, 4)]

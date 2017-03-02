@@ -30,10 +30,6 @@ namespace BrickGame.Scripts.Models
         [Tooltip("Index of the color palette")]
         public int ColorPalette;
 
-        [Tooltip("Instensivity of fish eye effect")]
-        [Range(-1, 1)]
-        public float FishEye;
-
         [Tooltip("Sprite for bricks drawing")]
         public Sprite BricksSprite;
 

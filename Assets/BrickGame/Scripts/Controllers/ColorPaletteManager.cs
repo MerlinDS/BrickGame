@@ -94,7 +94,6 @@ namespace BrickGame.Scripts.Controllers
             UpdateColors(force);
             _index = index;
             BroadcastNofitication(GameNotification.ColorChanged);
-
         }
         //================================ Private|Protected methods ================================
         private void Start()
