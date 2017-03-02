@@ -22,18 +22,21 @@ namespace BrickGame.Scripts.UI.Components
         public Transform Selector;
         //================================    Systems properties    =================================
         private GameModeManager _manager;
+        private ColorPaletteManager _colorPalette;
 
         //================================      Public methods      =================================
         [UsedImplicitly]
         public void OnClick(int index = 0)
         {
             _manager.ChangeMode(index);
+            _colorPalette.ChangePalette(_manager.CurrentRules.ColorPalette);
             UpdateView();
         }
         //================================ Private|Protected methods ================================
         private void Start()
         {
             _manager = Context.GetActor<GameModeManager>();
+            _colorPalette = Context.GetActor<ColorPaletteManager>();
             UpdateView();
         }
 

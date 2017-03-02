@@ -54,6 +54,7 @@ namespace BrickGame.Scripts.Controllers
             var bricksPools = GetComponentsInChildren<IBricksSpriteChanger>();
             foreach (IBricksSpriteChanger pool in bricksPools)
                 pool.ChangeSprite(pool.Image ? CurrentRules.BricksImage : CurrentRules.BricksSprite);
+
             BroadcastNofitication(GameNotification.ModeChanged);
         }
 
