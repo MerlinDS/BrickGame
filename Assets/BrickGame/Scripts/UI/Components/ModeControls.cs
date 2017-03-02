@@ -1,4 +1,4 @@
-﻿// <copyright file="SpriteSwitchUIControls.cs" company="Near Fancy">
+﻿// <copyright file="ModeControls.cs" company="Near Fancy">
 // Copyright (c) 2017 All Rights Reserved
 // </copyright>
 // <author>Andrew Salomatin</author>
@@ -6,17 +6,20 @@
 
 using BrickGame.Scripts.Controllers;
 using JetBrains.Annotations;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace BrickGame.Scripts.UI.Components
 {
     /// <summary>
-    /// SpriteSwitchUIControls
+    /// ModeControls
     /// </summary>
-    public class SpriteSwitchUIControls : GameBehaviour
+    public class ModeControls : GameBehaviour
     {
         //================================       Public Setup       =================================
+        public Text Label;
 
+        public Transform Selector;
         //================================    Systems properties    =================================
         private GameModeManager _manager;
 
@@ -25,25 +28,26 @@ namespace BrickGame.Scripts.UI.Components
         public void OnClick(int index = 0)
         {
             _manager.ChangeMode(index);
-            UpdateButtons();
+            UpdateView();
         }
         //================================ Private|Protected methods ================================
         private void Start()
         {
             _manager = Context.GetActor<GameModeManager>();
-            UpdateButtons();
+            UpdateView();
         }
 
-        private void UpdateButtons()
+        private void UpdateView()
         {
-            int n = transform.childCount;
+            int n = Selector.childCount;
             for (int i = 0; i < n; i++)
             {
-                var child = transform.GetChild(i);
+                var child = Selector.GetChild(i);
                 Button button = child.GetComponent<Button>();
                 if(button == null)continue;
                 button.interactable = _manager.Index != i;
             }
+            Label.text = _manager.CurrentRules.Name;
         }
 
     }

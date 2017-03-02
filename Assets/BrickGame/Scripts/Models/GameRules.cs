@@ -17,6 +17,9 @@ namespace BrickGame.Scripts.Models
     public class GameRules : ScriptableObject
     {
         //================================       Public Setup       =================================
+        [Tooltip("Visual name of the mode")]
+        public string Name;
+
         [Header("View setup")]
         [Tooltip("Width of the playground in cells")]
         public int Width = 10;
