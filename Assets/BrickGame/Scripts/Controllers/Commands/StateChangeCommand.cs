@@ -48,7 +48,7 @@ namespace BrickGame.Scripts.Controllers.Commands
                 Debug.LogWarningFormat("Session state {0} was not update to {1}", previous, next);
                 return;
             }
-            Debug.LogFormat("New session state is {0}", sessionModel.State);
+            Debug.LogFormat("Current state is {0}", sessionModel.State);
         }
 
         //================================ Private|Protected methods ================================
