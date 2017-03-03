@@ -39,6 +39,7 @@ namespace BrickGame.Scripts.UI
         private ButtonState _state;
 
         private Button _button;
+        private SessionModel _sessionModel;
 
         //================================      Public methods      =================================
         /// <summary>
@@ -57,13 +58,14 @@ namespace BrickGame.Scripts.UI
         private void Awake()
         {
             ResetState();
-            Context.AddListener(StateNotification.Start, StateHandler);
-            Context.AddListener(StateNotification.Pause, StateHandler);
-            Context.AddListener(StateNotification.End, StateHandler);
+            _sessionModel = Context.GetActor<SessionModel>();
+            _sessionModel.EndEvent += ResetState;
+            _sessionModel.StartEvent += ChangeState;
+            _sessionModel.PauseEvent += ChangeState;
             _button = GetComponent<Button>();
             _button.onClick.AddListener(() =>
             {
-                BroadcastNofitication(Context.GetActor<SessionModel>()
+                BroadcastNofitication(_sessionModel
                     .Any(SessionState.None, SessionState.Ended)
                     ? StateNotification.Start
                     : StateNotification.Pause);
@@ -71,34 +73,26 @@ namespace BrickGame.Scripts.UI
                 //BroadcastNofitication(StateNotification.Start);
             });
         }
-
-
         /// <summary>
         /// Remove listeners form the button
         /// </summary>
         private void OnDestroy()
         {
             _button.onClick.RemoveAllListeners();
-            Context.RemoveListener(StateNotification.Start, StateHandler);
-            Context.RemoveListener(StateNotification.End, StateHandler);
-            Context.RemoveListener(StateNotification.Pause, StateHandler);
+            _sessionModel.EndEvent -= ResetState;
+            _sessionModel.StartEvent -= ChangeState;
+            _sessionModel.PauseEvent -= ChangeState;
         }
 
-        /// <summary>
-        /// Handle game notifications from context and change button state
-        /// </summary>
-        /// <param name="state">Name of a game state</param>
-        private void StateHandler(string state)
+        private void ChangeState()
         {
-            if (state == StateNotification.End) ResetState();
-            else ChangeState();
+            ChangeState(false);
         }
-
         /// <summary>
         /// Cahange button statte
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void ChangeState()
+        private void ChangeState(bool onPause)
         {
             switch (_state)
             {

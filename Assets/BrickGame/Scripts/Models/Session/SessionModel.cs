@@ -4,6 +4,7 @@
 // <author>Andrew Salomatin</author>
 // <date>03/03/2017 13:12</date>
 
+using System;
 using MiniMoca;
 
 namespace BrickGame.Scripts.Models.Session
@@ -13,6 +14,18 @@ namespace BrickGame.Scripts.Models.Session
     /// </summary>
     public class SessionModel : IMocaActor
     {
+        /// <summary>
+        /// Will be invoked after start execution
+        /// </summary>
+        public event Action StartEvent;
+        /// <summary>
+        /// Will be invoked after end execution
+        /// </summary>
+        public event Action EndEvent;
+        /// <summary>
+        /// Will be invoked on Pause notification
+        /// </summary>
+        public event Action<bool> PauseEvent;
         //================================       Public Setup       =================================
         /// <summary>
         /// Get current state of the session.
@@ -40,6 +53,7 @@ namespace BrickGame.Scripts.Models.Session
                 if (state != SessionState.Started) return false;
                 //Mark session as started
                 _state = SessionState.Started;
+                BroadcastStartEvent();
                 return true;
             }
             //Update to None (clean session)
@@ -49,6 +63,7 @@ namespace BrickGame.Scripts.Models.Session
                 _state = state;
                 return true;
             }
+            bool result = true;
             //Update started session
             if ((_state & state) == state)
             {
@@ -62,22 +77,29 @@ namespace BrickGame.Scripts.Models.Session
                 if (state == SessionState.OnPause)
                 {
                     _state ^= SessionState.OnPause;
-                    return true;
+                    BroadcastPauseEvent(false);
                 }
-                if(state == SessionState.Started &&
-                   (_state & SessionState.Ended) == SessionState.Ended)
+                else if (state == SessionState.Started &&
+                    (_state & SessionState.Ended) == SessionState.Ended)
                 {
                     //recursive update and starting new session
                     TryUpdateState(SessionState.None);
-                    return TryUpdateState(SessionState.Started);
+                    result = TryUpdateState(SessionState.Started);
                 }
-                return false;
+                else //Already has this flag
+                    result = false;
             }
-            //The new state flag wasn't added yet.
-            _state |= state;
-            return true;
+            else
+            {
+                //The new state flag wasn't added yet.
+                _state |= state;
+                if(state == SessionState.OnPause)
+                    BroadcastPauseEvent(true);
+                else if(state == SessionState.Ended)
+                    BroadcastEndEvent();
+            }
+            return result;
         }
-
         /// <summary>
         /// Check if session model has states
         /// </summary>
@@ -121,6 +143,33 @@ namespace BrickGame.Scripts.Models.Session
 
         }
 
+        /// <summary>
+        /// Safe broadcasing of pause event
+        /// </summary>
+        /// <param name="onPause"></param>
+        private void BroadcastPauseEvent(bool onPause)
+        {
+            Action<bool> pauseEvent = PauseEvent;
+            if(pauseEvent != null)pauseEvent.Invoke(onPause);
+        }
+
+        /// <summary>
+        /// Safe broadcasing of start event
+        /// </summary>
+        private void BroadcastStartEvent()
+        {
+            Action startEvent = StartEvent;
+            if(startEvent != null)startEvent.Invoke();
+        }
+
+        /// <summary>
+        /// Safe broadcasing of end event
+        /// </summary>
+        private void BroadcastEndEvent()
+        {
+            Action endEvent = EndEvent;
+            if(endEvent != null)endEvent.Invoke();
+        }
 
     }
 }

@@ -29,7 +29,7 @@ namespace BrickGame.Scripts.Bricks
         /// Flag of the component validity
         /// </summary>
         private bool _valid;
-        private SessionModel _session;
+        private SessionModel _sessionModel;
         //================================      Public methods      =================================
         public bool Validate()
         {
@@ -69,10 +69,10 @@ namespace BrickGame.Scripts.Bricks
         /// </summary>
         private void Start()
         {
-            _session = Context.GetActor<SessionModel>();
-            Context.AddListener(StateNotification.Start, StateHandler);
-            Context.AddListener(StateNotification.Pause, StateHandler);
-            Context.AddListener(StateNotification.End, StateHandler);
+            _sessionModel = Context.GetActor<SessionModel>();
+            _sessionModel.StartEvent += StateHandler;
+            _sessionModel.PauseEvent += StateHandler;
+            _sessionModel.EndEvent += StateHandler;
         }
 
         /// <summary>
@@ -80,18 +80,20 @@ namespace BrickGame.Scripts.Bricks
         /// </summary>
         private void OnDestroy()
         {
-            Context.RemoveListener(StateNotification.Start, StateHandler);
-            Context.RemoveListener(StateNotification.Pause, StateHandler);
-            Context.RemoveListener(StateNotification.End, StateHandler);
+            _sessionModel.StartEvent -= StateHandler;
+            _sessionModel.PauseEvent -= StateHandler;
+            _sessionModel.EndEvent -= StateHandler;
         }
 
-        private void StateHandler(string state)
+        private void StateHandler()
+        {
+            StateHandler(_sessionModel.Has(SessionState.Ended));
+        }
+
+        private void StateHandler(bool onPause)
         {
             if(!gameObject.activeInHierarchy)return;
-            /*if (state == StateNotification.Start)
-            {
-            }*/
-            enabled = !_session.Any(SessionState.OnPause, SessionState.Ended);
+            enabled = !onPause;
         }
 
         /// <summary>

@@ -67,9 +67,9 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         {
             _model = Context.GetActor<ScoreModel>();
             _sessionModel = Context.GetActor<SessionModel>();
-            Context.AddListener(StateNotification.Start, StateHandler);
-            Context.AddListener(StateNotification.End, StateHandler);
-            Context.AddListener(StateNotification.Pause, StateHandler);
+            _sessionModel.StartEvent += StateHandler;
+            _sessionModel.PauseEvent += StateHandler;
+            _sessionModel.EndEvent += StateHandler;
             Context.AddListener(GameNotification.ScoreUpdated, ScoreHandler);
             enabled = false;
         }
@@ -77,14 +77,25 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
 
         private void OnDestroy()
         {
-            _model = null;
-            _figure = null;
-            _playground = null;
-            _sessionModel = null;
-            Context.RemoveListener(StateNotification.Start, StateHandler);
-            Context.RemoveListener(StateNotification.End, StateHandler);
-            Context.RemoveListener(StateNotification.Pause, StateHandler);
+            _sessionModel.StartEvent -= StateHandler;
+            _sessionModel.PauseEvent -= StateHandler;
+            _sessionModel.EndEvent -= StateHandler;
             Context.RemoveListener(GameNotification.ScoreUpdated, ScoreHandler);
+            _sessionModel = null;
+            _playground = null;
+            _figure = null;
+            _model = null;
+        }
+
+        private void StateHandler()
+        {
+            StateHandler(_sessionModel.Has(SessionState.Ended));
+        }
+
+        private void StateHandler(bool onPause)
+        {
+            if(onPause)Pause();
+            else Resume();
         }
 
         private void ScoreHandler(string s)
@@ -94,11 +105,6 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
             UpdateSpeed(factor);
         }
 
-        private void StateHandler(string s)
-        {
-            if(_sessionModel.Any(SessionState.Ended, SessionState.OnPause))Pause();
-            else Resume();
-        }
 
         private void LateUpdate()
         {

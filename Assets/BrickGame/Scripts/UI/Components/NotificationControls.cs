@@ -65,39 +65,32 @@ namespace BrickGame.Scripts.UI.Components
             _scoreModel = Context.GetActor<ScoreModel>();
             _sessionModel = Context.GetActor<SessionModel>();
             _input = Context.GetActor<InputManager>().GetInputAdapter();
-            Context.AddListener(StateNotification.Pause, Handler);
-            Context.AddListener(StateNotification.End, Handler);
+            _sessionModel.PauseEvent += Handler;
+            _sessionModel.EndEvent += Handler;
             gameObject.SetActive(false);
         }
-
         /// <summary>
         /// Destroy component, remove listener
         /// </summary>
         private void OnDestroy()
         {
-            Context.RemoveListener(StateNotification.Pause, Handler);
-            Context.RemoveListener(StateNotification.End, Handler);
+            _sessionModel.PauseEvent -= Handler;
+            _sessionModel.EndEvent -= Handler;
         }
 
-        /// <summary>
-        /// Handle notifications from context
-        /// </summary>
-        /// <param name="n">Notification type</param>
-        private void Handler(string n)
+        private void Handler()
         {
-            switch (n)
-            {
-                case StateNotification.Pause:
-                    if (_sessionModel.Has(SessionState.OnPause))
-                        _queue.Enqueue(PauseMessage);
-                    break;
-                case StateNotification.End:
-                    _queue.Enqueue(ScoreMessage + _scoreModel[ScoreModel.FieldName.Score]);
-                    break;
-            }
+            _queue.Enqueue(ScoreMessage + _scoreModel[ScoreModel.FieldName.Score]);
+            Handler(false);
+        }
+
+        private void Handler(bool onPause)
+        {
+            if(onPause)_queue.Enqueue(PauseMessage);
             if (gameObject.activeInHierarchy) return;
             ShowNext();
         }
+
         /// <summary>
         /// User input detection
         /// </summary>

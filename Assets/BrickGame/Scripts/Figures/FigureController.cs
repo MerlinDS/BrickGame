@@ -4,9 +4,9 @@
 // <author>Andrew Salomatin</author>
 // <date>02/19/2017 17:30</date>
 
-using BrickGame.Scripts.Models;
 using System.Collections;
 using BrickGame.Scripts.Controllers;
+using BrickGame.Scripts.Models;
 using BrickGame.Scripts.Models.Session;
 using BrickGame.Scripts.Utils;
 using JetBrains.Annotations;
@@ -53,17 +53,43 @@ namespace BrickGame.Scripts.Figures
             GameRules rules = Context.GetActor<GameModeManager>().CurrentRules;
             _direction = (int)rules.FallingDirection;
             SpawnPoint = rules.SpawPosition;
-            Context.AddListener(StateNotification.Start, StateHandler);
-            Context.AddListener(StateNotification.Pause, StateHandler);
+            //Add listeners
+            _sessionModel.StartEvent += StartHandler;
+            _sessionModel.PauseEvent += PauseHandler;
             enabled = false;
         }
 
+        /// <summary>
+        /// Remove listeners
+        /// </summary>
         private void OnDestroy()
         {
-            Context.RemoveListener(StateNotification.Start, StateHandler);
-            Context.RemoveListener(StateNotification.Pause, StateHandler);
+            _sessionModel.StartEvent -= StartHandler;
+            _sessionModel.PauseEvent -= PauseHandler;
+            _sessionModel = null;
+            _controls = null;
+            _builder = null;
         }
 
+        /// <summary>
+        /// Handle start notification
+        /// </summary>
+        private void StartHandler()
+        {
+            if(!gameObject.activeInHierarchy)return;
+            _position = Step;
+            PauseHandler(false);
+        }
+
+        /// <summary>
+        /// Handle pause event
+        /// </summary>
+        /// <param name="onPause"></param>
+        private void PauseHandler(bool onPause)
+        {
+            if(!gameObject.activeInHierarchy)return;
+            enabled = !onPause;
+        }
         /// <summary>
         /// Accelerate figure speed
         /// </summary>
@@ -89,15 +115,6 @@ namespace BrickGame.Scripts.Figures
             _position = 0;
             if (!enabled) enabled = true;
         }
-
-        private void StateHandler(string state = null)
-        {
-            if(!gameObject.activeInHierarchy)return;
-            if (state == StateNotification.Start)
-                _position = Step;
-            enabled = !_sessionModel.Has(SessionState.OnPause);
-        }
-
         /// <summary>
         /// Update figureMatrix position
         /// </summary>

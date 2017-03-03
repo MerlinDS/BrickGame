@@ -31,15 +31,15 @@ namespace BrickGame.Scripts
             CommandMap.MapCommand<RestoreGameCommand>(StateNotification.Restore);
             CommandMap.MapCommand<UpdateScoreCommand>(GameNotification.ScoreUpdated);
             CommandMap.MapCommand<StartGameCommand>(StateNotification.Start);
-            //Session command
-            CommandMap.MapCommand<StateChangeCommand>(StateNotification.Start,
-                StateNotification.End, StateNotification.Pause, StateNotification.Close);
             //Cache command
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound,
                 GameNotification.ColorChanged,
                 GameNotification.ScoreUpdated);
             CommandMap.MapCommand<UpdateCacheCommand>(StateNotification.End,
                 StateNotification.Pause, StateNotification.Close);
+            //Session command MUST BE THE LAST COMMAND IN THE EXECUTION STACK
+            CommandMap.MapCommand<StateChangeCommand>(StateNotification.Start,
+                StateNotification.End, StateNotification.Pause, StateNotification.Close);
         }
     }
 }
