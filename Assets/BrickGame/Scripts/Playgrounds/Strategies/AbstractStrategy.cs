@@ -7,6 +7,7 @@
 using System;
 using BrickGame.Scripts.Figures;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Models.Session;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -29,6 +30,9 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         private Figure _figure;
         private Playground _playground;
         private ScoreModel _model;
+
+        private SessionModel _sessionModel;
+
         //================================      Public methods      =================================
         public void Initialize(StrategySetup setup)
         {
@@ -62,6 +66,7 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         private void Awake()
         {
             _model = Context.GetActor<ScoreModel>();
+            _sessionModel = Context.GetActor<SessionModel>();
             Context.AddListener(StateNotification.Start, StateHandler);
             Context.AddListener(StateNotification.End, StateHandler);
             Context.AddListener(StateNotification.Pause, StateHandler);
@@ -75,6 +80,7 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
             _model = null;
             _figure = null;
             _playground = null;
+            _sessionModel = null;
             Context.RemoveListener(StateNotification.Start, StateHandler);
             Context.RemoveListener(StateNotification.End, StateHandler);
             Context.RemoveListener(StateNotification.Pause, StateHandler);
@@ -90,19 +96,8 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
 
         private void StateHandler(string s)
         {
-            switch (s)
-            {
-                case StateNotification.Pause:
-                    if (OnPasue) Resume();
-                    else Pause();
-                    break;
-                case StateNotification.Start:
-                    Resume();
-                    break;
-                case StateNotification.End:
-                    Pause();
-                    break;
-            }
+            if(_sessionModel.Any(SessionState.Ended, SessionState.OnPause))Pause();
+            else Resume();
         }
 
         private void LateUpdate()

@@ -7,6 +7,7 @@
 using BrickGame.Scripts.Models;
 using System.Collections;
 using BrickGame.Scripts.Controllers;
+using BrickGame.Scripts.Models.Session;
 using BrickGame.Scripts.Utils;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -37,6 +38,7 @@ namespace BrickGame.Scripts.Figures
         private Coroutine _finisher;
         private FigureBuilder _builder;
         private IFigureControls _controls;
+        private SessionModel _sessionModel;
         //================================      Public methods      =================================
 
         //================================ Private|Protected methods ================================
@@ -47,6 +49,7 @@ namespace BrickGame.Scripts.Figures
         {
             _builder = GetComponent<FigureBuilder>();
             _controls = GetComponent<IFigureControls>();
+            _sessionModel = Context.GetActor<SessionModel>();
             GameRules rules = Context.GetActor<GameModeManager>().CurrentRules;
             _direction = (int)rules.FallingDirection;
             SpawnPoint = rules.SpawPosition;
@@ -90,15 +93,9 @@ namespace BrickGame.Scripts.Figures
         private void StateHandler(string state = null)
         {
             if(!gameObject.activeInHierarchy)return;
-//            Debug.Log("StartHandler");
             if (state == StateNotification.Start)
-            {
                 _position = Step;
-                enabled = true;
-            }
-//                ChangeFigure();
-            if (state == StateNotification.Pause)
-                enabled = !enabled;
+            enabled = !_sessionModel.Has(SessionState.OnPause);
         }
 
         /// <summary>

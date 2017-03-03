@@ -50,7 +50,6 @@ namespace BrickGame.Scripts.UI.Components
                 gameObject.SetActive(false);
                 return;
             }
-            Debug.Log("Notification shown");
             _message.text = _queue.Dequeue();
             gameObject.SetActive(true);
         }

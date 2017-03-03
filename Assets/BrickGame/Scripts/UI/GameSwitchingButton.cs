@@ -68,7 +68,7 @@ namespace BrickGame.Scripts.UI
                     ? StateNotification.Start
                     : StateNotification.Pause);
                 //TODO: Remove after tests
-                BroadcastNofitication(StateNotification.Start);
+                //BroadcastNofitication(StateNotification.Start);
             });
         }
 

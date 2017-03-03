@@ -5,6 +5,7 @@
 // <date>02/08/2017 16:23</date>
 
 using System.Collections.Generic;
+using BrickGame.Scripts.Models.Session;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Bricks
@@ -23,20 +24,12 @@ namespace BrickGame.Scripts.Bricks
         [SerializeField] [Tooltip("Content holder")]
         // ReSharper disable once InconsistentNaming
         protected Transform _content;
-
-        /// <inheritdoc />
-        public Brick BrickPrefab
-        {
-            get { return _brickPrefab; }
-            set { _brickPrefab = value; }
-        }
-
         //================================    Systems properties    =================================
         /// <summary>
         /// Flag of the component validity
         /// </summary>
         private bool _valid;
-
+        private SessionModel _session;
         //================================      Public methods      =================================
         public bool Validate()
         {
@@ -71,6 +64,35 @@ namespace BrickGame.Scripts.Bricks
             while (children.Count > 0) Destroy(children.Dequeue());
         }
         //================================ Private|Protected methods ================================
+        /// <summary>
+        /// Add listeners to drawer
+        /// </summary>
+        private void Start()
+        {
+            _session = Context.GetActor<SessionModel>();
+            Context.AddListener(StateNotification.Start, StateHandler);
+            Context.AddListener(StateNotification.Pause, StateHandler);
+            Context.AddListener(StateNotification.End, StateHandler);
+        }
+
+        /// <summary>
+        /// Remove listeners from drawer
+        /// </summary>
+        private void OnDestroy()
+        {
+            Context.RemoveListener(StateNotification.Start, StateHandler);
+            Context.RemoveListener(StateNotification.Pause, StateHandler);
+            Context.RemoveListener(StateNotification.End, StateHandler);
+        }
+
+        private void StateHandler(string state)
+        {
+            if(!gameObject.activeInHierarchy)return;
+            /*if (state == StateNotification.Start)
+            {
+            }*/
+            enabled = !_session.Any(SessionState.OnPause, SessionState.Ended);
+        }
 
         /// <summary>
         /// Draw bricks

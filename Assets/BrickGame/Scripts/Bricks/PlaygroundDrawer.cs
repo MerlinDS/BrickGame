@@ -62,38 +62,6 @@ namespace BrickGame.Scripts.Bricks
                 list.Add(_bricks[x + y * Width]);
         }
         //================================ Private|Protected methods ================================
-
-        private void Start()
-        {
-            Context.AddListener(StateNotification.Start, StateHandler);
-            Context.AddListener(StateNotification.Pause, StateHandler);
-            Context.AddListener(StateNotification.End, StateHandler);
-        }
-
-        private void OnDestroy()
-        {
-            Context.RemoveListener(StateNotification.Start, StateHandler);
-            Context.RemoveListener(StateNotification.Pause, StateHandler);
-            Context.RemoveListener(StateNotification.End, StateHandler);
-        }
-
-        private void StateHandler(string state)
-        {
-            if(!gameObject.activeInHierarchy)return;
-            switch (state)
-            {
-                case StateNotification.Start:
-                    enabled = true;
-                    break;
-                case StateNotification.End:
-                    enabled = false;
-                    break;
-                case StateNotification.Pause:
-                    enabled = !enabled;
-                    break;
-            }
-        }
-
         private void Update()
         {
             if(_matrix.IsNull)return;
