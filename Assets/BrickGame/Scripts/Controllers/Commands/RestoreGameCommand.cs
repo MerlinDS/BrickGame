@@ -6,8 +6,10 @@
 
 using System;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Models.Session;
 using BrickGame.Scripts.Utils;
 using JetBrains.Annotations;
+using MiniMoca;
 using UnityEngine;
 
 namespace BrickGame.Scripts.Controllers.Commands
@@ -19,7 +21,12 @@ namespace BrickGame.Scripts.Controllers.Commands
     public class RestoreGameCommand : GameCommand<SessionDataProvider>
     {
         //================================       Public Setup       =================================
-
+        /// <inheritdoc />
+        public override bool Prepare(string notification, DataProvider data)
+        {
+            base.Prepare(notification, data);
+            return Context.GetActor<SessionModel>().Has(SessionState.None);
+        }
         //================================    Systems properties    =================================
 
         //================================      Public methods      =================================

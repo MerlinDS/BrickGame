@@ -6,6 +6,7 @@
 
 using System.Linq;
 using BrickGame.Scripts.Models;
+using BrickGame.Scripts.Models.Session;
 using BrickGame.Scripts.Playgrounds;
 using JetBrains.Annotations;
 using MiniMoca;
@@ -25,10 +26,13 @@ namespace BrickGame.Scripts.Controllers.Commands
 
         //================================      Public methods      =================================
         /// <inheritdoc />
-        public override void Prepare(string notification, DataProvider data)
+        public override bool Prepare(string notification, DataProvider data)
         {
             base.Prepare(notification, data);
             _restoreModel = Context.GetActor<RestoreModel>();
+            //Check session states
+            var sessionModel = Context.GetActor<SessionModel>();
+            return sessionModel.Any(SessionState.None, SessionState.Ended);
         }
 
         /// <inheritdoc />
@@ -41,6 +45,7 @@ namespace BrickGame.Scripts.Controllers.Commands
         /// <inheritdoc />
         public override void Execute()
         {
+
             Playground playground = null;
             if (Data != null)
                 playground = Playgrounds.FirstOrDefault(p => p.SessionName == Data.Session);

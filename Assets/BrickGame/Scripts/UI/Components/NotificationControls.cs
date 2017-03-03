@@ -39,12 +39,12 @@ namespace BrickGame.Scripts.UI.Components
             _tapped = false;
             if (_queue.Count == 0)
             {
-                if (_startNext)
+                /*if (_startNext)
                 {
                     _startNext = false;
                     BroadcastNofitication(StateNotification.Start);
                 }
-                else if(_onPause)BroadcastNofitication(StateNotification.Pause);
+                else if(_onPause)BroadcastNofitication(StateNotification.Pause);*/
                 gameObject.SetActive(false);
                 return;
             }
