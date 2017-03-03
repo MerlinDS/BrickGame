@@ -17,7 +17,6 @@ namespace BrickGame.Scripts
     /// </summary>
     public sealed class GameContext : MocaContext
     {
-
         //================================ Private|Protected methods ================================
         /// <inheritdoc />
         protected internal override void Initialize()
@@ -33,15 +32,14 @@ namespace BrickGame.Scripts
             CommandMap.MapCommand<UpdateScoreCommand>(GameNotification.ScoreUpdated);
             CommandMap.MapCommand<StartGameCommand>(StateNotification.Start);
             //Session command
-            CommandMap.MapCommand<StateChangeCommand>(StateNotification.Start);
-            CommandMap.MapCommand<StateChangeCommand>(StateNotification.End);
-            CommandMap.MapCommand<StateChangeCommand>(StateNotification.Pause);
+            CommandMap.MapCommand<StateChangeCommand>(StateNotification.Start,
+                StateNotification.End, StateNotification.Pause, StateNotification.Close);
             //Cache command
-            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound);
-            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ColorChanged);
-            CommandMap.MapCommand<UpdateCacheCommand>(StateNotification.End);
-            CommandMap.MapCommand<UpdateCacheCommand>(StateNotification.Pause);
-            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);
+            CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound,
+                GameNotification.ColorChanged,
+                GameNotification.ScoreUpdated);
+            CommandMap.MapCommand<UpdateCacheCommand>(StateNotification.End,
+                StateNotification.Pause, StateNotification.Close);
         }
     }
 }

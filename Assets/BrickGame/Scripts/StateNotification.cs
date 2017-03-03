@@ -28,5 +28,11 @@ namespace BrickGame.Scripts
         /// Execute <see cref="RestoreGameCommand"/>
         /// </summary>
         public static string Restore = "StateNotification:Restore";
+        /// <summary>
+        /// Try to close game mode.
+        /// User probably wants to open menu.
+        /// Make session state equlase to None and updating cache.
+        /// </summary>
+        public static string Close = "StateNotification:Close";
     }
 }
