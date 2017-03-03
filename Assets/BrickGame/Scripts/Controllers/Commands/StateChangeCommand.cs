@@ -43,12 +43,15 @@ namespace BrickGame.Scripts.Controllers.Commands
                     //Nothing to do with session model;
                     return;
             }
-            if (!sessionModel.TryUpdateState(next))
+            if (sessionModel.TryUpdateState(next))
             {
-                Debug.LogWarningFormat("Session state {0} was not update to {1}", previous, next);
+                Debug.LogFormat("Current state is {0}", sessionModel.State);
                 return;
             }
-            Debug.LogFormat("Current state is {0}", sessionModel.State);
+            Debug.LogWarningFormat("Session state {0} was not update to {1}. Broadcast will be stopped!",
+                previous, next);
+            StopFurtherBroadcast = true;
+
         }
 
         //================================ Private|Protected methods ================================

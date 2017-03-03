@@ -67,6 +67,8 @@ namespace BrickGame.Scripts.UI
                     .Any(SessionState.None, SessionState.Ended)
                     ? StateNotification.Start
                     : StateNotification.Pause);
+                //TODO: Remove after tests
+                BroadcastNofitication(StateNotification.Start);
             });
         }
 
