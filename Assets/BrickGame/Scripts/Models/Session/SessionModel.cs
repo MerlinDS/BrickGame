@@ -5,7 +5,6 @@
 // <date>03/03/2017 13:12</date>
 
 using MiniMoca;
-using UnityEngine;
 
 namespace BrickGame.Scripts.Models.Session
 {

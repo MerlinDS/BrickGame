@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using BrickGame.Scripts.Figures;
+using BrickGame.Scripts.Models.Session;
 using BrickGame.Scripts.Utils.Input;
 using UnityEngine;
 
@@ -32,6 +33,7 @@ namespace BrickGame.Scripts.Controllers
         private Vector2 _began;
 
         private IInputAdapter _input;
+        private SessionModel _sessionModel;
 
         //================================      Public methods      =================================
         /// <summary>
@@ -40,6 +42,7 @@ namespace BrickGame.Scripts.Controllers
         public void RefreshControllers()
         {
             _controls.Clear();
+            //TODO: calculate sens by device screen
             _slop = Mathf.Round(20F / 252F * Screen.dpi) * 4;
             _topBorder = Screen.height - (Screen.height / 6F);
 
@@ -60,6 +63,7 @@ namespace BrickGame.Scripts.Controllers
         {
             _began = new Vector2();
             _controls = new List<IFigureControls>();
+            _sessionModel = Context.GetActor<SessionModel>();
             _input = Context.GetActor<InputManager>().GetInputAdapter();
             Context.AddListener(StateNotification.Start, GameNotificationHandler);
             Context.AddListener(StateNotification.Pause, GameNotificationHandler);
@@ -75,7 +79,7 @@ namespace BrickGame.Scripts.Controllers
             Context.RemoveListener(StateNotification.Start, GameNotificationHandler);
             Context.RemoveListener(StateNotification.Pause, GameNotificationHandler);
             Context.RemoveListener(FigureNotification.Changed, GameNotificationHandler);
-            Context.RemoveListener(GameNotification.ModeChanged, this.GameNotificationHandler);
+            Context.RemoveListener(GameNotification.ModeChanged, GameNotificationHandler);
             _controls.Clear();
         }
 
@@ -86,21 +90,22 @@ namespace BrickGame.Scripts.Controllers
         /// <param name="notification"></param>
         private void GameNotificationHandler(string notification)
         {
+            //Update component stats
             if (notification == GameNotification.ModeChanged)
             {
                 _direction = (int)Context.GetActor<GameModeManager>()
                     .CurrentRules.FallingDirection;
                 return;
             }
-            if (notification == StateNotification.Start)
+            //depended on figure
+            if (notification == FigureNotification.Changed)
             {
-                RefreshControllers();
-                enabled = true;
-            }
-            else if (notification == StateNotification.Pause)
-                enabled = !enabled;
-            else if (notification == FigureNotification.Changed)
                 _input.Reset();
+                return;
+            }
+            //Depended on state
+            if (notification == StateNotification.Start)RefreshControllers();
+            enabled = !_sessionModel.Has(SessionState.OnPause);
         }
         /// <summary>
         /// Getting a user input and providing game actions.
