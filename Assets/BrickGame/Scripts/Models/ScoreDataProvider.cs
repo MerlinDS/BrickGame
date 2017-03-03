@@ -44,6 +44,7 @@ namespace BrickGame.Scripts.Models
         {
             Session = session;
             Progress = new GameProgress {Level = 1};
+            Replacement = true;
         }
 
         public ScoreDataProvider(string session, int lines)
