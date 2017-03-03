@@ -22,17 +22,17 @@ namespace BrickGame.Scripts
         /// <summary>
         /// Set game on pause or resume it.
         /// </summary>
-        public const string Pause = "StateNotification:Pause";
+        public const string Pause = "StateNotification::Pause";
         /// <summary>
         /// Try to restore playground from the cache.
         /// Execute <see cref="RestoreGameCommand"/>
         /// </summary>
-        public static string Restore = "StateNotification:Restore";
+        public const string Restore = "StateNotification::Restore";
         /// <summary>
         /// Try to close game mode.
         /// User probably wants to open menu.
         /// Make session state equlase to None and updating cache.
         /// </summary>
-        public static string Close = "StateNotification:Close";
+        public const string Close = "StateNotification::Close";
     }
 }

@@ -36,6 +36,9 @@ namespace BrickGame.Scripts.Controllers.Commands
                 case StateNotification.End:
                     next = SessionState.Ended;
                     break;
+                case StateNotification.Close:
+                    next = SessionState.None;
+                    break;
                 default:
                     //Nothing to do with session model;
                     return;

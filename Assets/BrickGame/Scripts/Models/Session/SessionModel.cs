@@ -38,22 +38,45 @@ namespace BrickGame.Scripts.Models.Session
                 _state = SessionState.Started;
                 return true;
             }
+            //Update to None (clean session)
+            if (state == SessionState.None)
+            {
+                Clean();
+                _state = state;
+                return true;
+            }
             //Update started session
             if ((_state & state) == state)
             {
                 /*
                     Session already has the new state flag.
                     If the new flag is "on pause", remove it.
+                    If the new float is "start", check if session has flag "ended".
+                    If session has this flag, start new session.
                     In other cases don't update the state.
                 */
-                if (state != SessionState.OnPause) return false;
-                _state ^= SessionState.OnPause;
-                return true;
+                if (state == SessionState.OnPause)
+                {
+                    _state ^= SessionState.OnPause;
+                    return true;
+                }
+                if(state == SessionState.Started &&
+                   (_state & SessionState.Ended) == SessionState.Ended)
+                {
+                    //recursive update and starting new session
+                    TryUpdateState(SessionState.None);
+                    return TryUpdateState(SessionState.Started);
+                }
+                return false;
             }
             //The new state flag wasn't added yet.
             _state |= state;
             return true;
         }
         //================================ Private|Protected methods ================================
+        private void Clean()
+        {
+
+        }
     }
 }
