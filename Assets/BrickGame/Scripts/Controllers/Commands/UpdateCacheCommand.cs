@@ -48,7 +48,7 @@ namespace BrickGame.Scripts.Controllers.Commands
 
             ScoreUpdate(cacheModel);
             if (Notification == GameNotification.ScoreUpdated) return;//Just update score
-            if (Notification == GameState.End)
+            if (Notification == StateNotification.End)
             {
                 CleanCache(cacheModel);
                 return;

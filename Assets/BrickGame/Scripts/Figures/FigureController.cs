@@ -50,15 +50,15 @@ namespace BrickGame.Scripts.Figures
             GameRules rules = Context.GetActor<GameModeManager>().CurrentRules;
             _direction = (int)rules.FallingDirection;
             SpawnPoint = rules.SpawPosition;
-            Context.AddListener(GameState.Start, StateHandler);
-            Context.AddListener(GameState.Pause, StateHandler);
+            Context.AddListener(StateNotification.Start, StateHandler);
+            Context.AddListener(StateNotification.Pause, StateHandler);
             enabled = false;
         }
 
         private void OnDestroy()
         {
-            Context.RemoveListener(GameState.Start, StateHandler);
-            Context.RemoveListener(GameState.Pause, StateHandler);
+            Context.RemoveListener(StateNotification.Start, StateHandler);
+            Context.RemoveListener(StateNotification.Pause, StateHandler);
         }
 
         /// <summary>
@@ -91,13 +91,13 @@ namespace BrickGame.Scripts.Figures
         {
             if(!gameObject.activeInHierarchy)return;
 //            Debug.Log("StartHandler");
-            if (state == GameState.Start)
+            if (state == StateNotification.Start)
             {
                 _position = Step;
                 enabled = true;
             }
 //                ChangeFigure();
-            if (state == GameState.Pause)
+            if (state == StateNotification.Pause)
                 enabled = !enabled;
         }
 

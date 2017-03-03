@@ -53,7 +53,7 @@ namespace BrickGame.Scripts.Controllers
             var drawers = FindObjectsOfType<BricksDrawer>();
             foreach (var drawer in drawers)drawer.DestroyBricks();
             //provokes cache updating
-            BroadcastNofitication(GameState.Pause);
+            BroadcastNofitication(StateNotification.Pause);
             //Load menu
             ChangeCurrentSceneTo(SRScenes.MainMenuScene);
         }

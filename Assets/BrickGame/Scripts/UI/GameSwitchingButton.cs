@@ -51,16 +51,16 @@ namespace BrickGame.Scripts.UI
         private void Awake()
         {
             ResetState();
-            Context.AddListener(GameState.Start, StateHandler);
-            Context.AddListener(GameState.Pause, StateHandler);
-            Context.AddListener(GameState.End, StateHandler);
+            Context.AddListener(StateNotification.Start, StateHandler);
+            Context.AddListener(StateNotification.Pause, StateHandler);
+            Context.AddListener(StateNotification.End, StateHandler);
             _button = GetComponent<Button>();
             _button.onClick.AddListener(() =>
             {
                 if(_state == ButtonState.Start)
-                    BroadcastNofitication(GameState.Start);
+                    BroadcastNofitication(StateNotification.Start);
                 else
-                    BroadcastNofitication(GameState.Pause);
+                    BroadcastNofitication(StateNotification.Pause);
             });
         }
 
@@ -71,9 +71,9 @@ namespace BrickGame.Scripts.UI
         private void OnDestroy()
         {
             _button.onClick.RemoveAllListeners();
-            Context.RemoveListener(GameState.Start, StateHandler);
-            Context.RemoveListener(GameState.End, StateHandler);
-            Context.RemoveListener(GameState.Pause, StateHandler);
+            Context.RemoveListener(StateNotification.Start, StateHandler);
+            Context.RemoveListener(StateNotification.End, StateHandler);
+            Context.RemoveListener(StateNotification.Pause, StateHandler);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace BrickGame.Scripts.UI
         /// <param name="state">Name of a game state</param>
         private void StateHandler(string state)
         {
-            if(state == GameState.End)ResetState();
+            if(state == StateNotification.End)ResetState();
             else ChangeState();
         }
 

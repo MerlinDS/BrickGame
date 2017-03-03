@@ -62,9 +62,9 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         private void Awake()
         {
             _model = Context.GetActor<ScoreModel>();
-            Context.AddListener(GameState.Start, StateHandler);
-            Context.AddListener(GameState.End, StateHandler);
-            Context.AddListener(GameState.Pause, StateHandler);
+            Context.AddListener(StateNotification.Start, StateHandler);
+            Context.AddListener(StateNotification.End, StateHandler);
+            Context.AddListener(StateNotification.Pause, StateHandler);
             Context.AddListener(GameNotification.ScoreUpdated, ScoreHandler);
             enabled = false;
         }
@@ -75,9 +75,9 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
             _model = null;
             _figure = null;
             _playground = null;
-            Context.RemoveListener(GameState.Start, StateHandler);
-            Context.RemoveListener(GameState.End, StateHandler);
-            Context.RemoveListener(GameState.Pause, StateHandler);
+            Context.RemoveListener(StateNotification.Start, StateHandler);
+            Context.RemoveListener(StateNotification.End, StateHandler);
+            Context.RemoveListener(StateNotification.Pause, StateHandler);
             Context.RemoveListener(GameNotification.ScoreUpdated, ScoreHandler);
         }
 
@@ -92,14 +92,14 @@ namespace BrickGame.Scripts.Playgrounds.Strategies
         {
             switch (s)
             {
-                case GameState.Pause:
+                case StateNotification.Pause:
                     if (OnPasue) Resume();
                     else Pause();
                     break;
-                case GameState.Start:
+                case StateNotification.Start:
                     Resume();
                     break;
-                case GameState.End:
+                case StateNotification.End:
                     Pause();
                     break;
             }

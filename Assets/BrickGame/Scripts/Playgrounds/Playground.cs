@@ -87,7 +87,7 @@ namespace BrickGame.Scripts.Playgrounds
         {
             _matrix = new PlaygroundMatrix(0, 0);
             Context.Notify(AdvNotification.ShowVideo);
-            BroadcastNofitication(GameState.End);
+            BroadcastNofitication(StateNotification.End);
         }
         //================================ Private|Protected methods ================================
 
@@ -97,12 +97,12 @@ namespace BrickGame.Scripts.Playgrounds
             foreach (StrategySetup setup in Rules.Strategies)
                 AddStrategy(setup);
             //Try to restore game data from the cache
-            BroadcastNofitication(GameState.Restore,
+            BroadcastNofitication(StateNotification.Restore,
                 new SessionDataProvider(Rules.name, SessionName));
             //Start new game
-            BroadcastNofitication(GameState.Start,
+            BroadcastNofitication(StateNotification.Start,
                 new SessionDataProvider(Rules.name, SessionName));
-            //BroadcastNofitication(GameState.Pause);
+            //BroadcastNofitication(StateNotification.Pause);
         }
 
         private void AddStrategy(StrategySetup setup)

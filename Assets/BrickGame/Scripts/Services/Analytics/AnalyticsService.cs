@@ -39,8 +39,8 @@ namespace BrickGame.Scripts.Services.Analytics
             _audio = Context.GetActor<AudioController>();
             _palette = Context.GetActor<ColorPaletteManager>();
             _modes = Context.GetActor<GameModeManager>();
-            Context.AddListener(GameState.Start, Handler);
-            Context.AddListener(GameState.End, Handler);
+            Context.AddListener(StateNotification.Start, Handler);
+            Context.AddListener(StateNotification.End, Handler);
             Context.AddListener(GameNotification.ColorChanged, Handler);
             Context.AddListener(GameNotification.ModeChanged, Handler);
             Context.AddListener(GameNotification.MuteSound, Handler);
@@ -50,10 +50,10 @@ namespace BrickGame.Scripts.Services.Analytics
         {
             switch (s)
             {
-                case GameState.Start:
+                case StateNotification.Start:
                     SessionStart();
                     break;
-                case GameState.End:
+                case StateNotification.End:
                     SessionEnd();
                     break;
                 case GameNotification.ColorChanged:
@@ -71,9 +71,9 @@ namespace BrickGame.Scripts.Services.Analytics
 
         private void OnDestroy()
         {
-            if (!Context.HasListener(GameState.Start, Handler)) return;
-            Context.RemoveListener(GameState.Start, Handler);
-            Context.RemoveListener(GameState.End, Handler);
+            if (!Context.HasListener(StateNotification.Start, Handler)) return;
+            Context.RemoveListener(StateNotification.Start, Handler);
+            Context.RemoveListener(StateNotification.End, Handler);
             Context.RemoveListener(GameNotification.ColorChanged, Handler);
             Context.RemoveListener(GameNotification.ModeChanged, Handler);
             Context.RemoveListener(GameNotification.MuteSound, Handler);

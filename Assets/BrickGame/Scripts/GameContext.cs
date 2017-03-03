@@ -27,14 +27,14 @@ namespace BrickGame.Scripts
             MapInstance<RestoreModel>();
             MapInstance<ScoreModel>();
             //Map commands
-            CommandMap.MapCommand<RestoreGameCommand>(GameState.Restore);
+            CommandMap.MapCommand<RestoreGameCommand>(StateNotification.Restore);
             CommandMap.MapCommand<UpdateScoreCommand>(GameNotification.ScoreUpdated);
-            CommandMap.MapCommand<StartGameCommand>(GameState.Start);
+            CommandMap.MapCommand<StartGameCommand>(StateNotification.Start);
             //Cache command
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.MuteSound);
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ColorChanged);
-            CommandMap.MapCommand<UpdateCacheCommand>(GameState.End);
-            CommandMap.MapCommand<UpdateCacheCommand>(GameState.Pause);
+            CommandMap.MapCommand<UpdateCacheCommand>(StateNotification.End);
+            CommandMap.MapCommand<UpdateCacheCommand>(StateNotification.Pause);
             CommandMap.MapCommand<UpdateCacheCommand>(GameNotification.ScoreUpdated);
         }
     }

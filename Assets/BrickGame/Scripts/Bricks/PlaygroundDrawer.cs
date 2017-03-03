@@ -65,16 +65,16 @@ namespace BrickGame.Scripts.Bricks
 
         private void Start()
         {
-            Context.AddListener(GameState.Start, StateHandler);
-            Context.AddListener(GameState.Pause, StateHandler);
-            Context.AddListener(GameState.End, StateHandler);
+            Context.AddListener(StateNotification.Start, StateHandler);
+            Context.AddListener(StateNotification.Pause, StateHandler);
+            Context.AddListener(StateNotification.End, StateHandler);
         }
 
         private void OnDestroy()
         {
-            Context.RemoveListener(GameState.Start, StateHandler);
-            Context.RemoveListener(GameState.Pause, StateHandler);
-            Context.RemoveListener(GameState.End, StateHandler);
+            Context.RemoveListener(StateNotification.Start, StateHandler);
+            Context.RemoveListener(StateNotification.Pause, StateHandler);
+            Context.RemoveListener(StateNotification.End, StateHandler);
         }
 
         private void StateHandler(string state)
@@ -82,13 +82,13 @@ namespace BrickGame.Scripts.Bricks
             if(!gameObject.activeInHierarchy)return;
             switch (state)
             {
-                case GameState.Start:
+                case StateNotification.Start:
                     enabled = true;
                     break;
-                case GameState.End:
+                case StateNotification.End:
                     enabled = false;
                     break;
-                case GameState.Pause:
+                case StateNotification.Pause:
                     enabled = !enabled;
                     break;
             }

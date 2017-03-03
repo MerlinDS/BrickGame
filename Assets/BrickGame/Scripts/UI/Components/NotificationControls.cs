@@ -42,9 +42,9 @@ namespace BrickGame.Scripts.UI.Components
                 if (_startNext)
                 {
                     _startNext = false;
-                    BroadcastNofitication(GameState.Start);
+                    BroadcastNofitication(StateNotification.Start);
                 }
-                else if(_onPause)BroadcastNofitication(GameState.Pause);
+                else if(_onPause)BroadcastNofitication(StateNotification.Pause);
                 gameObject.SetActive(false);
                 return;
             }
@@ -59,15 +59,15 @@ namespace BrickGame.Scripts.UI.Components
             _animator = GetComponent<Animator>();
             _scoreModel = Context.GetActor<ScoreModel>();
             _input = Context.GetActor<InputManager>().GetInputAdapter();
-            Context.AddListener(GameState.Pause, Handler);
-            Context.AddListener(GameState.End, Handler);
+            Context.AddListener(StateNotification.Pause, Handler);
+            Context.AddListener(StateNotification.End, Handler);
             gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            Context.RemoveListener(GameState.Pause, Handler);
-            Context.RemoveListener(GameState.End, Handler);
+            Context.RemoveListener(StateNotification.Pause, Handler);
+            Context.RemoveListener(StateNotification.End, Handler);
         }
 
         private void Update()
@@ -85,11 +85,11 @@ namespace BrickGame.Scripts.UI.Components
         {
             switch (s)
             {
-                case GameState.Pause:
+                case StateNotification.Pause:
                     if (!_onPause) _queue.Enqueue("Pause\ntap to resume");
                     _onPause = !_onPause;
                     break;
-                case GameState.End:
+                case StateNotification.End:
                     _queue.Enqueue("You score:\n" + _scoreModel[ScoreModel.FieldName.Score]);
                     _startNext = true;
                     break;

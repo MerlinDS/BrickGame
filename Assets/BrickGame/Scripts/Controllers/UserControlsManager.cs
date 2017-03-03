@@ -61,8 +61,8 @@ namespace BrickGame.Scripts.Controllers
             _began = new Vector2();
             _controls = new List<IFigureControls>();
             _input = Context.GetActor<InputManager>().GetInputAdapter();
-            Context.AddListener(GameState.Start, GameNotificationHandler);
-            Context.AddListener(GameState.Pause, GameNotificationHandler);
+            Context.AddListener(StateNotification.Start, GameNotificationHandler);
+            Context.AddListener(StateNotification.Pause, GameNotificationHandler);
             Context.AddListener(FigureNotification.Changed, GameNotificationHandler);
             Context.AddListener(GameNotification.ModeChanged, GameNotificationHandler);
         }
@@ -72,8 +72,8 @@ namespace BrickGame.Scripts.Controllers
         /// </summary>
         private void OnDestroy()
         {
-            Context.RemoveListener(GameState.Start, GameNotificationHandler);
-            Context.RemoveListener(GameState.Pause, GameNotificationHandler);
+            Context.RemoveListener(StateNotification.Start, GameNotificationHandler);
+            Context.RemoveListener(StateNotification.Pause, GameNotificationHandler);
             Context.RemoveListener(FigureNotification.Changed, GameNotificationHandler);
             Context.RemoveListener(GameNotification.ModeChanged, this.GameNotificationHandler);
             _controls.Clear();
@@ -92,12 +92,12 @@ namespace BrickGame.Scripts.Controllers
                     .CurrentRules.FallingDirection;
                 return;
             }
-            if (notification == GameState.Start)
+            if (notification == StateNotification.Start)
             {
                 RefreshControllers();
                 enabled = true;
             }
-            else if (notification == GameState.Pause)
+            else if (notification == StateNotification.Pause)
                 enabled = !enabled;
             else if (notification == FigureNotification.Changed)
                 _input.Reset();
