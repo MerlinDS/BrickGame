@@ -112,8 +112,8 @@ namespace BrickGame.Scripts.Figures
                 matrix.y -= matrix.Height - 1;
             SendMessage(MessageReceiver.UpdateFigure, matrix);
             BroadcastNofitication(FigureNotification.Changed);
+            enabled = !_sessionModel.Has(SessionState.OnPause);
             _position = 0;
-            if (!enabled) enabled = true;
         }
         /// <summary>
         /// Update figureMatrix position
