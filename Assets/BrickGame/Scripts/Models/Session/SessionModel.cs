@@ -5,6 +5,7 @@
 // <date>03/03/2017 13:12</date>
 
 using MiniMoca;
+using UnityEngine;
 
 namespace BrickGame.Scripts.Models.Session
 {
@@ -23,8 +24,9 @@ namespace BrickGame.Scripts.Models.Session
         }
 
         //================================    Systems properties    =================================
-        private SessionState _state;
+        private SessionState _state = SessionState.None;
         //================================      Public methods      =================================
+
         /// <summary>
         /// Try to update session state.
         /// </summary>

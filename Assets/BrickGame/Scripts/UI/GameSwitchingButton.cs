@@ -5,6 +5,7 @@
 // <date>02/09/2017 9:50</date>
 
 using System;
+using BrickGame.Scripts.Models.Session;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,20 +22,24 @@ namespace BrickGame.Scripts.UI
         /// </summary>
         private enum ButtonState
         {
-            Start, Pause, Resume
+            Start,
+            Pause,
+            Resume
         }
+
         //================================       Public Setup       =================================
-        [Tooltip("Rebuild button label text")]
-        public string StartLable = "START";
-        [Tooltip("Pause button label text")]
-        public string PauseLabel = "PAUSE";
-        [Tooltip("Resume button label text")]
-        public string ResumeLabel = "RESUME";
-        [Tooltip("Label text field")]
-        public Text Label;
+        [Tooltip("Rebuild button label text")] public string StartLable = "START";
+
+        [Tooltip("Pause button label text")] public string PauseLabel = "PAUSE";
+        [Tooltip("Resume button label text")] public string ResumeLabel = "RESUME";
+
+        [Tooltip("Label text field")] public Text Label;
+
         //================================    Systems properties    =================================
         private ButtonState _state;
+
         private Button _button;
+
         //================================      Public methods      =================================
         /// <summary>
         /// Reset button to starting state
@@ -44,6 +49,7 @@ namespace BrickGame.Scripts.UI
             Label.text = StartLable;
             _state = ButtonState.Start;
         }
+
         //================================ Private|Protected methods ================================
         /// <summary>
         /// Initialize button and add context listeners
@@ -57,10 +63,10 @@ namespace BrickGame.Scripts.UI
             _button = GetComponent<Button>();
             _button.onClick.AddListener(() =>
             {
-                if(_state == ButtonState.Start)
-                    BroadcastNofitication(StateNotification.Start);
-                else
-                    BroadcastNofitication(StateNotification.Pause);
+                BroadcastNofitication(Context.GetActor<SessionModel>()
+                    .Any(SessionState.None, SessionState.Ended)
+                    ? StateNotification.Start
+                    : StateNotification.Pause);
             });
         }
 
@@ -82,7 +88,7 @@ namespace BrickGame.Scripts.UI
         /// <param name="state">Name of a game state</param>
         private void StateHandler(string state)
         {
-            if(state == StateNotification.End)ResetState();
+            if (state == StateNotification.End) ResetState();
             else ChangeState();
         }
 

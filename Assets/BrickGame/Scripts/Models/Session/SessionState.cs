@@ -17,18 +17,18 @@ namespace BrickGame.Scripts.Models.Session
         /// <summary>
         /// Session has not state.
         /// </summary>
-        None = 0x0,
+        None = 0x1,
         /// <summary>
         /// Session was started
         /// </summary>
-        Started = 0x1,
+        Started = 0x2,
         /// <summary>
         /// Session was ended
         /// </summary>
-        Ended = 0x2,
+        Ended = 0x4,
         /// <summary>
         /// Session holds on pause
         /// </summary>
-        OnPause = 0x4
+        OnPause = 0x8
     }
 }
